@@ -1,6 +1,12 @@
 import sys
 from pathlib import Path
 
+def run(source):
+    scanner = Scanner(source)
+    tokens = scanner.scanTokens()
+    parser = Parser(tokens)
+    statements = parser.parse()
+
 def runFile(pathString):
     try:
         with Path(pathString).open() as file:
