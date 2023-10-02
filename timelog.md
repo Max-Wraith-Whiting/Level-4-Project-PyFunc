@@ -35,3 +35,4 @@
 ## 2nd October 2023
 
 * *3 hour* Reading material relating to parametric polymorphism implementations
+* *4 hour* Researching formal syntax defintions and working on implementing a rudimentary scanner and parser
