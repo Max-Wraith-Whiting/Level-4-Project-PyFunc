@@ -3,13 +3,13 @@ from pathlib import Path
 
 def run(source):
     scanner = Scanner(source)
-    tokens = scanner.scanTokens()
+    tokens = scanner.scan_tokens()
     parser = Parser(tokens)
     statements = parser.parse()
 
-def runFile(pathString):
+def run_file(path_string):
     try:
-        with Path(pathString).open() as file:
+        with Path(path_string).open() as file:
             run(file) # Run the whole file in totality.
     except e:
         print(e)
@@ -19,7 +19,7 @@ def main():
     if len(sys.argv) > 1:
         print("Usage: main.py [script file]")
     elif len(sys.arv) is 1:
-        runFile(sys.argv[1])
+        run_file(sys.argv[1])
     else:
         # A REPL can be called here later.
         print("Usage: main.py [script file]")
