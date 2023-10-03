@@ -40,3 +40,4 @@
 ## 3rd October 2023
 
 * *2 hour* Researching Type systems papers
+* *1.5 hour* Designing basic syntax and grammar
