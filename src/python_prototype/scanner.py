@@ -8,9 +8,7 @@ class Scanner(self):
         this.current = 0
         this.line = 1
         
-        # this.keywords = Set(
-        #     "" 
-        # )
+
     
     def is_at_end(self):
         return this.current >= len(source)
