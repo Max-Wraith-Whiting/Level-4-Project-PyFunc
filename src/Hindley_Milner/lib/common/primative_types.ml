@@ -1,5 +1,5 @@
 (* Constant declares included primative types. *)
-module Contant = struct
+module Constant = struct
   type t = 
   | ConstString of string
   | ConstBool of bool
