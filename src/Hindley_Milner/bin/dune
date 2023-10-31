@@ -1,0 +1,4 @@
+(executable
+ (public_name pyfunc)
+ (name main)
+ (libraries pyfunc))

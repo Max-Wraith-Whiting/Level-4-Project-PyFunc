@@ -1,6 +1,6 @@
 (lang dune 3.11)
 
-(name Hindley_Milner)
+(name pyfunc)
 
 (generate_opam_files true)
 
@@ -16,9 +16,9 @@
 (documentation https://url/to/documentation)
 
 (package
- (name Hindley_Milner)
- (synopsis "A short synopsis")
- (description "A longer description")
+ (name pyfunc)
+ (synopsis "A plain english expression-based impure functional programming language.")
+ (description "A plain english expression-based impure functional programming language.")
  (depends ocaml dune)
  (tags
   (topics "to describe" your project)))
