@@ -1,0 +1,2 @@
+echo "Running..."
+dune exec Hindley_Milner
