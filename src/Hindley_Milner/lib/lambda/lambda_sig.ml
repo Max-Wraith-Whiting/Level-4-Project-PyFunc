@@ -1,4 +1,4 @@
-open Primative_types
+open Primitive_types
 
 (* Public interface for type t
    Here for expansion. *)

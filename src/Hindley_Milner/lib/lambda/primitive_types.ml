@@ -1,4 +1,4 @@
-(* Constant declares included primative types. *)
+(* Constant declares included primitive types. *)
 module Constant = struct
   type t = 
   | ConstString of string
