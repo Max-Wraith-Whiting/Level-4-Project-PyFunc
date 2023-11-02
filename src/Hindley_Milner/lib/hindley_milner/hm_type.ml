@@ -1,4 +1,4 @@
-type op = ADD | SUB | GREATER | LESS | AND | OR
+(* type op = ADD | SUB | GREATER | LESS | AND | OR
 
 module CharacterMap = Map.Make(String)
 
@@ -56,4 +56,42 @@ let op_to_string (op: op): string =
   | GREATER -> ">"
   | LESS -> "<"
   | OR -> "||"
-  | AND -> "&&"
+  | AND -> "&&" *)
+
+  module HMType = struct
+    
+    module Quantifier = struct
+      type t = string
+      let make x = x
+      let ofTypeVar (typvar, _) = typvar
+    end
+
+    type quantifier = Quantifier.t
+    type isResovled = Unresolved | Resolved of t
+    and typeVar = string * (isResovled UnionFind.elem)
+    and monotype =
+      | TypeVar of typeVar
+      | TypeInt
+      | TypeBool
+      | TypeString
+      | TypeUnit
+      | TypeFunc of (t * t)
+    and polytype = quantifier list * monotype
+    and t = monotype
+end
+
+(* module Expr = struct
+  type t = HMType.t
+  type binder = string
+  type variable = string
+
+  type t = 
+    | ExprVar of variable
+    | ExprConst of Constant.t
+    | ExprLet of (binder * t * t)
+    | ExprOpBinary of (Binary_op.t * t * t)
+    | ExprFunc of (binder * typeDesc option * t)
+    | ExprApp of (t * t)
+    | ExprAnn of (t * typeDesc)
+    | ExprIf of (t * t * t)
+end *)
