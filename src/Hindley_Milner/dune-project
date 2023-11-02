@@ -2,6 +2,8 @@
 
 (name pyfunc)
 
+(using menhir 2.1)
+
 (generate_opam_files true)
 
 (source
@@ -19,7 +21,7 @@
  (name pyfunc)
  (synopsis "A plain english expression-based impure functional programming language.")
  (description "A plain english expression-based impure functional programming language.")
- (depends ocaml dune)
+ (depends ocaml dune unionfind menhir)
  (tags
   (topics "to describe" your project)))
 
