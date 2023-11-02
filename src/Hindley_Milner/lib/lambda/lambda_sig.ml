@@ -20,7 +20,7 @@ module type EXPR = sig
   type variable = string
 end
 
-module type LANGUAGE = sig
+module type LAMBDA = sig
   module Type : TYPE
   module Expr : EXPR
 (* TypeConstructors interface, for making type data. *)
@@ -43,13 +43,14 @@ module type LANGUAGE = sig
     val make_application : Expr.t -> Expr.t -> Expr.t
     val make_annotation : Expr.t -> Type.t -> Expr.t
     val make_if : Expr.t -> Expr.t -> Expr.t -> Expr.t
-    val make_pair : Expr.t -> Expr.t -> Expr.t 
+    (* val make_pair : Expr.t -> Expr.t -> Expr.t 
     val make_first : Expr.t -> Expr.t 
     val make_second : Expr.t -> Expr.t 
-    val make_let_pair : variable -> variable -> Expr.t -> Expr.t -> Expr.t 
+    val make_let_pair : variable -> variable -> Expr.t -> Expr.t -> Expr.t  *)
   end
 
-  (* Besides the constructors, LANGUAGE allows typecheck and state-mangement.*)
+  (* Besides the constructors, LAMBDA has method for typechecking and
+     state-mangement.*)
   val typecheck : Expr.t -> Type.t
   val reset_state : unit -> unit
 end
