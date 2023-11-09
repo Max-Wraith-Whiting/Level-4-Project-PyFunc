@@ -1,3 +1,3 @@
 (library
  (name HM)
- (libraries lambda unionFind))
+ (libraries unionFind))
