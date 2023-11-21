@@ -1,18 +1,11 @@
 (ocamllex
  (modules lexer))
 
-(menhir 
- (modules tokens)
- (flags --only-tokens)
-)
-
 (menhir
- (modules tokens parser)
- (merge_into parser)
- (flags --external-tokens Tokens)
+ (modules parser)
 )
 
 (library
- (name lexparser)
- (libraries lambda)
+ (name pyfunc_frontend)
+ (libraries slambda)
  )
