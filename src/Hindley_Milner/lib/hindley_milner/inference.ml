@@ -21,6 +21,6 @@
 (* 2. Generate constraints *)
 (* 3. unify based on constraints *)
 (* 4. run the substitutions on unresolved types *)
-(* 5. Profit??? Or rather we get the final annotated expression *)
+(* 5. Profit??? Or rather we get the final internally annotated expression *)
 
 (* Will have to use mutable ref for algorithm J... Got to figure out how to do this. *)

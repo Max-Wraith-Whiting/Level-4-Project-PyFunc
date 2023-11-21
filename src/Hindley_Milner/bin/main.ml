@@ -7,4 +7,10 @@ let rec repl() =
   else repl();;
 
 
-repl();;
+(* repl();; *)
+
+let expr_main = 
+  let open Lexing in
+  let lexbuf = Lexing.from_channel stdin in 
+  let result = Pyfunc_frontend.Parse.main Lexer.token lexbuf in 
+  Printf.printf "Result: %d\n" result

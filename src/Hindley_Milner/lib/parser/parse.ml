@@ -1,12 +1,14 @@
-open Lambda_sig
+(* let main token lexbuf = failwith "undefined" *)
+
+open Lexer
 open Lexing
 
-module Make(Lambda: LAMBDA) = struct
-  module LambdaParser = Parser.Make(Lambda)
+let parse_with_error lexbuf = 
 
-  let parse_string s () = 
-    let lexbuf = Lexing.from_string s in
-    lexbuf.lex_curr_p <- {lexbuf.lex_curr_p with pos_fname = "<string>"};
-    let expr = LambdaParser.expr_main Lexer.token lexbuf in
+let parse_string str = 
+  let lexbuf = Lexing.from_string str in
+  lexbuf.lex_curr_p <- {lexbuf.lex_curr_p with pos_fname = "<string>"};
+  let expr = parse_with_error lexbuf in 
     expr
-end
+
+(* let parse_with_error lexbuf = try  *)
