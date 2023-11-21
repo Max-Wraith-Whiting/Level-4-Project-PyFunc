@@ -6,7 +6,15 @@ module Type = struct
     (* A recursive definition refering to t.*)
     | TypeFunc of (t * t)
     | TypeUnit
+
+  let rec pp ppf = function
+    | TypeInt -> Format.pp_print_string ppf "Int"
+    | TypeBool -> Format.pp_print_string ppf "Bool"
+    | TypeString -> Format.pp_print_string ppf "String"
+    | TypeUnit -> Format.pp_print_string ppf "Unit"
+    | TypeFunc (type_a, type_b) -> Format.fprintf ppf "(%a -> %a)" pp type_a pp type_b
 end
+
 
 (* OpBinary declares type for all possible binary operations. *)
 module OpBinary = struct
