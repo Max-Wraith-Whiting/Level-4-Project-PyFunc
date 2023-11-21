@@ -91,7 +91,7 @@ base_expr:
 // Base values.
 value :
     | LPAREN expr RPAREN {$2}
-    // | IDENTIFIER         {(*FIND IDENTIFIER FROM TABLE(?)*)}
+    | IDENTIFIER         {try find table $1 with Not_found -> makeVar ($1)}
     | STRINGVAL          {makeConst (Types.Constant.ConstString $1)}
     | INTVAL             {makeConst (Types.Constant.ConstInt $1)}
     | TRUE               {makeConst (Types.Constant.ConstBool true)}
