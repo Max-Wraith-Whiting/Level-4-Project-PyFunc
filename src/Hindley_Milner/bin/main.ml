@@ -1,8 +1,8 @@
 (* Start REPL *)
 open Pyfunc_frontend
-open Slambda.Typechecker
-open Slambda.Errors
-open Slambda.Types
+open HM.Typechecker
+open HM.Errors
+open HM.Types
 
 let pipe str = 
   let expr = Parse.parse_string str in Typecheck.typecheck expr

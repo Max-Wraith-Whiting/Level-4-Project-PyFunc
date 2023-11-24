@@ -7,5 +7,5 @@
 
 (library
  (name pyfunc_frontend)
- (libraries slambda)
+ (libraries HM)
  )
