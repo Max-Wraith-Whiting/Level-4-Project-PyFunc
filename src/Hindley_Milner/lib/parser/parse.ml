@@ -2,7 +2,7 @@
 
 open Lexer
 open Lexing
-open Slambda.Errors
+open HM.Errors
 
 let print_position ppf lexbuf = 
   let pos = lexbuf.lex_curr_p in 
