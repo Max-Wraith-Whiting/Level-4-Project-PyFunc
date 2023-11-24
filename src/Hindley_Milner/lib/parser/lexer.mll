@@ -24,22 +24,23 @@ rule token = parse
     | "()"      {UNITVAL}
     | '('       {LPAREN}
     | ')'       {RPAREN}
-    | "="       {EQ}
+    | '='       {EQ}
     | "->"      {ARROW}
-    | "."       {DOT}
+    | '.'       {DOT}
     | "&&"      {AND}
     | "||"      {OR}
-    | "<"       {LT}
-    | ">"       {GT}
+    | '<'       {LT}
+    | '>'       {GT}
     | ">="      {GEQ}
     | "<="      {LEQ}
     | "=="      {EQQ}
     | "!="      {NEQ}
-    | "+"       {PLUS}
-    | "-"       {MINUS}
-    | "*"       {STAR}
-    | "/"       {DIVIDE}
-    | ","       {COMMA}
+    | '+'       {PLUS}
+    | '-'       {MINUS}
+    | '*'       {STAR}
+    | '/'       {DIVIDE}
+    | ','       {COMMA}
+    | ':'       {COLON}
     | eof       {EOF}
     | ['A'-'Z' 'a'-'z' '_']['A'-'Z' 'a'-'z' '_' '0'-'9' '\'']* 
                 {IDENTIFIER (lexeme lexbuf)}
