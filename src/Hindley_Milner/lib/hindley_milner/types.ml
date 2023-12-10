@@ -1,5 +1,6 @@
 open Format
 
+(* Type declares all non-primitive types. *)
 module Type = struct
   
   module Quantifier = struct
@@ -10,38 +11,40 @@ module Type = struct
     let compare = String.compare
   end
 
-  type quantifier = Quantifier.t
   type resolution_state = Unresolved | Resolved of t
-  and typeVar = string * (resolution_state UnionFind.elem) 
+
+  and typeVar = string * (resolution_state UnionFind.elem)
+
   and monoType = 
     | TypeInt
     | TypeBool
     | TypeString
-    (* A recursive definition refering to t. *)
-    | TypeFunc of (t * t)
+    | TypeFunc of (t * t) (* A recursive definition refering to t. *)
     | TypePair of (t * t)
     | TypeUnit
     | TypeVar of typeVar
-  and polyType = quantifier list * monoType
+    
+  and polyType = Quantifier.t list * monoType
+
   and t = monoType
 
   module TypeVar = struct
-    let source = ref 0
-    let reset () = source := 0
+    let id_count = ref 0
+    let reset () = id_count := 0
     
-    let new_var ?(prefix="_") () =
-      let symbol = !source in
-      let () = incr source in
-      let point = UnionFind.make Unresolved in
-      prefix ^ (string_of_int symbol), point
+    let fresh_TV ?(scope_prefix="_") () =
+      let id = !id_count in
+      let () = incr id_count in
+      let resolution_state = UnionFind.make Unresolved in
+      (scope_prefix ^ (string_of_int id), resolution_state)
 
-      let pp ppf (tv,_) = Format.pp_print_string ppf tv
-      let var = fst
-      let point = snd
-      let compare (typeVar_a,_) (typeVar_b,_) = String.compare typeVar_a typeVar_b
+    let pp ppf (typeVar,_) = Format.pp_print_string ppf typeVar
+    let var = fst
+    let resolution_state = snd
+    let compare (typeVar_a,_) (typeVar_b,_) = String.compare typeVar_a typeVar_b
   end
 
-  let new_var () = TypeVar (TypeVar.new_var ())
+  let new_var () = TypeVar (TypeVar.fresh_TV ())
 
   let rec pp_monotype ppf = function
     | TypeInt -> Format.pp_print_string ppf "Int"
@@ -58,7 +61,7 @@ module Type = struct
     else
       let pp_space ppf () = pp_print_string ppf " " in
       let print_quantifiers ppf quantifiers = 
-        pp_print_list ~pp_sep:(pp_space) Quantifier.pp ppf quantifiers
+        pp_print_list ~pp_sep:pp_space Quantifier.pp ppf quantifiers
       in
       Format.fprintf ppf "forall %a. %a" print_quantifiers quantifiers pp_monotype monotype
     
@@ -92,6 +95,7 @@ module Constant = struct
   | ConstUnit
 end
 
+(* Expr declares all valid expressions. *)
 module Expr = struct
   type typ = Type.t
   type binder = string
