@@ -18,13 +18,14 @@ module Typecheck = struct
   (* Typecheck with a given context / environment. *)
   let rec _typecheck context = 
 
+    (* Typechecking Functions *)
     let typecheck_func context binder typ body = 
       let newContext = Context.add binder typ context in
       let body_type = _typecheck newContext body in
         TypeFunc (typ, body_type) 
     in
 
-
+    (* Typechecking Applications *)
     let typecheck_applic context expr_func expr_arg =
       let type_func = _typecheck context expr_func in
       let type_arg = _typecheck context expr_arg in
@@ -37,7 +38,7 @@ module Typecheck = struct
           raise (Errors.type_error "Cannot call non-function.")
     in
 
-
+    (* Typechecking ifs *)
     let typecheck_if context expr_cond expr_if expr_else = 
       let type_cond = _typecheck context expr_cond in 
       let type_if = _typecheck context expr_if in 
@@ -49,21 +50,23 @@ module Typecheck = struct
             raise (Errors.type_error "Both branches of a conditional must have the same type.")
           else type_if
     in
-  
+    
+    (* Typechecking Annotations *)
     let typecheck_ann context expr ann =
       let typ = _typecheck context expr in 
         if (typ <> ann) then
           raise (Errors.type_error "Type of expression didn't match annotation.")
         else typ
     in
-  
+    
+    (* Typechecking Lets *)
     let typecheck_let context binder expr_a expr_b = 
       let type_a = _typecheck context expr_a in
       let newContext = Context.add binder type_a context in
         _typecheck newContext expr_b
     in
   
-
+    (* Typechecking Binary Operations *)
     let typecheck_opbinary context op expr_a expr_b =
       let type_a = _typecheck context expr_a in
       let type_b = _typecheck context expr_b in
@@ -89,7 +92,7 @@ module Typecheck = struct
           else TypeInt
     in
     
-    (* Typechecker function! *)
+    (* Total Typechecker Function *)
     function
     | ExprVar value -> Context.find value context
     | ExprFunc (binder, typ, body) -> typecheck_func context binder typ body
