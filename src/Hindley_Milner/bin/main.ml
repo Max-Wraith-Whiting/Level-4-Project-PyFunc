@@ -1,18 +1,18 @@
 (* Start REPL *)
-open Pyfunc_frontend
+(* open Pyfunc_frontend
 open HM.Typechecker
 open HM.Errors
-open HM.Types
+open HM.Types *)
 
-let pipe str = 
-  let expr = Parse.parse_string str in Typecheck.typecheck expr
+(* let pipe str = 
+  let expr = Parse.parse_string str in Typecheck.typecheck expr *)
 
 let rec repl () = 
   print_string "> ";
-  let user_input = read_line() in
+  let user_input = read_line() in print_string user_input; repl();;
   (* if user_input = "" then print_string "--- Closing REPL ---\n" *)
   (* else  *)
-  let () = 
+  (* let () = 
     try
       let typ = pipe user_input in
       Format.printf "Type: %a\n" Type.pp typ
@@ -21,7 +21,7 @@ let rec repl () =
     | Type_Error err ->  Format.printf "[Type Error] %s\n" err
     in 
     let () = Format.print_flush () in
-      repl ();;
+      repl ();; *)
 
 
 repl ();;
