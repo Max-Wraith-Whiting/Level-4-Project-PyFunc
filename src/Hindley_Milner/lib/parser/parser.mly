@@ -57,7 +57,7 @@
 // Every possible type.
 typ:
     | base_typ ARROW typ { makeTypeFunc $1 $3}
-    | base_typ STAR typ  { makePair $1 $3}
+    | base_typ STAR typ  { makeTypePair $1 $3}
     | base_typ           { $1 }
 
 // Type primatives.
