@@ -11,10 +11,10 @@ module Type = struct
     let compare = String.compare
   end
 
+  type quantifier = Quantifier.t
   type resolution_state = Unresolved | Resolved of t
 
-  and typeVar = string * (resolution_state UnionFind.elem)
-
+  and typevar = string * (resolution_state UnionFind.elem)
   and monoType = 
     | TypeInt
     | TypeBool
@@ -22,10 +22,8 @@ module Type = struct
     | TypeFunc of (t * t) (* A recursive definition refering to t. *)
     | TypePair of (t * t)
     | TypeUnit
-    | TypeVar of typeVar
-    
-  and polyType = Quantifier.t list * monoType
-
+    | TypeVar of typevar
+  and polyType = quantifier list * monoType
   and t = monoType
 
   module TypeVar = struct
