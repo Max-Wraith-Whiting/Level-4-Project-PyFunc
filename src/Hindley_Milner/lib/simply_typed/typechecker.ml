@@ -1,10 +1,10 @@
-open Types
+(* open Types
 open Type
 open OpBinary
-open Types.Expr
+open Types.Expr *)
 
 
-module Typecheck = struct
+(* module Typecheck = struct
   module Context = Map.Make (String)
   type context = Type.t Context.t
 
@@ -105,4 +105,4 @@ module Typecheck = struct
 
 
   let typecheck expr = _typecheck Context.empty expr
-end 
+end  *)
