@@ -2,17 +2,17 @@
     open HM.Constructors.TypeConstructors
     open HM.Constructors.ExprConstructors
     open HM
-    open HM.Types
+    open HM.Ast
     open Hashtbl
 
     let table = create 1024;;
 %}
 
 %start expr_main
-%type <Types.Expr.t> expr_main
+%type <Ast.Expr.t> expr_main
 
 %start typ_main
-%type <Types.Type.t> typ_main
+%type <Ast.Type.t> typ_main
 
 
 // Tokens
@@ -102,11 +102,11 @@ value :
     | LPAREN expr COMMA expr RPAREN {makePair $2 $4}
     | LPAREN expr RPAREN            {$2}
     | ID                            {try find table $1 with Not_found -> makeVar ($1)}
-    | STRINGVAL                     {makeConst (Types.Constant.ConstString $1)}
-    | INTVAL                        {makeConst (Types.Constant.ConstInt $1)}
-    | TRUE                          {makeConst (Types.Constant.ConstBool true)}
-    | FALSE                         {makeConst (Types.Constant.ConstBool false)}
-    | UNITVAL                       {makeConst Types.Constant.ConstUnit}
+    | STRINGVAL                     {makeConst (Ast.Constant.ConstString $1)}
+    | INTVAL                        {makeConst (Ast.Constant.ConstInt $1)}
+    | TRUE                          {makeConst (Ast.Constant.ConstBool true)}
+    | FALSE                         {makeConst (Ast.Constant.ConstBool false)}
+    | UNITVAL                       {makeConst Ast.Constant.ConstUnit}
 
 // Entry point.
 expr_main:
