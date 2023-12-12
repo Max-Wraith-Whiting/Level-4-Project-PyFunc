@@ -1,4 +1,4 @@
-open Types
+open Ast
 
 module Constraint = struct
   type t = Type.t * Type.t
