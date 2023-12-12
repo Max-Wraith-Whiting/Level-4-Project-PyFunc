@@ -1,5 +1,5 @@
-open Types.Expr
-open Types.Type
+open Ast.Expr
+open Ast.Type
 
 module ExprConstructors = struct
   let makeConst const = ExprConst const
