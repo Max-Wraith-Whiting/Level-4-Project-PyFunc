@@ -82,15 +82,35 @@ module OpBinary = struct
     | NotEqual
     | And
     | Or
+
+  let pp = function
+    | Add -> "+"
+    | Subtract -> "-" 
+    | Multiply -> "*"
+    | Divide -> "÷"
+    | Less -> "<"
+    | Greater -> ">"
+    | LessEqual -> "<="
+    | GreaterEqual -> ">="
+    | Equal -> "=="
+    | NotEqual -> "!="
+    | And -> "And"
+    | Or -> "Or"
 end
 
 (* Constant declares included primitive types. *)
 module Constant = struct
   type t = 
-  | ConstString of string
-  | ConstBool of bool
-  | ConstInt of int
-  | ConstUnit
+    | ConstString of string
+    | ConstBool of bool
+    | ConstInt of int
+    | ConstUnit
+
+  let pp = function
+    | ConstString s -> s
+    | ConstBool b -> string_of_bool b
+    | ConstInt i -> string_of_int i
+    | ConstUnit -> "()"
 end
 
 (* Expr declares all valid expressions. *)
@@ -99,18 +119,57 @@ module Expr = struct
   type binder = string
   type variable = string
 
-  type t = 
+  type expr_tree = 
     | ExprVar of variable
     | ExprConst of Constant.t
-    | ExprLet of (binder * t * t)
-    | ExprOpBinary of (OpBinary.t * t * t)
-    | ExprFunc of (binder * typ option * t)
-    | ExprApplic of (t * t)
-    | ExprAnn of (t * typ)
-    | ExprIf of (t * t * t)
-    | ExprPair of (t * t)
-    | ExprLetPair of (variable * variable * t * t)
-    | ExprFirst of t
-    | ExprSecond of t
-end
+    | ExprLet of (binder * expr_tree * expr_tree)
+    | ExprOpBinary of (OpBinary.t * expr_tree * expr_tree)
+    | ExprFunc of (binder * typ option * expr_tree)
+    | ExprApplic of (expr_tree * expr_tree)
+    | ExprAnn of (expr_tree * typ)
+    | ExprIf of (expr_tree * expr_tree * expr_tree)
+    | ExprPair of (expr_tree * expr_tree)
+    | ExprLetPair of (variable * variable * expr_tree * expr_tree)
+    | ExprFirst of expr_tree
+    | ExprSecond of expr_tree
 
+  let rec print_ast acc = function
+    | ExprVar v -> acc ^ v
+    | ExprConst c -> acc ^ (Constant.pp c)
+    | ExprLet (binder, a, b) -> acc ^ "Let:" ^ binder ^ (print_ast acc a) ^ (print_ast acc b) ^ " "
+    | ExprOpBinary (op, a, b) -> acc ^ (print_ast acc a) ^ " " ^ (OpBinary.pp op) ^ " " ^ (print_ast acc b)
+    | ExprFunc (binder, _, a) -> acc ^ "λ (" ^ binder ^ ") (" ^ (print_ast acc a) ^ ")"
+    | ExprApplic (a, b) -> acc ^ "Apply (" ^ (print_ast acc a) ^ ") (" ^ (print_ast acc b) ^ ") "
+    | ExprAnn _ -> acc
+    | ExprIf (cond, if_cond, else_cond) -> acc ^ "If:" ^ (print_ast acc cond) ^ " " ^ (print_ast acc if_cond) ^ " " ^ (print_ast acc else_cond) ^ " "
+    | ExprPair (a, b) -> acc ^ "Pair:" ^ (print_ast acc a) ^ ", " ^ (print_ast acc b) ^ " "
+    | _ -> ""
+
+  let get_name = function
+    | ExprVar v -> v
+    | ExprConst c -> Constant.pp c
+    | ExprLet (binder, _, _) ->  binder
+    | ExprOpBinary (op, _, _) -> OpBinary.pp op
+    | ExprFunc _ -> "λ"
+    | ExprApplic _ -> "Apply"
+    | ExprAnn _ -> ""
+    | ExprIf _ -> "If"
+    | ExprPair _ -> "Pair"
+    | _ -> ""
+
+  let get_children = function
+    | ExprVar v -> []
+    | ExprConst c -> []
+    | ExprLet (_, a, b) -> [a; b]
+    | ExprOpBinary (_, a, b) -> [a; b]
+    | ExprFunc (_, _, a) -> [a]
+    | ExprApplic (a, b) -> [a; b]
+    | ExprAnn _ -> [] 
+    | ExprIf (cond, if_cond, else_cond) -> [cond; if_cond; else_cond]
+    | ExprPair (a, b) -> [a; b]
+    | _ -> []
+
+  let pp x = 
+    let p = Format.pp_print_string (Format.get_std_formatter ()) in
+    p (print_ast "" x)
+end
