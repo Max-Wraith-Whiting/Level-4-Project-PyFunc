@@ -119,47 +119,35 @@ module Expr = struct
   type binder = string
   type variable = string
 
-  type expr_tree = 
+  type tree = 
     | ExprVar of variable
     | ExprConst of Constant.t
-    | ExprLet of (binder * expr_tree * expr_tree)
-    | ExprOpBinary of (OpBinary.t * expr_tree * expr_tree)
-    | ExprFunc of (binder * typ option * expr_tree)
-    | ExprApplic of (expr_tree * expr_tree)
-    | ExprAnn of (expr_tree * typ)
-    | ExprIf of (expr_tree * expr_tree * expr_tree)
-    | ExprPair of (expr_tree * expr_tree)
-    | ExprLetPair of (variable * variable * expr_tree * expr_tree)
-    | ExprFirst of expr_tree
-    | ExprSecond of expr_tree
-
-  let rec print_ast acc = function
-    | ExprVar v -> acc ^ v
-    | ExprConst c -> acc ^ (Constant.pp c)
-    | ExprLet (binder, a, b) -> acc ^ "Let:" ^ binder ^ (print_ast acc a) ^ (print_ast acc b) ^ " "
-    | ExprOpBinary (op, a, b) -> acc ^ (print_ast acc a) ^ " " ^ (OpBinary.pp op) ^ " " ^ (print_ast acc b)
-    | ExprFunc (binder, _, a) -> acc ^ "λ (" ^ binder ^ ") (" ^ (print_ast acc a) ^ ")"
-    | ExprApplic (a, b) -> acc ^ "Apply (" ^ (print_ast acc a) ^ ") (" ^ (print_ast acc b) ^ ") "
-    | ExprAnn _ -> acc
-    | ExprIf (cond, if_cond, else_cond) -> acc ^ "If:" ^ (print_ast acc cond) ^ " " ^ (print_ast acc if_cond) ^ " " ^ (print_ast acc else_cond) ^ " "
-    | ExprPair (a, b) -> acc ^ "Pair:" ^ (print_ast acc a) ^ ", " ^ (print_ast acc b) ^ " "
-    | _ -> ""
-
-  let get_name = function
+    | ExprLet of (binder * tree * tree)
+    | ExprOpBinary of (OpBinary.t * tree * tree)
+    | ExprFunc of (binder * typ option * tree)
+    | ExprApplic of (tree * tree)
+    | ExprAnn of (tree * typ)
+    | ExprIf of (tree * tree * tree)
+    | ExprPair of (tree * tree)
+    | ExprLetPair of (variable * variable * tree * tree)
+    | ExprFirst of tree
+    | ExprSecond of tree
+    
+    let get_name = function
     | ExprVar v -> v
     | ExprConst c -> Constant.pp c
-    | ExprLet (binder, _, _) ->  binder
+    | ExprLet _ ->  "Let"
     | ExprOpBinary (op, _, _) -> OpBinary.pp op
-    | ExprFunc _ -> "λ"
+    | ExprFunc (binder, _, _) -> "λ" ^ binder
     | ExprApplic _ -> "Apply"
     | ExprAnn _ -> ""
     | ExprIf _ -> "If"
     | ExprPair _ -> "Pair"
     | _ -> ""
-
-  let get_children = function
-    | ExprVar v -> []
-    | ExprConst c -> []
+    
+    let get_children = function
+    | ExprVar _ -> []
+    | ExprConst _ -> []
     | ExprLet (_, a, b) -> [a; b]
     | ExprOpBinary (_, a, b) -> [a; b]
     | ExprFunc (_, _, a) -> [a]
@@ -168,8 +156,52 @@ module Expr = struct
     | ExprIf (cond, if_cond, else_cond) -> [cond; if_cond; else_cond]
     | ExprPair (a, b) -> [a; b]
     | _ -> []
+    
+    let print_tree tree =
+
+      let rec iter fn = function
+        | [] -> ()
+        | [head] -> fn true head
+        | head :: tail -> fn false head; iter fn tail
+      in
+
+      let open Printf in
+      let buffer = Buffer.create 1000 in
+      
+      let to_buffer ?(line_prefix="") buffer tree = 
+        let rec print_root indent tree = 
+          bprintf buffer "%s\n" (get_name tree);
+          iter (print_child indent) (get_children tree)
+        and print_child indent is_last tree =
+          let line = match is_last with
+            | true  -> "└─"
+            | false -> "├─"
+          in
+          bprintf buffer "%s%s" indent line;
+          let extra_indent = match is_last with
+            | true  -> "  "
+            | false -> "│ "
+        in
+        print_root (indent ^ extra_indent) tree
+        in
+        Buffer.add_string buffer line_prefix;
+        print_root line_prefix tree
+      in
+      to_buffer buffer tree;
+      Buffer.contents buffer
+    
+  let rec print_ast acc = function
+    | ExprVar v -> acc ^ v
+    | ExprConst c -> acc ^ (Constant.pp c)
+    | ExprLet (binder, a, b) -> acc ^ "Let " ^ binder ^ " = " ^ (print_ast acc a) ^ " in " ^ (print_ast acc b) ^ " "
+    | ExprOpBinary (op, a, b) -> acc ^ (print_ast acc a) ^ " " ^ (OpBinary.pp op) ^ " " ^ (print_ast acc b)
+    | ExprFunc (binder, _, a) -> acc ^ "λ (" ^ binder ^ ") (" ^ (print_ast acc a) ^ ")"
+    | ExprApplic (a, b) -> acc ^ "Apply (" ^ (print_ast acc a) ^ ") (" ^ (print_ast acc b) ^ ") "
+    | ExprAnn _ -> acc
+    | ExprIf (cond, if_cond, else_cond) -> acc ^ "If:" ^ (print_ast acc cond) ^ " " ^ (print_ast acc if_cond) ^ " " ^ (print_ast acc else_cond) ^ " "
+    | ExprPair (a, b) -> acc ^ "Pair:" ^ (print_ast acc a) ^ ", " ^ (print_ast acc b) ^ " "
+    | _ -> ""
 
   let pp x = 
-    let p = Format.pp_print_string (Format.get_std_formatter ()) in
-    p (print_ast "" x)
+    Format.pp_print_string (Format.get_std_formatter ()) (print_ast "" x)
 end
