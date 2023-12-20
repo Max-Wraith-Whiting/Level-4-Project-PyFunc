@@ -15,9 +15,9 @@ module Typecheck = struct
     | TypePair (type_a, type_b) -> ContextSet.union (fresh_TVs type_a) (fresh_TVs type_b)
     | _ -> ContextSet.empty
 
-    let fresh_monoTvs = fresh_TVs
+  let fresh_monoTvs = fresh_TVs
 
-    let fresh_polyTVs (quantifier, monotype) =
+  let fresh_polyTVs (quantifier, monotype) =
       ContextSet.diff (fresh_TVs monotype) quantifier
 
   (* Environment *)
