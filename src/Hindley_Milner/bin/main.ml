@@ -61,7 +61,8 @@ Repl.repl () *)
 
 let f str = 
   let ast = Interpreter.ast_parse str in
-    HM.Ast.Expr.pp ast;;
+    HM.Ast.Expr.pp ast;
+    print_string(HM.Ast.Expr.print_tree ast);;
 
 
 
