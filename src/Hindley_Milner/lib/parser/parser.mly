@@ -9,7 +9,7 @@
 %}
 
 %start expr_main
-%type <Ast.Expr.t> expr_main
+%type <Ast.Expr.tree> expr_main
 
 %start typ_main
 %type <Ast.Type.t> typ_main
