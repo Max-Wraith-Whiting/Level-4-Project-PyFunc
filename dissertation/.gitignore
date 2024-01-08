@@ -245,3 +245,7 @@ TSWLatexianTemp*
 
 # generated if using elsarticle.cls
 *.spl
+
+# Fonts and Images Excluded for reasonable use of git
+/fonts/
+/images/
