@@ -63,7 +63,8 @@ let f str =
   let ast = Interpreter.ast_parse str in
     HM.Ast.Expr.pp ast;
     print_string(HM.Ast.Expr.print_tree ast);;
+    (* print_string("\n" ^ string_of_int(Interpreter.interpret ast) ^ "\n");; *)
 
 
 
-f (read_line ());;
+f (print_string("> "); read_line ());;

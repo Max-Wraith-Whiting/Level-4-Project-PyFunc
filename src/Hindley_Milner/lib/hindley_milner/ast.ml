@@ -203,5 +203,5 @@ module Expr = struct
     | _ -> ""
 
   let pp x = 
-    Format.pp_print_string (Format.get_std_formatter ()) (print_ast "" x)
+    Format.pp_print_string (Format.get_std_formatter ()) ((print_ast "" x) ^ "\n")
 end
