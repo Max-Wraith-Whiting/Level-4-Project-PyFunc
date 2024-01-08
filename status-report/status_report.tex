@@ -1,0 +1,98 @@
+    
+\documentclass[11pt]{article}
+\usepackage{times}
+    \usepackage{fullpage}
+    
+    \title{Py-Func (Name T.B.A.) - A Python-Like Functional Programming Language}
+    \author{Max Wraith-Whiting — 2560800W}
+
+    \begin{document}
+    \maketitle
+
+\section{Status report}
+
+\subsection{Proposal}\label{proposal}
+
+\subsubsection{Motivation}\label{motivation}
+
+    Python is an immensely popular and versatile programming language known for its readability and ease of use.
+    However, it is not primarily designed for functional programming, which can lead to challenges when writing purely functional code.
+    Python includes statements, mutable data structures, and lacks a robust type system.
+    These limitations can hinder the development of large-scale, maintainable, and error-free functional codebases.
+    This is in direct contrast to functional programming languages which have gained traction in recent years due to their many advantages, including enhanced code reliability, better parallelism, and easier testing.
+
+    So, the fundamental idea behind this project is to leverage both Python's and Functional programming languages advantageous features into a single language.
+    
+\subsubsection{Aims}\label{aims}
+
+    The project aims to produce a language that capitalises on the benefits of both Python's friendly syntax \emph{and} functional programming's many advantages.
+    The language will need to provide features such as immutability, first-class functions, and a strong type system based on Hindley-Milner to make it suitable for functional development.
+    By creating a Python-like functional programming language, we aim to provide the following benefits:
+
+    \begin{itemize}
+        \item \emph{Readability and Ease of Learning:} Leveraging Python's familiar syntax will lower the barrier to entry for developers new to functional programming, making it easier to transition to this paradigm.
+        \item \emph{Error Prevention:} A robust type system with Hindley-Milner type inference will catch errors at compile-time, reducing runtime errors and enhancing code reliability.
+        \item \emph{Improved Code Maintenance:} Functional programming techniques, like immutability and parametric polymorphism, simplify code maintenance and debugging.
+    \end{itemize}
+
+\subsection{Progress}\label{progress}
+
+\begin{itemize}
+    \item Implementation language chosen: Ocaml
+    \item Basic structure of language pipeline draw out.
+    \item Significant background research conducted on type-theory and the implementation of a Hindley-Milner type system.
+    \item Created an intermediate representation (IR) specification. (Which is effectively an enhanced form of the lambda calculus, including binary-operations, if-else expressions and let expressions.)
+    \item IR lexer and parser created to generate abstract syntax trees.
+    \item Hindley-Milner type-checker implemented.
+    \item Basic skeleton of the IR interpreter.
+\end{itemize}
+
+\subsection{Problems and risks}\label{problems-and-risks}
+
+\subsubsection{Problems}\label{problems}
+
+
+\begin{itemize}
+    \item The topic of type-systems has a fog of difficult to interpret documentation and its own formal language to describe the function of these systems. A lot of time was needed to parse the information.
+    \item Developing in Ocaml has been slower than anticipated due to multitudinous reasons. (Poor-error messages, difficulty managing dependencies, etc.)
+    \item The existing type-checker does not recognise decimal numbers and the IR does not yet support them either.
+\end{itemize}
+
+\subsubsection{Risks}\label{risks}
+
+\begin{itemize}
+    \item Large pool of available syntax in Python to include. \textbf{Mitigation:} will have to restrict to only the most obvious syntax being flexible depending on work progress in Semester 2.
+    \item Difficult to measure how \emph{"successful"} a programming language is. \textbf{Mitigation:} will measure against existing Python specification and code snippets to do in-situ comparisons.
+    \item The type-checker is difficult to work with, and therefore the required future extensions will be an unknown amount of work. \textbf{Mitigation:} will block out additional time for these extensions than strictly necessary.
+\end{itemize}
+
+\subsection{Plan}\label{plan}
+
+   \begin{itemize}
+    \item Week 1-2: Complete Interpreter and extend Hindley-Milner type-checker to include float values.
+    \begin{description}
+        \item [— Deliverable:] A fully functional interpreter for the existing IR, including float or int values in a boxed type (number).
+    \end{description}
+
+    \item Week 3-4: Work on the Python-esque frontend to the language.
+    \begin{description}
+        \item[— Deliverable:] A functional lexer and parser, with space for expansion, that encompasses basic Python syntax.
+    \end{description}
+
+    \item Week 5-6: Implement the Python AST converter for the IR.
+    \begin{description}
+        \item[— Deliverable:] Complete converter for the existing syntax (at this point of the project).
+    \end{description}
+
+    \item Week 7-8: Further expansion of the frontend to include more Python features. Begin comparative testing and dissertation.
+    \begin{description}
+        \item[— Deliverable:] A more complete representation of Python in the new language. (This will likely not include more advanced features. E.g., Classes.)
+    \end{description}
+
+    \item Week 9-10: Finalisation of Project and Dissertation.
+    \begin{description}
+        \item[— Deliverable:] A complete project (within reason) and dissertation.
+    \end{description}
+   \end{itemize} 
+    
+    \end{document}
