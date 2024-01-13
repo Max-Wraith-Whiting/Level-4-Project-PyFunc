@@ -6,6 +6,6 @@
 )
 
 (library
- (name pyfunc_frontend)
+ (name ir_frontend)
  (libraries HM)
  )
