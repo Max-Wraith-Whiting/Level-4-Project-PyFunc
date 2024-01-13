@@ -10,7 +10,7 @@ base_value =
     | ['A'-'Z' 'a'-'z' '_']['A'-'Z' 'a'-'z' '_' '0'-'9' '\'']* -> STRING;
     | (['0'-'9']+)?"."['0'-'9'] -> FLOAT;
 
-call = base_value ( "(" arguments? ")" || "." ID)*; Possibly ignore . notation.
+call = base_value ( "(" arguments? ")" || "." ID)*; // Possibly ignore . notation.
 
 unary = ("!" || "-") unary | call;
 
@@ -45,3 +45,5 @@ declaration =
 fun_decl = "def" function;
 
 var_decl = ID ( "=" expression);
+
+program = declaration* EOF;
