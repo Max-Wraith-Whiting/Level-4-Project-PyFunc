@@ -4,7 +4,7 @@
 (* open HM.Typechecker *)
 (* open HM.Ast *)
 (* open HM.Errors *)
-open Pyfunc_interpreter
+open Pyfunc_frontend
 (* 
 module REPL = struct
   module Type = HM.Ast.Type
@@ -59,7 +59,7 @@ end *)
 (* module Repl = ASTPrint;;
 Repl.repl () *)
 
-let f str = 
+(* let f str = 
   let ast = Interpreter.ast_parse str in
     HM.Ast.Expr.pp ast;
     print_string(HM.Ast.Expr.print_tree ast);;
@@ -67,4 +67,16 @@ let f str =
 
 
 
-f (print_string("> "); read_line ());;
+f (print_string("> "); read_line ());; *)
+
+let ast_parse str = 
+  let lexbuf = Lexing.from_string str in
+  let ast = Parser.main Lexer.token lexbuf in
+    ast
+;;
+
+
+
+print_string(Ast.Expr.print_tree (ast_parse("if True: # Hello world!\n 1 else 2")))
+  (* print_string(Ast.Expr.print_tree ast);; *)
+  
