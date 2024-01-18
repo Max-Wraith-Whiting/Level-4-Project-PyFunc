@@ -11,7 +11,7 @@
   Interpreter processing stack.
 *)
 
-open Pyfunc_frontend
+open Ir_frontend
 (* open Lexing *)
 (* open HM.Ast.Expr *)
 
