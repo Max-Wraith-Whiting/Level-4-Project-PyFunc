@@ -6,5 +6,5 @@
 )
 
 (library
- (name frontend)
- (libraries ))
+ (name pyfunc_frontend)
+ (libraries HM))

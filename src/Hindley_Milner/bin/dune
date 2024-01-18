@@ -1,4 +1,4 @@
 (executable
  (public_name pyfunc)
  (name main)
- (libraries pyfunc unionFind ir_frontend pyfunc_interpreter))
+ (libraries pyfunc unionFind ir_frontend pyfunc_interpreter pyfunc_frontend))

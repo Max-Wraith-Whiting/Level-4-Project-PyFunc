@@ -1,3 +1,3 @@
 (library
  (name pyfunc_interpreter )
- (libraries HM pyfunc_frontend))
+ (libraries HM ir_frontend))
