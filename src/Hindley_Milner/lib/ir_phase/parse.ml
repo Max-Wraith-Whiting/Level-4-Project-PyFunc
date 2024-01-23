@@ -1,6 +1,6 @@
 (* let main token lexbuf = failwith "undefined" *)
 
-open Lexer
+open Ir_lexer
 open Lexing
 open HM.Errors
 
@@ -9,10 +9,10 @@ let print_position ppf lexbuf =
   Format.fprintf ppf "%s:%d:%d" pos.pos_fname pos.pos_lnum (pos.pos_cnum - pos.pos_bol + 1)
 
 let parse_with_error lexbuf = 
-  try Parser.expr_main Lexer.token lexbuf with
+  try Ir_parser.expr_main Ir_lexer.token lexbuf with
   | Lexical_error msg -> 
     let msg = Format.asprintf "%a: %s" print_position lexbuf msg in raise (parse_error msg)
-  | Parser.Error ->
+  | Ir_parser.Error ->
     let msg = Format.asprintf "%a: syntax error" print_position lexbuf in raise (parse_error msg)
   
 let parse_string str = 

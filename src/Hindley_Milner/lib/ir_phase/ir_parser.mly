@@ -18,6 +18,7 @@
 // Tokens
 %token LAMBDA
 %token LET
+%token REC
 %token IN
 %token TRUE
 %token FALSE
@@ -71,7 +72,8 @@ base_typ:
 // Complex expressions.
 expr:
     | LAMBDA ID DOT expr                            {makeExprFunc $2 None $4}
-    | LAMBDA ID COLON typ DOT expr                  {makeExprFunc $2 (Some $4) $6}
+    // | LAMBDA ID COLON typ DOT expr                  {makeExprFunc $2 (Some $4) $6}
+    | REC LAMBDA ID DOT expr                        {makeExprRecFunc $3 None $5}
     | LET ID EQ expr IN expr                        {makeLet $2 $4 $6}
     | LET LPAREN ID COMMA ID RPAREN EQ expr IN expr {makeLetPair $3 $5 $8 $10}
     | FIRST expr                                    {makeFirst $2}
@@ -98,7 +100,7 @@ base_expr:
 
 // Base values.
 value :
-    | LPAREN expr COLON typ RPAREN  {makeAnn $2 $4}
+    // | LPAREN expr COLON typ RPAREN  {makeAnn $2 $4}
     | LPAREN expr COMMA expr RPAREN {makePair $2 $4}
     | LPAREN expr RPAREN            {$2}
     | ID                            {try find table $1 with Not_found -> makeVar ($1)}

@@ -1,44 +1,40 @@
 %{
     open Hashtbl
-    open Ast.Constant
-    open Ast.Constructor
-    open Ast.OpBinary
+    open Py_ast.Constant
+    open Py_ast.Constructor
+    open Py_ast.OpBinary
 
     let var_table = create 1024;;
-    (*let fn_table = create 1024;;*)
 %}
 
-%start main
-%type <Ast.Expr.tree> main
+%start start
+%type <Py_ast.Expr.tree> start
 
 // Tokens
-%token IN
 %token TRUE
 %token FALSE
 %token IF
-%token THEN
+// %token THEN
 %token ELSE
-%token STRING
-%token INT
-%token BOOL
-%token UNIT
 %token UNITVAL
 %token LPAREN
 %token RPAREN
-%token EQ
+%token LBRACE
+%token RBRACE
+// %token EQ
 %token AND OR
 %token LT GT GEQ LEQ EQQ NEQ
 %token PLUS MINUS
 %token STAR DIVIDE
 %token COMMA
 %token COLON
-// %token FIRST SECOND
 %token DEFINE
-// %token LIST // On a probationary status.
 %token EOF
+// %token NL
 %token <string> ID
 %token <string> STRINGVAL
 %token <int> INTVAL
+// %token LIST // On a probationary status.
 
 // Precedence
 %left AND OR
@@ -49,17 +45,20 @@
 %%
 
 expr:
-    | IF expr COLON expr ELSE expr              {makeIf $2 $4 $6}
-    // | value base_expr                        {}
-    // | DEFINE ID LPAREN param RPAREN COLON expr  {try find fn_table $2 with Not_found -> makeFunc $2 $4 $7}// Define a function.
-    // | value LPAREN args RPAREN                  {makeCall $1 $3}    // Call a function
+    | IF base_expr COLON scope ELSE scope       {makeIf $2 $4 $6}
+    // | value LPAREN RPAREN                    {makeCall $1 (makeConst ConstUnit)}       // Call without params.
+    | ID LPAREN arg_list RPAREN                 {makeCall $1 $3}    // Call with params.
+    | DEFINE ID LPAREN param_list RPAREN scope  {makeFunc $2 $4 $6} // Define a function.
     | base_expr                                 {$1}
 
-param:
-    | value {makeParam $1}
+scope: LBRACE expr RBRACE   {$2}
 
-args:
-    | value {makeArgs $1}
+param_list:
+    | xs = separated_nonempty_list(COMMA, ID) { xs }
+
+arg_list:
+    | xs = separated_nonempty_list(COMMA, value) { xs }
+
 
 base_expr:
     | base_expr AND base_expr    {makeOpBinary And $1 $3}
@@ -76,8 +75,9 @@ base_expr:
     | base_expr DIVIDE base_expr {makeOpBinary Divide $1 $3} 
     | value                      {$1}
 
+
+
 value:
-    // | LPAREN expr COMMA expr RPAREN
     | LPAREN expr RPAREN {$2}
     | ID                 {try find var_table $1 with Not_found -> makeVar ($1)}
     | STRINGVAL          {makeConst (ConstString $1)}
@@ -86,5 +86,5 @@ value:
     | FALSE              {makeConst (ConstBool false)}
     | UNITVAL            {makeConst ConstUnit}
 
-main:
+start:
     | expr EOF {$1}

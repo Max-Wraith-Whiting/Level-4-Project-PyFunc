@@ -4,7 +4,6 @@
 (* open HM.Typechecker *)
 (* open HM.Ast *)
 (* open HM.Errors *)
-open Pyfunc_frontend
 (* 
 module REPL = struct
   module Type = HM.Ast.Type
@@ -68,15 +67,18 @@ Repl.repl () *)
 
 
 f (print_string("> "); read_line ());; *)
-
+(* open Ir
 let ast_parse str = 
   let lexbuf = Lexing.from_string str in
-  let ast = Parser.main Lexer.token lexbuf in
+  let ast = Frontend.Py_parser.start Py_lexer.token lexbuf in
     ast
 ;;
 
 
 
-print_string(Ast.Expr.print_tree (ast_parse("if True: # Hello world!\n 1 else 2")))
+print_string(Py_ast.Expr.print_tree (ast_parse("if True: # Hello world!\n 1 else 2")))
   (* print_string(Ast.Expr.print_tree ast);; *)
-  
+   *)
+
+
+print_string (Frontend.get_ast "if x == \"94\": {zz(a , 15   , 1992, chevolette)} else {1992}")

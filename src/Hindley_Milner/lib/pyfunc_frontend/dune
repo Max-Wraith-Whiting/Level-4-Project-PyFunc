@@ -1,10 +1,10 @@
 (ocamllex
- (modules lexer))
+ (modules py_lexer))
 
 (menhir
- (modules parser)
+ (modules py_parser)
 )
 
 (library
- (name pyfunc_frontend)
- (libraries HM))
+ (name frontend)
+ )

@@ -20,6 +20,7 @@ module Type = struct
     | TypeBool
     | TypeString
     | TypeFunc of (t * t) (* A recursive definition refering to t. *)
+    | TypeRecFunc of (t * t * t)
     | TypePair of (t * t)
     | TypeUnit
     | TypeVar of typevar
@@ -50,6 +51,7 @@ module Type = struct
     | TypeString -> Format.pp_print_string ppf "String"
     | TypeUnit -> Format.pp_print_string ppf "Unit"
     | TypeFunc (type_a, type_b) -> Format.fprintf ppf "(%a -> %a)" pp_monotype type_a pp_monotype type_b
+    | TypeRecFunc (_, type_a, type_b) -> Format.fprintf ppf "(%a -> %a)" pp_monotype type_a pp_monotype type_b
     | TypePair (type_a, type_b) -> Format.fprintf ppf "(%a * %a)" pp_monotype type_a pp_monotype type_b
     | TypeVar tv -> TypeVar.pp ppf tv
 
@@ -125,8 +127,9 @@ module Expr = struct
     | ExprLet of (binder * tree * tree)
     | ExprOpBinary of (OpBinary.t * tree * tree)
     | ExprFunc of (binder * typ option * tree)
+    | ExprRecFunc of (binder * typ option * tree) (* Self, binder, type, body*)
     | ExprApplic of (tree * tree)
-    | ExprAnn of (tree * typ)
+    (* | ExprAnn of (tree * typ) *)
     | ExprIf of (tree * tree * tree)
     | ExprPair of (tree * tree)
     | ExprLetPair of (variable * variable * tree * tree)
@@ -140,7 +143,7 @@ module Expr = struct
     | ExprOpBinary (op, _, _) -> OpBinary.pp op
     | ExprFunc (binder, _, _) -> "λ" ^ binder
     | ExprApplic _ -> "Apply"
-    | ExprAnn _ -> ""
+    (* | ExprAnn _ -> "" *)
     | ExprIf _ -> "If"
     | ExprPair _ -> "Pair"
     | _ -> ""
@@ -152,7 +155,7 @@ module Expr = struct
     | ExprOpBinary (_, a, b) -> [a; b]
     | ExprFunc (_, _, a) -> [a]
     | ExprApplic (a, b) -> [a; b]
-    | ExprAnn _ -> [] 
+    (* | ExprAnn _ -> []  *)
     | ExprIf (cond, if_cond, else_cond) -> [cond; if_cond; else_cond]
     | ExprPair (a, b) -> [a; b]
     | _ -> []
@@ -197,7 +200,7 @@ module Expr = struct
     | ExprOpBinary (op, a, b) -> acc ^ (print_ast acc a) ^ " " ^ (OpBinary.pp op) ^ " " ^ (print_ast acc b)
     | ExprFunc (binder, _, a) -> acc ^ "λ (" ^ binder ^ ") (" ^ (print_ast acc a) ^ ")"
     | ExprApplic (a, b) -> acc ^ "Apply (" ^ (print_ast acc a) ^ ") (" ^ (print_ast acc b) ^ ") "
-    | ExprAnn _ -> acc
+    (* | ExprAnn _ -> acc *)
     | ExprIf (cond, if_cond, else_cond) -> acc ^ "If:" ^ (print_ast acc cond) ^ " " ^ (print_ast acc if_cond) ^ " " ^ (print_ast acc else_cond) ^ " "
     | ExprPair (a, b) -> acc ^ "Pair:" ^ (print_ast acc a) ^ ", " ^ (print_ast acc b) ^ " "
     | _ -> ""

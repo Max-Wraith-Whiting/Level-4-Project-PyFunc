@@ -1,18 +1,22 @@
 {
-    open Parser
+    open Ir_parser
     open Lexing
 
     exception Lexical_error of string
     let lexical_error msg = Lexical_error msg
-}
 
+}
+(* NEED TO DEFINE parse function*)
 rule token = parse
     | [' ' '\t' '\r' '\n']* { token lexbuf }
-    | '#'[^'\n']*           { token lexbuf }  (* Single line comments. *)
-    | "def"     {DEFINE}
-    | "True"    {TRUE}
-    | "False"   {FALSE}
+    | "\\"      {LAMBDA}
+    | "let"     {LET}
+    | "rec"     {REC}
+    | "in"      {IN}
+    | "true"    {TRUE}
+    | "false"   {FALSE}
     | "if"      {IF}
+    | "then"    {THEN}
     | "else"    {ELSE}
     | "String"  {STRING}
     | "Int"     {INT}
@@ -22,10 +26,10 @@ rule token = parse
     | '('       {LPAREN}
     | ')'       {RPAREN}
     | '='       {EQ}
-    (* | '.'       {DOT} *)
-    | "and"     {AND}
-    | "or"      {OR}
-    (* | "not"     {NOT} *)
+    | "->"      {ARROW}
+    | '.'       {DOT}
+    | "&&"      {AND}
+    | "||"      {OR}
     | '<'       {LT}
     | '>'       {GT}
     | ">="      {GEQ}

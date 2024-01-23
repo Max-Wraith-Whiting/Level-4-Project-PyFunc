@@ -1,34 +1,31 @@
 {
-    open Parser
+    open Py_parser
     open Lexing
 
     exception Lexical_error of string
     let lexical_error msg = Lexical_error msg
-
 }
-(* NEED TO DEFINE parse function*)
+
 rule token = parse
+    (* Source Cleaners *)
     | [' ' '\t' '\r' '\n']* { token lexbuf }
-    | "\\"      {LAMBDA}
-    | "let"     {LET}
-    | "in"      {IN}
-    | "true"    {TRUE}
-    | "false"   {FALSE}
+    | '#'[^'\n']*           { token lexbuf }  (* Single line comments. *)
+    (* | '\n'      {NL} Newline *)
+    | "def"     {DEFINE}
+    | "True"    {TRUE}
+    | "False"   {FALSE}
     | "if"      {IF}
-    | "then"    {THEN}
     | "else"    {ELSE}
-    | "String"  {STRING}
-    | "Int"     {INT}
-    | "Bool"    {BOOL}
-    | "Unit"    {UNIT}
     | "()"      {UNITVAL}
     | '('       {LPAREN}
     | ')'       {RPAREN}
-    | '='       {EQ}
-    | "->"      {ARROW}
-    | '.'       {DOT}
-    | "&&"      {AND}
-    | "||"      {OR}
+    | '{'       {LBRACE}
+    | '}'       {RBRACE}
+    (* | '='       {EQ} *)
+    (* | '.'       {DOT} *)
+    | "and"     {AND}
+    | "or"      {OR}
+    (* | "not"     {NOT} *)
     | '<'       {LT}
     | '>'       {GT}
     | ">="      {GEQ}

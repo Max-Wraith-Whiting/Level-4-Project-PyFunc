@@ -1,0 +1,11 @@
+(ocamllex
+ (modules ir_lexer))
+
+(menhir
+ (modules ir_parser)
+)
+
+(library
+ (name ir)
+ (libraries HM frontend)
+ )

@@ -95,7 +95,7 @@ module Typecheck = struct
 
   let rec is_value = function
     | ExprPair (expr_a, expr_b) -> is_value expr_a && is_value expr_b
-    | ExprAnn (e, _) -> is_value e
+    (* | ExprAnn (e, _) -> is_value e *)
     | ExprVar _ | ExprConst _ | ExprFunc _ -> true
     | _ -> false
 
@@ -149,7 +149,7 @@ module Typecheck = struct
       let body_typ = _typecheck env' body in
       TypeFunc (type_ann, body_typ)
     in
-
+    
     (* Typechecking Applications *)
     let typecheck_applic env expr_func expr_arg =
       let fresh_var = new_var () in
@@ -238,6 +238,7 @@ module Typecheck = struct
     function
       | ExprVar value -> instantiate (Env.find value env)
       | ExprFunc (binder, opt_ann, body) -> typecheck_func env binder opt_ann body
+      | ExprRecFunc (binder, opt_ann, body) -> typecheck_func env binder opt_ann body
       | ExprApplic (expr_func, expr_arg) -> typecheck_applic env expr_func expr_arg
       | ExprOpBinary (op, expr_a, expr_b) -> typecheck_opbinary env op expr_a expr_b
       | ExprConst const -> typecheck_const const
@@ -247,7 +248,7 @@ module Typecheck = struct
       | ExprPair (expr_a, expr_b) -> typecheck_pair env expr_a expr_b
       | ExprFirst expr -> typecheck_first env expr
       | ExprSecond expr -> typecheck_second env expr
-      | ExprAnn (expr, ann) -> unify (_typecheck env expr) ann; ann
+      (* | ExprAnn (expr, ann) -> unify (_typecheck env expr) ann; ann *)
 
   let rec resolve_types = function
     | TypeVar type_var ->

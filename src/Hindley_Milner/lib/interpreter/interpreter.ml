@@ -11,7 +11,7 @@
   Interpreter processing stack.
 *)
 
-open Ir_frontend
+(* open Ir *)
 (* open Lexing *)
 (* open HM.Ast.Expr *)
 
@@ -26,11 +26,11 @@ open Ir_frontend
     | Parser.Error ->
       let msg = Format.asprintf "%a: syntax error" print_position lexbuf in raise (parse_error msg)
 *)
-
+(* 
 let ast_parse str = 
   let lexbuf = Lexing.from_string str in
   let ast = Parser.expr_main Lexer.token lexbuf in
-  ast
+  ast *)
 
 (* let rec interpret (*: HM.Ast.Constant.t *) =
   let open HM.Ast.Expr in
