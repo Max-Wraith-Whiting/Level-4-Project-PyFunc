@@ -137,6 +137,7 @@ module Expr = struct
     | ExprVar v -> v
     | ExprConst c -> Constant.pp c
     | ExprLet _ ->  "Let"
+    | ExprLetRec _ -> "Letrec"
     | ExprOpBinary (op, _, _) -> OpBinary.pp op
     | ExprFunc (binder, _) -> "λ" ^ binder
     | ExprApplic _ -> "Apply"
@@ -148,6 +149,7 @@ module Expr = struct
     | ExprVar _ -> []
     | ExprConst _ -> []
     | ExprLet (_, a, b) -> [a; b]
+    | ExprLetRec (_, a, b) -> [a; b]
     | ExprOpBinary (_, a, b) -> [a; b]
     | ExprFunc (_, a) -> [a]
     | ExprApplic (a, b) -> [a; b]
