@@ -41,7 +41,7 @@ rule token = parse
     | '*'       {STAR}
     | '/'       {DIVIDE}
     | ','       {COMMA}
-    | ':'       {COLON}
+    (* | ':'       {COLON} *)
     | eof       {EOF}
     | ['A'-'Z' 'a'-'z' '_']['A'-'Z' 'a'-'z' '_' '0'-'9' '\'']*  {ID (lexeme lexbuf)}
     | '"'       {read_string (Buffer.create 17) lexbuf}
