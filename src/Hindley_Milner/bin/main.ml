@@ -1,10 +1,10 @@
 (* Start REPL *)
 
-(* open Pyfunc_frontend *)
-(* open HM.Typechecker *)
-(* open HM.Ast *)
-(* open HM.Errors *)
-(* 
+open HM.Errors
+open HM.Typechecker
+open HM.Ast.Type
+open Ir
+
 module REPL = struct
   module Type = HM.Ast.Type
   module Expr = HM.Ast.Expr
@@ -35,50 +35,9 @@ module REPL = struct
     in
     let () = Format.print_flush () in 
     repl ~prompt ()
-end *)
+end
 
-(* module ASTPrint = struct
-  (* module Type = HM.Ast.Type *)
-  module Expr = HM.Ast.Expr
+let () =
+  REPL.repl ()
 
-  let rec repl ?(prompt="") () = 
-    print_string (prompt ^ "> ");
-    let string = read_line () in
-      (* try *)
-        let ast = Interpreter.ast_parse string in
-        ast
-      (* with
-        | Parse_Error err -> Format.printf "[Parse error] %s \n" err
-        | Type_Error err -> Format.printf "[Type error] %s \n" err
-        | exn -> Format.printf "[Error] %s\n" (Printexc.to_string exn) *)
-    let () = Format.print_flush () in
-    repl ~prompt ()
-end *)
-
-(* module Repl = ASTPrint;;
-Repl.repl () *)
-
-(* let f str = 
-  let ast = Interpreter.ast_parse str in
-    HM.Ast.Expr.pp ast;
-    print_string(HM.Ast.Expr.print_tree ast);;
-    (* print_string("\n" ^ string_of_int(Interpreter.interpret ast) ^ "\n");; *)
-
-
-
-f (print_string("> "); read_line ());; *)
-(* open Ir
-let ast_parse str = 
-  let lexbuf = Lexing.from_string str in
-  let ast = Frontend.Py_parser.start Py_lexer.token lexbuf in
-    ast
-;;
-
-
-
-print_string(Py_ast.Expr.print_tree (ast_parse("if True: # Hello world!\n 1 else 2")))
-  (* print_string(Ast.Expr.print_tree ast);; *)
-   *)
-
-
-print_string (Frontend.get_ast "if x == \"94\": {zz(a , 15   , 1992, chevolette)} else {1992}")
+(* print_string (Frontend.get_ast "if x == \"94\": {zz(a , 15   , 1992, chevolette)} else {1992}") *)
