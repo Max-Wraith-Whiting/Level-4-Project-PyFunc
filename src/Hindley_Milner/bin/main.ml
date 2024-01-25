@@ -16,7 +16,7 @@ module REPL = struct
 
   let process string = 
     let expr = REPL_Parser.parse_string string in
-      (* print_string ("[Input]:" ^ Expr.pp expr ^ "\n"); *)
+    print_string (HM.Ast.Expr.print_tree expr);
       typecheck expr
 
   let rec repl ?(prompt="") () =
