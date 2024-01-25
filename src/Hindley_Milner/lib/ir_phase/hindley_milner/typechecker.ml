@@ -95,10 +95,8 @@ module Typecheck = struct
 
   let rec is_value = function
     | ExprPair (expr_a, expr_b) -> is_value expr_a && is_value expr_b
-    (* | ExprAnn (e, _) -> is_value e *)
     | ExprVar _ | ExprConst _ | ExprFunc _ -> true
     | _ -> false
-
 
   let rec unify type_a type_b = 
     match type_a, type_b with
@@ -139,16 +137,13 @@ module Typecheck = struct
   let rec _typecheck env = 
 
     (* Typechecking Functions *)
-    let typecheck_func env binder type_ann body =
-      let type_ann = 
-        match type_ann with
-        | Some ann -> ann
-        | None -> new_var ()
-      in
+    let typecheck_func env binder body =
+      let type_ann = new_var () in
       let env' = Env.bind binder type_ann env in
       let body_typ = _typecheck env' body in
       TypeFunc (type_ann, body_typ)
     in
+
     
     (* Typechecking Applications *)
     let typecheck_applic env expr_func expr_arg =
@@ -158,15 +153,24 @@ module Typecheck = struct
       unify func_type (TypeFunc (arg_type, fresh_var));
       fresh_var
     in
-
+    
     (* Typechecking ifs *)
     let typecheck_if env expr_cond expr_if expr_else = 
       let cond_type = _typecheck env expr_cond in
       let if_type = _typecheck env expr_if in 
       let else_type = _typecheck env expr_else in
-      unify cond_type TypeBool;
-      unify if_type else_type;
-      if_type
+        unify cond_type TypeBool;
+        unify if_type else_type;
+        if_type
+    in
+    
+    (* Typechecking Letrec:  letrec x = e in e' *)
+    let typecheck_letrec env binder expr_a expr_b = 
+      let env' = Env.bind binder (new_var ()) env in 
+      let a_type = _typecheck env' expr_a in
+      let env'' = Env.bind_polytype binder (generalise env' a_type) env' in
+      let b_type = _typecheck env'' expr_b in
+        b_type
     in
 
     (* Typechecking Lets *)
@@ -237,13 +241,13 @@ module Typecheck = struct
     (* Total Typechecker Function *)
     function
       | ExprVar value -> instantiate (Env.find value env)
-      | ExprFunc (binder, opt_ann, body) -> typecheck_func env binder opt_ann body
-      | ExprRecFunc (binder, opt_ann, body) -> typecheck_func env binder opt_ann body
+      | ExprFunc (binder, body) -> typecheck_func env binder body
       | ExprApplic (expr_func, expr_arg) -> typecheck_applic env expr_func expr_arg
       | ExprOpBinary (op, expr_a, expr_b) -> typecheck_opbinary env op expr_a expr_b
       | ExprConst const -> typecheck_const const
-      | ExprLet (binder, expr_a, expr_b) -> typecheck_let env binder expr_a expr_b
       | ExprIf (expr_cond, expr_if, expr_else) -> typecheck_if env expr_cond expr_if expr_else
+      | ExprLet (binder, expr_a, expr_b) -> typecheck_let env binder expr_a expr_b
+      | ExprLetRec (binder, expr_a, expr_b) -> typecheck_letrec env binder expr_a expr_b
       | ExprLetPair (a, b, expr_a, expr_b) -> typecheck_let_pair env a b expr_a expr_b
       | ExprPair (expr_a, expr_b) -> typecheck_pair env expr_a expr_b
       | ExprFirst expr -> typecheck_first env expr
