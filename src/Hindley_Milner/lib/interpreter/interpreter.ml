@@ -4,19 +4,24 @@ open HM.Ast.Constant
 open HM.Ast.OpBinary
 (* open Errors *)
 
-module Interpreter = struct
-  
+module Env = struct
   type env = (string * tree) list
 
+  let make_env = ([] : env)
+  
   let get (env: env) key = 
     let result = List.assoc key env in function
       | Not_found -> print_string "Oh no! Not in env"; None
       | _ -> Some result
-
+  
   let set (env: env) (key : string) (value : tree) =
     let result = (key, value) :: env in
       result
 
+end
+
+module Interpreter = struct
+  
   let is_truthy value =
     match value with
       | ConstBool b -> b
@@ -31,7 +36,11 @@ module Interpreter = struct
       | _, _ -> false
 
   type value = Vint of int | Vstring of string | Vbool of bool | Vunit of unit
-  
+  let ppv = function
+    | Vint i -> string_of_int i
+    | Vstring s -> s
+    | Vbool b -> string_of_bool b
+    | Vunit _ -> "()"
   (* Const *)
   let eval_const = function 
     | ConstBool b -> Vbool b
@@ -43,6 +52,7 @@ module Interpreter = struct
   let rec eval = function
     (* | ExprVar v -> eval_var v env *)
     | ExprOpBinary (op, expr_a, expr_b) -> eval_op_binary op expr_a expr_b
+    | ExprIf (cond, expr_a, expr_b) -> eval_if cond expr_a expr_b
     | ExprConst c -> eval_const c
     | _ -> print_string "Oh no! Invalid tree node"; Vunit ()
   
@@ -63,9 +73,9 @@ module Interpreter = struct
     match left, op, right with
     (* Integer Operations *)
     | (Vint a), Add, (Vint b) -> Vint (a + b)
-    | (Vint a), Subtract, (Vint b) -> Vint (a + b)
-    | (Vint a), Multiply, (Vint b) -> Vint (a + b)
-    | (Vint a), Divide, (Vint b) -> Vint (a + b)
+    | (Vint a), Subtract, (Vint b) -> Vint (a - b)
+    | (Vint a), Multiply, (Vint b) -> Vint (a * b)
+    | (Vint a), Divide, (Vint b) -> Vint (a / b)
     (* Boolean Operations *)
     | (Vbool a), Less, (Vbool b) -> Vbool (a < b)
     | (Vbool a), Greater, (Vbool b) -> Vbool (a > b)
@@ -84,7 +94,12 @@ module Interpreter = struct
   and eval_applic = ()
 
   (* If *)
-  and eval_if = ()
+  and eval_if condition expr_a expr_b = 
+    let cond = eval condition in
+    match cond with
+      | Vbool true -> eval expr_a
+      | Vbool false -> eval expr_b
+      | _ -> print_string "Oh no! Invalid condition: Must be boolean!"; Vunit ()
 
   (* Pair *)
   and eval_pair = ()
