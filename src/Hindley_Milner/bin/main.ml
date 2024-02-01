@@ -4,28 +4,37 @@ open HM.Errors
 open HM.Typechecker
 open HM.Ast.Type
 open Ir
+open Interpreter
 
 module REPL = struct
   module Type = HM.Ast.Type
   module Expr = HM.Ast.Expr
   module REPL_Parser = Parse
   module Typechecker = Typecheck
+  (* module Interpreter = Interpreter *)
 
-  let typecheck = Typechecker.typecheck
+  let _typecheck = Typechecker.typecheck
   let reset_state = TypeVar.reset
 
-  let process string = 
-    let expr = REPL_Parser.parse_string string in
-    print_string (HM.Ast.Expr.print_tree expr);
-      typecheck expr
+  let type_check ast = 
+    print_string (HM.Ast.Expr.print_tree ast);
+      _typecheck ast
+
+  let generate_ast source =
+    REPL_Parser.parse_string source
+
+  let _interpret = Interpreter.eval
+  let interpret (tree : Expr.tree) = 
+    _interpret tree 
 
   let rec repl ?(prompt="") () =
     reset_state ();
     print_string (prompt ^ "> ");
-    let string = read_line () in
+    let input_string = read_line () in
+    let ast = generate_ast input_string in
     let () =
       try
-        let typ = process string in
+        let typ = type_check ast in
         Format.printf "Type: %a\n" HM.Ast.Type.pp typ
       with
         | Parse_Error err -> Format.printf "[Parse error] %s \n" err
@@ -34,6 +43,9 @@ module REPL = struct
         | exn -> Format.printf "[Error] %s\n" (Printexc.to_string exn)
     in
     let () = Format.print_flush () in 
+    let () =
+      print_string ((Interpreter.ppv (interpret ast)) ^ "\n")
+    in
     repl ~prompt ()
 end
 
