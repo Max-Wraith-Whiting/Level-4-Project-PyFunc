@@ -40,9 +40,9 @@ module Interpreter = struct
     | ConstUnit -> Vunit ()
 
   (* General Interpreter *)
-  let rec eval (env : env)  = function
+  let rec eval = function
     (* | ExprVar v -> eval_var v env *)
-    | ExprOpBinary (op, expr_a, expr_b) -> eval_op_binary op expr_a expr_b env
+    | ExprOpBinary (op, expr_a, expr_b) -> eval_op_binary op expr_a expr_b
     | ExprConst c -> eval_const c
     | _ -> print_string "Oh no! Invalid tree node"; Vunit ()
   
@@ -57,9 +57,9 @@ module Interpreter = struct
   and eval_letrec = ()
 
   (* Op Binary *)
-  and eval_op_binary op expr_a expr_b env =
-    let left = eval env expr_a in
-    let right = eval env expr_b in
+  and eval_op_binary op expr_a expr_b =
+    let left = eval expr_a in
+    let right = eval expr_b in
     match left, op, right with
     (* Integer Operations *)
     | (Vint a), Add, (Vint b) -> Vint (a + b)
