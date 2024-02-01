@@ -1,78 +1,102 @@
 (* Interpreter for running the AST *)
+open HM.Ast.Expr
+open HM.Ast.Constant
+open HM.Ast.OpBinary
+(* open Errors *)
 
-(*
-  Language Constructs:
-  1. Lambda
-  2. If Else (will need provision for implicit empty else)
-  3. Binary ops
-  4. application of lambdas
-  5. Let expressions
-
-  Interpreter processing stack.
-*)
-
-(* open Ir *)
-(* open Lexing *)
-(* open HM.Ast.Expr *)
-
-(* Print AST *)
-(* let ast_error str =
-  let ast = parse_string str in
-  pp ast *)
-  (* try Parser.expr_main Lexer.token lexbuf with
-    | Lexical_error msg ->
-      let msg = Format.asprintf "%a: %s" print_position lexbuf msg in raise (parse_error msg)
-
-    | Parser.Error ->
-      let msg = Format.asprintf "%a: syntax error" print_position lexbuf in raise (parse_error msg)
-*)
-(* 
-let ast_parse str = 
-  let lexbuf = Lexing.from_string str in
-  let ast = Parser.expr_main Lexer.token lexbuf in
-  ast *)
-
-(* let rec interpret (*: HM.Ast.Constant.t *) =
-  let open HM.Ast.Expr in
-  let open HM.Ast.Constant in
-  let open HM.Ast.OpBinary in
-  (* let apply = () in *)
-  (* let func = () in *)
+module Interpreter = struct
   
-  let binary_op op a_expr b_expr : tree = 
-    let a = interpret a_expr in
-    let b = interpret b_expr in
-    let int_out x = ExprConst (ConstInt x) in
-    let bool_out x = ExprConst (ConstBool x) in
-    match op with
-    | Add -> int_out (a + b)
-    | Subtract -> int_out (a - b)
-    | Multiply -> int_out (a * b)
-    | Divide -> int_out (a / b)
-    | Less -> bool_out (a < b)
-    | Greater -> bool_out (a > b)
-    | LessEqual -> bool_out (a <= b)
-    | GreaterEqual -> bool_out (a >= b)
-    | Equal -> bool_out (a == b)
-    | NotEqual -> bool_out (a != b)
-    | And -> bool_out (a && b)
-    | Or -> bool_out (a || b)
-  in
-  
-  let if_else cond_expr if_expr else_expr =
-    let truth = interpret cond_expr in
-    match truth with
-      | true -> interpret if_expr
-      | false -> interpret else_expr
-  
-  in
+  type env = (string * tree) list
 
-  (* let let_expr = () in *)
-  (* let pair = () in  *)
-  (* let let_pair = () in *)
-  (* let first = () in *)
-  (* let second = () in *)
-  function
-    | ExprOpBinary (op, a, b) -> binary_op op a b
-    | ExprIf (cond, if_expr, else_expr) -> if_else cond if_expr else_expr
-    | _ -> ExprConst (ConstBool false) *)
+  let get (env: env) key = 
+    let result = List.assoc key env in function
+      | Not_found -> print_string "Oh no! Not in env"; None
+      | _ -> Some result
+
+  let set (env: env) (key : string) (value : tree) =
+    let result = (key, value) :: env in
+      result
+
+  let is_truthy value =
+    match value with
+      | ConstBool b -> b
+      | ConstUnit -> false
+      | _ -> true
+
+  let is_equal left right =
+    match left, right with
+      | ConstUnit, ConstUnit -> true
+      | ConstUnit, _ -> false
+      | ConstBool l, ConstBool r -> l = r
+      | _, _ -> false
+
+  type value = Vint of int | Vstring of string | Vbool of bool | Vunit of unit
+  
+  (* Const *)
+  let eval_const = function 
+    | ConstBool b -> Vbool b
+    | ConstInt i -> Vint i
+    | ConstString s -> Vstring s
+    | ConstUnit -> Vunit ()
+
+  (* General Interpreter *)
+  let rec eval (env : env)  = function
+    (* | ExprVar v -> eval_var v env *)
+    | ExprOpBinary (op, expr_a, expr_b) -> eval_op_binary op expr_a expr_b env
+    | ExprConst c -> eval_const c
+    | _ -> print_string "Oh no! Invalid tree node"; Vunit ()
+  
+
+  (* Var *)
+  and eval_var = ()
+
+  (* Let *)
+  and eval_let = () 
+
+  (* Let Rec *)
+  and eval_letrec = ()
+
+  (* Op Binary *)
+  and eval_op_binary op expr_a expr_b env =
+    let left = eval env expr_a in
+    let right = eval env expr_b in
+    match left, op, right with
+    (* Integer Operations *)
+    | (Vint a), Add, (Vint b) -> Vint (a + b)
+    | (Vint a), Subtract, (Vint b) -> Vint (a + b)
+    | (Vint a), Multiply, (Vint b) -> Vint (a + b)
+    | (Vint a), Divide, (Vint b) -> Vint (a + b)
+    (* Boolean Operations *)
+    | (Vbool a), Less, (Vbool b) -> Vbool (a < b)
+    | (Vbool a), Greater, (Vbool b) -> Vbool (a > b)
+    | (Vbool a), LessEqual, (Vbool b) -> Vbool (a <= b)
+    | (Vbool a), GreaterEqual, (Vbool b) -> Vbool (a >= b)
+    | (Vbool a), Equal, (Vbool b) -> Vbool (a = b)
+    | (Vbool a), NotEqual, (Vbool b) -> Vbool (a <> b)
+    | (Vbool a), And, (Vbool b) -> Vbool (a && b)
+    | (Vbool a), Or, (Vbool b) -> Vbool (a || b)
+    | _, _, _ -> print_string "Oh no! Invalid binary op!"; Vunit ()
+      
+  (* Func *)
+  and eval_func = ()
+
+  (* Applic *)
+  and eval_applic = ()
+
+  (* If *)
+  and eval_if = ()
+
+  (* Pair *)
+  and eval_pair = ()
+
+  (* Let Pair *)
+  and eval_let_pair = ()
+
+  (* First *)
+  and eval_first = ()
+
+  (* Second *)
+  and eval_second = ()
+
+  
+end
