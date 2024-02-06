@@ -1,9 +1,9 @@
 # Timelog
 
-* Hyper-explicit Programming Language with Parametric Polymorphism [Name TBA]
-* Maxwell Wraith-Whiting
-* 2560800w
-* Simon Fowler
+* Project Name: Python-like Functional Programming Language with Intergrated Type-System 
+* Name: Maxwell Wraith-Whiting
+* Student Reference Number: 2560800
+* Supervisor: Simon Fowler
 
 ## Guidance
 
@@ -41,3 +41,52 @@
 
 * *2 hour* Researching Type systems papers
 * *1.5 hour* Designing basic syntax and grammar
+
+## 4th October 2023
+
+* *3 hours* Researching lambda calculus
+
+## 5th October 2023
+
+* *1.5 hours* Subject research
+
+## 6th October 2023
+
+* *1.5 hours* Researching SKI combinators
+* *0.5 hours* Trying to figure out why I don't understand SKI combinators :(
+
+## 7th October 2023
+
+* *1.5 hours* Subject research
+
+## 9th October 2023
+
+* *1.5 hours* Subject research
+
+## 10th October 2023
+
+* *1.5 hours* Subject research
+
+## 11th October 2023
+
+* *1.5 hours* Subject research
+
+## 12th October 2023
+
+* *1.5 hours* Reading about "B, C, K, W system" and why it's important
+
+## 13th October 2023
+
+* *1.5 hours* "Re"-Researching SKI combinators
+
+## 16th October 2023
+
+* *1.5 hours* Researching intermediate language representations in lambda calculus 
+
+## 17th October 2023
+
+* *3 hours* Researching G-machines
+
+## 20th October 2023
+
+* *1 hour* Designing a minimal inital Token specification
