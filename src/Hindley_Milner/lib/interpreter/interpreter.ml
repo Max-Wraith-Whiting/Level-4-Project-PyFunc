@@ -1,117 +1,106 @@
-(* Interpreter for running the AST *)
+(* Language Interpreter Runtime *)
 open HM.Ast.Expr
 open HM.Ast.Constant
 open HM.Ast.OpBinary
-(* open Errors *)
 
 module Env = struct
   type env = (string * tree) list
+  
+  let make = ([] : env)
 
-  let make_env = ([] : env)
-  
-  let get (env: env) key = 
-    let result = List.assoc key env in function
-      | Not_found -> print_string "Oh no! Not in env"; None
-      | _ -> Some result
-  
-  let set (env: env) (key : string) (value : tree) =
-    let result = (key, value) :: env in
+  let get (env : env) key =
+    let result = List.assoc key env in 
       result
 
+  let set (env : env) (key : string) (value : tree) = 
+    let result = (key, value) :: env in 
+    result
 end
 
 module Interpreter = struct
-  
-  let is_truthy value =
-    match value with
-      | ConstBool b -> b
-      | ConstUnit -> false
-      | _ -> true
 
-  let is_equal left right =
-    match left, right with
-      | ConstUnit, ConstUnit -> true
-      | ConstUnit, _ -> false
-      | ConstBool l, ConstBool r -> l = r
-      | _, _ -> false
+  let rec eval (env : Env.env) = function
+    | ExprConst c -> ExprConst c
+    | ExprVar var -> eval_var env var
+    | ExprOpBinary (op, expr_a, expr_b) -> eval_op_binary (env : Env.env) op expr_a expr_b
+    | ExprIf (condition, expr_a, expr_b) -> eval_if (env : Env.env) condition expr_a expr_b
+    | ExprLet (binder, value, expr) -> eval_let (env : Env.env) binder value expr
+    | ExprLetRec (binder, value, expr) -> eval_letrec (env : Env.env) binder value expr
+    | ExprApplic (func, arg) -> eval_applic (env : Env.env) arg func
+    | ExprFunc (binder, body) -> ExprFunc(binder, body)
+    | _ -> print_string "Oh no! Invalid tree node!"; (ExprConst ConstUnit)
 
-  type value = Vint of int | Vstring of string | Vbool of bool | Vunit of unit
-  let ppv = function
-    | Vint i -> string_of_int i
-    | Vstring s -> s
-    | Vbool b -> string_of_bool b
-    | Vunit _ -> "()"
-  (* Const *)
-  let eval_const = function 
-    | ConstBool b -> Vbool b
-    | ConstInt i -> Vint i
-    | ConstString s -> Vstring s
-    | ConstUnit -> Vunit ()
-
-  (* General Interpreter *)
-  let rec eval = function
-    (* | ExprVar v -> eval_var v env *)
-    | ExprOpBinary (op, expr_a, expr_b) -> eval_op_binary op expr_a expr_b
-    | ExprIf (cond, expr_a, expr_b) -> eval_if cond expr_a expr_b
-    | ExprConst c -> eval_const c
-    | _ -> print_string "Oh no! Invalid tree node"; Vunit ()
-  
-
-  (* Var *)
-  and eval_var = ()
-
-  (* Let *)
-  and eval_let = () 
-
-  (* Let Rec *)
-  and eval_letrec = ()
-
-  (* Op Binary *)
-  and eval_op_binary op expr_a expr_b =
-    let left = eval expr_a in
-    let right = eval expr_b in
+  and eval_op_binary (env : Env.env) op expr_a expr_b =
+    let left = eval env expr_a in
+    let right = eval env expr_b in
     match left, op, right with
-    (* Integer Operations *)
-    | (Vint a), Add, (Vint b) -> Vint (a + b)
-    | (Vint a), Subtract, (Vint b) -> Vint (a - b)
-    | (Vint a), Multiply, (Vint b) -> Vint (a * b)
-    | (Vint a), Divide, (Vint b) -> Vint (a / b)
-    (* Boolean Operations *)
-    | (Vbool a), Less, (Vbool b) -> Vbool (a < b)
-    | (Vbool a), Greater, (Vbool b) -> Vbool (a > b)
-    | (Vbool a), LessEqual, (Vbool b) -> Vbool (a <= b)
-    | (Vbool a), GreaterEqual, (Vbool b) -> Vbool (a >= b)
-    | (Vbool a), Equal, (Vbool b) -> Vbool (a = b)
-    | (Vbool a), NotEqual, (Vbool b) -> Vbool (a <> b)
-    | (Vbool a), And, (Vbool b) -> Vbool (a && b)
-    | (Vbool a), Or, (Vbool b) -> Vbool (a || b)
-    | _, _, _ -> print_string "Oh no! Invalid binary op!"; Vunit ()
-      
-  (* Func *)
-  and eval_func = ()
+    (* Integer operations *)
+      | (ExprConst (ConstInt a)), Add,            (ExprConst (ConstInt b)) ->  ExprConst (ConstInt (a + b))
+      | (ExprConst (ConstInt a)), Subtract,       (ExprConst (ConstInt b)) ->  ExprConst (ConstInt (a - b))
+      | (ExprConst (ConstInt a)), Multiply,       (ExprConst (ConstInt b)) ->  ExprConst (ConstInt (a * b))
+      | (ExprConst (ConstInt a)), Divide,         (ExprConst (ConstInt b)) ->  ExprConst (ConstInt (a / b))
+    (* Boolean operations *)
+      | (ExprConst (ConstBool a)), Less,          (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a < b))
+      | (ExprConst (ConstBool a)), Greater,       (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a > b))
+      | (ExprConst (ConstBool a)), LessEqual,     (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a <= b))
+      | (ExprConst (ConstBool a)), GreaterEqual,  (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a >= b))
+      | (ExprConst (ConstBool a)), Equal,         (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a = b))
+      | (ExprConst (ConstBool a)), NotEqual,      (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a <> b))
+      | (ExprConst (ConstBool a)), And,           (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a && b))
+      | (ExprConst (ConstBool a)), Or,            (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a || b))
+      | _, _, _ -> print_string "Oh no! Invalid binary op!"; ExprConst (ConstUnit)
 
-  (* Applic *)
-  and eval_applic = ()
-
-  (* If *)
-  and eval_if condition expr_a expr_b = 
-    let cond = eval condition in
+  and eval_if (env : Env.env) condition expr_a expr_b =
+    let cond = eval env condition in
     match cond with
-      | Vbool true -> eval expr_a
-      | Vbool false -> eval expr_b
-      | _ -> print_string "Oh no! Invalid condition: Must be boolean!"; Vunit ()
+      | ExprConst (ConstBool true) -> eval env expr_a
+      | ExprConst (ConstBool false) -> eval env expr_b
+      | ExprVar var -> eval_var env var
+      | _ -> print_string "Oh no! Invalid condition: Must be a boolean!"; ExprConst (ConstUnit)
 
-  (* Pair *)
-  and eval_pair = ()
+  and eval_let (env : Env.env) binder value_node expr_node =
+    (* Compute value *)
+    let value = eval env value_node in
+    (* Set (binder, value) in environment. *)
+    let env' = Env.set env binder value in
+    (* Eval expr with new environment. *)
+    eval env' expr_node
 
-  (* Let Pair *)
-  and eval_let_pair = ()
+  and eval_letrec (env : Env.env) binder value_node expr_node =
+    (* Set variable into the Env before evaluation. *)
+    let env' = Env.set env binder value_node in
+    (* Compute value with recursive referencing. *)
+    (* let value = eval env' value_node in *)
+    eval env' expr_node
 
-  (* First *)
-  and eval_first = ()
+  and eval_var (env : Env.env) var =
+    (* Attempt to get var from env *)
+    let result = Env.get env var in
+    result
 
-  (* Second *)
-  and eval_second = ()
+  (* and eval_func (env : Env.env) binder body = *)
+    (* You have an unbound variable as a parameter. *)
+    (* Body is to be evaluated on the condition of application so NOT here. *)
+    (* () *)
 
-  
+  and eval_applic (env : Env.env) arg (func : tree) =
+    (* Func refers to either a function node or a variable node! *)
+    let get_func_node (env : Env.env) = function
+    | ExprFunc node -> ExprFunc node          (* If lambda is raw. *)
+    | ExprVar var -> (eval_var env (var))     (* If lambda is called by via a variable. *)
+    | x -> raise (Errors.Runtime_Error ("Called non-functional node:" ^ (get_name x)))
+    in
+
+    let unwrap = function 
+    | ExprFunc (binder, body) -> (binder, body)
+    | x -> raise (Errors.Runtime_Error ("ExprFunc unwrapping error! Node: " ^ get_name x))
+    in
+
+    let binder, body = unwrap (get_func_node env func) in 
+    let env' = Env.set env binder arg in
+      eval env' body
+
+
+  let interpret (root_node : tree) =
+    eval (Env.make) root_node
 end
