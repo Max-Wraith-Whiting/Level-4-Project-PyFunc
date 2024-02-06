@@ -136,8 +136,8 @@ module Expr = struct
     let get_name = function
     | ExprVar v -> v
     | ExprConst c -> Constant.pp c
-    | ExprLet _ ->  "Let"
-    | ExprLetRec _ -> "Letrec"
+    | ExprLet (v, _, _) ->  "Let: " ^ v
+    | ExprLetRec (v, _, _) -> "Letrec " ^ v
     | ExprOpBinary (op, _, _) -> OpBinary.pp op
     | ExprFunc (binder, _) -> "λ" ^ binder
     | ExprApplic _ -> "Apply"
@@ -200,6 +200,10 @@ module Expr = struct
     | ExprIf (cond, if_cond, else_cond) -> acc ^ "If:" ^ (print_ast acc cond) ^ " " ^ (print_ast acc if_cond) ^ " " ^ (print_ast acc else_cond) ^ " "
     | ExprPair (a, b) -> acc ^ "Pair:" ^ (print_ast acc a) ^ ", " ^ (print_ast acc b) ^ " "
     | _ -> ""
+
+  let output = function
+    | ExprConst c -> Constant.pp c
+    | _ -> "Invalid output node!"
 
   let pp x = 
     Format.pp_print_string (Format.get_std_formatter ()) ((print_ast "" x) ^ "\n")
