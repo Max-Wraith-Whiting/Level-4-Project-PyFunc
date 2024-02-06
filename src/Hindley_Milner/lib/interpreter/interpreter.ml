@@ -28,7 +28,7 @@ module Interpreter = struct
     | ExprLetRec (binder, value, expr) -> eval_letrec (env : Env.env) binder value expr
     | ExprApplic (func, arg) -> eval_applic (env : Env.env) arg func
     | ExprFunc (binder, body) -> ExprFunc(binder, body)
-    | _ -> print_string "Oh no! Invalid tree node!"; (ExprConst ConstUnit)
+    | _ -> print_endline "Oh no! Invalid tree node!"; (ExprConst ConstUnit)
 
   and eval_op_binary (env : Env.env) op expr_a expr_b =
     let left = eval env expr_a in
@@ -48,7 +48,7 @@ module Interpreter = struct
       | (ExprConst (ConstBool a)), NotEqual,      (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a <> b))
       | (ExprConst (ConstBool a)), And,           (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a && b))
       | (ExprConst (ConstBool a)), Or,            (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a || b))
-      | _, _, _ -> print_string "Oh no! Invalid binary op!"; ExprConst (ConstUnit)
+      | _, _, _ -> print_endline "Oh no! Invalid binary op!"; ExprConst (ConstUnit)
 
   and eval_if (env : Env.env) condition expr_a expr_b =
     let cond = eval env condition in
@@ -56,7 +56,7 @@ module Interpreter = struct
       | ExprConst (ConstBool true) -> eval env expr_a
       | ExprConst (ConstBool false) -> eval env expr_b
       | ExprVar var -> eval_var env var
-      | _ -> print_string "Oh no! Invalid condition: Must be a boolean!"; ExprConst (ConstUnit)
+      | _ -> print_endline "Oh no! Invalid condition: Must be a boolean!"; ExprConst (ConstUnit)
 
   and eval_let (env : Env.env) binder value_node expr_node =
     (* Compute value *)
