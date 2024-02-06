@@ -23,11 +23,7 @@ module REPL = struct
   let generate_ast source =
     REPL_Parser.parse_string source
 
-  let _interpret = Interpreter.eval
-  let interpret (tree : Expr.tree) = 
-    _interpret tree 
-
-  let rec repl ?(prompt="") () =
+  let repl ?(prompt="") () =
     reset_state ();
     print_string (prompt ^ "> ");
     let input_string = read_line () in
@@ -44,12 +40,15 @@ module REPL = struct
     in
     let () = Format.print_flush () in 
     let () =
-      print_string ((Interpreter.ppv (interpret ast)) ^ "\n")
+    print_string ("Output: " ^ (HM.Ast.Expr.output (Interpreter.interpret ast)) ^ "\n")
     in
-    repl ~prompt ()
+    ()
 end
 
 let () =
-  REPL.repl ()
+  while true do
+    try REPL.repl () with
+      | _ -> ()
+  done
 
 (* print_string (Frontend.get_ast "if x == \"94\": {zz(a , 15   , 1992, chevolette)} else {1992}") *)
