@@ -143,6 +143,7 @@ module Expr = struct
     | ExprApplic _ -> "Apply"
     | ExprIf _ -> "If"
     | ExprPair _ -> "Pair"
+    | ExprLetPair (a, b, _, _) -> "Let: (" ^ a ^ ", " ^ b ^ ")"
     | _ -> ""
     
     let get_children = function
@@ -155,6 +156,7 @@ module Expr = struct
     | ExprApplic (a, b) -> [a; b]
     | ExprIf (cond, if_cond, else_cond) -> [cond; if_cond; else_cond]
     | ExprPair (a, b) -> [a; b]
+    | ExprLetPair (_, _, a, b) -> [a; b]
     | _ -> []
     
     let print_tree tree =
@@ -203,6 +205,7 @@ module Expr = struct
 
   let output = function
     | ExprConst c -> Constant.pp c
+    | ExprPair (ExprConst fst, ExprConst snd) -> "(" ^ (Constant.pp fst) ^ ", " ^ (Constant.pp snd) ^ ")"
     | _ -> "Invalid output node!"
 
   let pp x = 
