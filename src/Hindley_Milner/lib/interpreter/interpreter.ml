@@ -28,6 +28,10 @@ module Interpreter = struct
     | ExprLetRec (binder, value, expr) -> eval_letrec (env : Env.env) binder value expr
     | ExprApplic (func, arg) -> eval_applic (env : Env.env) arg func
     | ExprFunc (binder, body) -> ExprFunc(binder, body)
+    | ExprPair (first, second) -> eval_pair (env : Env.env) first second
+    | ExprLetPair (binder_a, binder_b, expr_a, expr_b) -> eval_let_pair (env : Env.env) binder_a binder_b expr_a expr_b
+    | ExprFirst (ExprPair (first, _)) -> eval (env : Env.env) first
+    | ExprSecond (ExprPair (_, second)) -> eval (env : Env.env) second
     | _ -> print_endline "Oh no! Invalid tree node!"; (ExprConst ConstUnit)
 
   and eval_op_binary (env : Env.env) op expr_a expr_b =
@@ -100,6 +104,28 @@ module Interpreter = struct
     let env' = Env.set env binder arg in
       eval env' body
 
+
+  and eval_pair (env : Env.env) first second =
+    (* Evaluate the terms of the pair, but retain the structure. *)
+    let value_first = eval env first in
+    let value_second = eval env second in
+      ExprPair (value_first, value_second)
+
+  
+  and eval_let_pair (env : Env.env) binder_a binder_b definition scope =
+    let get_pair = function
+      | ExprPair (first, second) -> (first, second)
+      | x -> raise (Errors.Runtime_Error ("Let-Pair expression does not return a pair! Node: " ^ get_name x ))
+    in
+      
+    (* Evaluate assinged expression. *)
+    let pair_definition = eval env definition in
+    (* Extract the pair values. *)
+    let (value_a, value_b) = get_pair pair_definition in
+    (* Set binder_a to value_a and binder_b to value_b. *)
+    let env' = Env.set env binder_a value_a in
+    let env'' = Env.set env' binder_b value_b in
+      eval env'' scope
 
   let interpret (root_node : tree) =
     eval (Env.make) root_node
