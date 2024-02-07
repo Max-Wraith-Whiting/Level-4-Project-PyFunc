@@ -38,8 +38,8 @@ module REPL = struct
         (* | Unsupported feat -> "[Unsupported] Feature %s is unsupported in language %s\n" feat prompt *)
         | exn -> Format.printf "[Error] %s\n" (Printexc.to_string exn)
     in
-    let () = Format.print_flush () in 
     let () =
+    Format.print_flush ();
     print_string ("Output: " ^ (HM.Ast.Expr.output (Interpreter.interpret ast)) ^ "\n")
     in
     ()
