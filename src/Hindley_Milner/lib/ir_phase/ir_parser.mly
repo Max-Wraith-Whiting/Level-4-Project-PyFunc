@@ -40,7 +40,6 @@
 %token PLUS MINUS
 %token STAR DIVIDE
 %token COMMA
-// %token COLON
 %token FIRST SECOND
 %token EOF
 %token <string> ID
@@ -72,7 +71,6 @@ base_typ:
 // Complex expressions.
 expr:
     | LAMBDA ID DOT expr                            {makeFunc $2 $4}
-    // | REC LAMBDA ID DOT expr                        {makeExprRecFunc $3 $5}
     | LET REC ID EQ expr IN expr                    {makeLetRec $3 $5 $7}
     | LET ID EQ expr IN expr                        {makeLet $2 $4 $6}
     | LET LPAREN ID COMMA ID RPAREN EQ expr IN expr {makeLetPair $3 $5 $8 $10}
@@ -100,7 +98,6 @@ base_expr:
 
 // Base values.
 value :
-    // | LPAREN expr COLON typ RPAREN  {makeAnn $2 $4}
     | LPAREN expr COMMA expr RPAREN {makePair $2 $4}
     | LPAREN expr RPAREN            {$2}
     | ID                            {try find table $1 with Not_found -> makeVar ($1)}
