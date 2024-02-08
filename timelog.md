@@ -19,83 +19,83 @@
 * *1 hour* Initial meeting with S. Fowler (project reassignment)
 * *2 hour* Research on programming languages to prepare for writing new project proposal.
 
-## 21 September 2023
+### 21 September 2023
 
 * *0.5 hour* Researching programming laguage concepts of significance
 
-## 22 September 2023
+### 22 September 2023
 
 * *1 hour* Meeting to discuss new proposal with S. Fowler
 * *2 hour* Research on type systems and ambigious parsing
 
 ## Week 2
 
-## 29 September 2023
+### 29 September 2023
 
 * *1 hour* Meeting to solidify proposal: A programming language with a sophisticated type system (Hindley-Milner or approx.)
 
 ## Week 3
 
-## 2nd October 2023
+### 2nd October 2023
 
 * *3 hour* Reading material relating to parametric polymorphism implementations
 * *4 hour* Researching formal syntax defintions and working on implementing a rudimentary scanner and parser
 
-## 3rd October 2023
+### 3rd October 2023
 
 * *2 hour* Researching Type systems papers
 * *1.5 hour* Designing basic syntax and grammar
 
-## 4th October 2023
+### 4th October 2023
 
 * *3 hours* Researching lambda calculus
 
-## 5th October 2023
+### 5th October 2023
 
 * *1.5 hours* Subject research
 
-## 6th October 2023
+### 6th October 2023
 
 * *1.5 hours* Researching SKI combinators
 * *0.5 hours* Trying to figure out why I don't understand SKI combinators :(
 
-## 7th October 2023
+### 7th October 2023
 
 * *1.5 hours* Subject research
 
 ## Week 4
 
-## 9th October 2023
+### 9th October 2023
 
 * *1.5 hours* Subject research
 
-## 10th October 2023
+### 10th October 2023
 
 * *1.5 hours* Subject research
 
-## 11th October 2023
+### 11th October 2023
 
 * *1.5 hours* Subject research
 
-## 12th October 2023
+### 12th October 2023
 
 * *1.5 hours* Reading about "B, C, K, W system" and why it's important
 
-## 13th October 2023
+### 13th October 2023
 
 * *1.5 hours* "Re"-Researching SKI combinators
 
 ## Week 5
 
-## 16th October 2023
+### 16th October 2023
 
 * *1.5 hours* Researching intermediate language representations in lambda calculus 
 
-## 17th October 2023
+### 17th October 2023
 
 * *3 hours* Researching G-machines
 
-## 20th October 2023
+### 20th October 2023
     
 * *1 hour* Designing a minimal inital Token specification
 
@@ -191,15 +191,29 @@
 * *1.5 hour*
 
 
-## 12th December 2023
+### 12th December 2023
 
 * *1.0 hour* Intergrated all the disparate parts of the typechecker and fully implemented it for the extended lambda calculus IR.
 * *1.0 hour* Lot's of house-keeping. (Refactoring etc.)
 
-## 19th December 2023
+### 19th December 2023
 
 * *1.0 hour* Added debug AST printer 
 
-## 20th December 2023
+### 20th December 2023
 
 * *1.5 hour* Made a far better AST printer like Unix tree command. (Feels like Ocaml has finally clicked!)
+
+### 8th January 2024
+
+### 13th January 2024
+
+### 18th January 2024
+
+### 23rd January 2024
+
+### 25th January 2024
+
+### 1st February 2024
+
+### 6th February 2024
