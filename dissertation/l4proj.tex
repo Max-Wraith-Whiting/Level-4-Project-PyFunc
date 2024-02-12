@@ -11,7 +11,7 @@
 
 %==============================================================================
 %% METADATA
-\title{Pythonic Syntax, Functional Core: A Proposed Language for Safe and Intuitive Programming}
+\title{Pythonic Syntax, Functional Core}
 \author{Maxwell A. Wraith-Whiting}
 \date{January 8th, 2024}
 
@@ -205,38 +205,92 @@ Can it be made less opaque, less academic by shoe-horning in the syntax and idea
 
 Who is to say.
 
+\section{Strengths of Pythonic Syntax}
+\section{Benefits of the Functional Paradigm}
+\subsection{Type-Systems Hindley-Milner}
 
 \section{Guidance}
-\begin{itemize}    
-    \item
-      Don't give a laundry list of references.
-    \item
-      Tie everything you say to your problem.
-    \item
-      Present an argument.
-    \item Think critically; weigh up the contribution of the background and put it in context.    
-    \item
-      \textbf{Don't write a tutorial}; provide background and cite
-      references for further information.
-\end{itemize}
+% \begin{itemize}    
+%     \item
+%       Don't give a laundry list of references.
+%     \item
+%       Tie everything you say to your problem.
+%     \item
+%       Present an argument.
+%     \item Think critically; weigh up the contribution of the background and put it in context.    
+%     \item
+%       \textbf{Don't write a tutorial}; provide background and cite
+%       references for further information.
+% \end{itemize}
 
 %==================================================================================================================================
 \chapter{Analysis/Requirements}
 What is the problem that you want to solve, and how did you arrive at it?
+
+\section{Why bother?}
+\section{What it would take.}
+\subsection{Frontend Syntax}
+\subsection{Type-System}
+The Hindley-Milner Type System offers several advantages in programming:
+
+\begin{itemize}
+    \item \textbf{Type Inference:} Hindley-Milner allows for type inference, which means that you don't have to explicitly annotate the types of every variable or function in your code.
+    The type checker can often automatically infer the most general types, reducing the burden on the programmer and making the code more concise.
+    \item \textbf{Type Safety:} Programs written in languages with Hindley-Milner type systems tend to have fewer type-related bugs because the compiler or interpreter can catch many type errors at compile time.
+    This leads to more robust and reliable code.
+    \item \textbf{Polymorphism:} Hindley-Milner supports parametric polymorphism, also known as generics in some languages.
+    This allows you to write functions and data structures that can operate on a wide range of types without sacrificing type safety.
+    \item \textbf{Expressiveness:} Despite being statically typed, Hindley-Milner type systems are quite expressive and flexible.
+    They can handle complex type constraints and provide powerful abstractions for structuring programs.
+    \item \textbf{Efficiency:} The type inference algorithm used in Hindley-Milner systems is efficent, making compilation or interpretation fast compared to more complex type systems.
+\end{itemize}
+
+As for alternatives:
+
+\begin{itemize}
+    \item \textbf{Dynamic Typing:} In languages with dynamic typing, such as Python itself, there is no static typechecking at compile time.
+    Instead, types are checked at runtime, which can lead to type-related errors occuring during program execution rather than compile time. 
+    While dynamic typing offers flexibility and rapid development, it can also make code harder to understand and maintain, and it may result in runtime type errors that could have been caught at compile time.
+    \item \textbf{Dependent Typing:} Dependent type systems, found in languages like Idris and Agda, allow types to depend on values.
+    This provides very strong guarantees about program correctness but can be complex to work with and may require explicit type annotations from the programmer.
+    \item \textbf{Gradual Typing:} Graudal typing combines elements from static and dynamic typing, allowing programmers to choose when to use type annotations and when to rely on dynamic typing.
+    This can be useful when transitioning existing codebases to a statically typed language or when working in areas where static typing is impractical or overly restricitive.
+\end{itemize}
+
+In cases where no type system is used at all, programmers have complete freedom but lose the benefits of type checking, such as early error detection and improved code documentation.
+This approach can work well for small projects with dedicated teams but can become problematic as codebases grow larger and more complex.
+
+\subsection{Language Features}
+
+\section{Proposed Requirements}
 \section{Guidance}
 Make it clear how you derived the constrained form of your problem via a clear and logical process. 
 
 %==================================================================================================================================
 \chapter{Design}
 How is this problem to be approached, without reference to specific implementation details? 
+\section{Language Pipeline}
+\section{Frontend Syntax Design}
+\section{IR Specification}
+\section{Typechecking and Hindley Milner}
+\section{Interpreter's Scope and Constrainted Design}
 \section{Guidance}
-Design should cover the abstract design in such a way that someone else might be able to do what you did, but with a different language or library or tool.
+% Design should cover the abstract design in such a way that someone else might be able to do what you did, but with a different language or library or tool.
 
 %==================================================================================================================================
 \chapter{Implementation}
 What did you do to implement this idea, and what technical achievements did you make?
+
+\section{IR Syntax and Justification}
+\section{AST and Parsing}
+\section{Hindley-Milner Typechecker}
+\subsection{Unification}
+\subsection{Generalisation and Other Sins}
+\subsection{Soundness and Recursion: Bitter Enemies If Any Ever Were!}
+\subsection{General Typechecking Rules}
+
 \section{Guidance}
-You can't talk about everything. Cover the high level first, then cover important, relevant or impressive details.
+% You can't talk about everything. Cover the high level first, then cover important, relevant or impressive details.
 
 
 
@@ -426,19 +480,21 @@ Avoid putting large blocks of code in the report (more than a page in one block,
 \chapter{Evaluation} 
 How good is your solution? How well did you solve the general problem, and what evidence do you have to support that?
 
+\section{Direct Comparison}
+
 \section{Guidance}
-\begin{itemize}
-    \item
-        Ask specific questions that address the general problem.
-    \item
-        Answer them with precise evidence (graphs, numbers, statistical
-        analysis, qualitative analysis).
-    \item
-        Be fair and be scientific.
-    \item
-        The key thing is to show that you know how to evaluate your work, not
-        that your work is the most amazing product ever.
-\end{itemize}
+% \begin{itemize}
+%     \item
+%         Ask specific questions that address the general problem.
+%     \item
+%         Answer them with precise evidence (graphs, numbers, statistical
+%         analysis, qualitative analysis).
+%     \item
+%         Be fair and be scientific.
+%     \item
+%         The key thing is to show that you know how to evaluate your work, not
+%         that your work is the most amazing product ever.
+% \end{itemize}
 
 \section{Evidence}
 Make sure you present your evidence well. Use appropriate visualisations, reporting techniques and statistical analysis, as appropriate.
