@@ -26,6 +26,15 @@ end
 
 module Interpreter = struct
 
+  type value = Vint of int | Vbool of bool | Vstring of string | Vunit of unit
+
+  let eval_const = function
+    | ExprConst ConstInt i -> Vint i
+    | ExprConst ConstBool b -> Vbool b
+    | ExprConst ConstString s -> Vstring s
+    | ExprConst ConstUnit -> Vunit ()
+    | _ -> raise (Errors.Runtime_Error "Eval error: Invalid Const evaluation!")
+
   let rec eval (env : Env.t) = function
     | ExprConst c -> ExprConst c
     | ExprVar var -> eval_var env var
@@ -46,19 +55,19 @@ module Interpreter = struct
     let right = eval env expr_b in
     match left, op, right with
     (* Integer operations *)
-      | (ExprConst (ConstInt a)), Add,            (ExprConst (ConstInt b)) ->  ExprConst (ConstInt (a + b))
-      | (ExprConst (ConstInt a)), Subtract,       (ExprConst (ConstInt b)) ->  ExprConst (ConstInt (a - b))
-      | (ExprConst (ConstInt a)), Multiply,       (ExprConst (ConstInt b)) ->  ExprConst (ConstInt (a * b))
-      | (ExprConst (ConstInt a)), Divide,         (ExprConst (ConstInt b)) ->  ExprConst (ConstInt (a / b))
+      | (ExprConst (ConstInt a)), Add,           (ExprConst (ConstInt b)) ->  ExprConst (ConstInt (a + b))
+      | (ExprConst (ConstInt a)), Subtract,      (ExprConst (ConstInt b)) ->  ExprConst (ConstInt (a - b))
+      | (ExprConst (ConstInt a)), Multiply,      (ExprConst (ConstInt b)) ->  ExprConst (ConstInt (a * b))
+      | (ExprConst (ConstInt a)), Divide,        (ExprConst (ConstInt b)) ->  ExprConst (ConstInt (a / b))
     (* Boolean operations *)
-      | (ExprConst (ConstBool a)), Less,          (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a < b))
-      | (ExprConst (ConstBool a)), Greater,       (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a > b))
-      | (ExprConst (ConstBool a)), LessEqual,     (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a <= b))
-      | (ExprConst (ConstBool a)), GreaterEqual,  (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a >= b))
-      | (ExprConst (ConstBool a)), Equal,         (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a = b))
-      | (ExprConst (ConstBool a)), NotEqual,      (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a <> b))
-      | (ExprConst (ConstBool a)), And,           (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a && b))
-      | (ExprConst (ConstBool a)), Or,            (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a || b))
+      | (ExprConst (ConstBool a)), Less,         (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a < b))
+      | (ExprConst (ConstBool a)), Greater,      (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a > b))
+      | (ExprConst (ConstBool a)), LessEqual,    (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a <= b))
+      | (ExprConst (ConstBool a)), GreaterEqual, (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a >= b))
+      | (ExprConst (ConstBool a)), Equal,        (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a = b))
+      | (ExprConst (ConstBool a)), NotEqual,     (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a <> b))
+      | (ExprConst (ConstBool a)), And,          (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a && b))
+      | (ExprConst (ConstBool a)), Or,           (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a || b))
       | tree_a, op, tree_b -> print_endline ("Oh no! Invalid binary op!" ^ "\nLeft-side: " ^ (print_tree tree_a) ^ "\nOp: " ^ (pp op) ^ "\nRight-side: " ^ (print_tree tree_b)); ExprConst (ConstUnit)
 
   and eval_if (env : Env.t) condition expr_a expr_b =
