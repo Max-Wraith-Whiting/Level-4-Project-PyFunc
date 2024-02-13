@@ -11,7 +11,7 @@ module Env = struct
   let get (env : t) key =
     let result = 
       try List.assoc key env with 
-      Not_found -> raise (Errors.raise_error "Undefined variable look up!") in
+      Not_found -> raise (Errors.raise_lookup_error "Undefined variable look up!") in
     result
 
   let set (env : t) (key : string) (value : tree) = 
