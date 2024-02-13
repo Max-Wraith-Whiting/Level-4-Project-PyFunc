@@ -40,7 +40,7 @@ module REPL = struct
     in
     let () =
     Format.print_flush ();
-    print_string ("Output: " ^ (HM.Ast.Expr.output (Interpreter.interpret ast)) ^ "\n")
+    print_string ("Output: " ^ (pp_value (Interpreter.interpret ast)) ^ "\n")
     in
     ()
 end
