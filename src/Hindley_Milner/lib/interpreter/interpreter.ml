@@ -9,12 +9,19 @@ module Env = struct
   let make = ([] : t)
 
   let get (env : t) key =
-    let result = List.assoc key env in 
-      result
+    let result = 
+      try List.assoc key env with 
+      Not_found -> raise (Errors.raise_error "Undefined variable look up!") in
+    result
 
   let set (env : t) (key : string) (value : tree) = 
-    let result = (key, value) :: env in 
-    result
+    let is_assigned = List.mem_assoc key env
+    in (* Throws error if undefined *)
+    if is_assigned then
+      let env' = List.remove_assoc key env in
+      (key, value) :: env'
+    else 
+      (key, value) :: env
 end
 
 module Interpreter = struct
@@ -52,7 +59,7 @@ module Interpreter = struct
       | (ExprConst (ConstBool a)), NotEqual,      (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a <> b))
       | (ExprConst (ConstBool a)), And,           (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a && b))
       | (ExprConst (ConstBool a)), Or,            (ExprConst (ConstBool b)) -> ExprConst (ConstBool (a || b))
-      | _, _, _ -> print_endline "Oh no! Invalid binary op!"; ExprConst (ConstUnit)
+      | tree_a, op, tree_b -> print_endline ("Oh no! Invalid binary op!" ^ "\nLeft-side: " ^ (print_tree tree_a) ^ "\nOp: " ^ (pp op) ^ "\nRight-side: " ^ (print_tree tree_b)); ExprConst (ConstUnit)
 
   and eval_if (env : Env.t) condition expr_a expr_b =
     let cond = eval env condition in
