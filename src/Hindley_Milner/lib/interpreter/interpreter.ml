@@ -131,9 +131,8 @@ module Interpreter = struct
       | EntryVar v -> v        (* Return the value from scope. *)
       | EntryTree t -> Vtree t (* Return the tree node wrapped as a value. *)
 
-  and eval_applic (env : Env.t) arg (func : tree) =
+  and eval_applic (env : Env.t) arg (func_or_var : tree) =
     (* print_endline "eval_applic"; *)
-    (* Func refers to either a function node or a variable node! *)
     let unwrap_vtree = function
       | Vtree t -> t
       | _ -> raise (Errors.Runtime_Error "Non-Vtree value presented!")
@@ -147,7 +146,7 @@ module Interpreter = struct
       | ExprFunc (body, binder) -> (body, binder)
       | _ -> raise (Errors.Runtime_Error ("Attempted non-lambda node unwrap!")) 
     in
-    let binder, body = get_body_and_binder (get_func_node env func) in 
+    let binder, body = get_body_and_binder (get_func_node env func_or_var) in 
     let arg_value = eval env arg in
     let env' = Env.set env binder (EntryVar arg_value) in
       eval env' body
