@@ -53,6 +53,7 @@ module Type = struct
     | TypeFunc (type_a, type_b) -> Format.fprintf ppf "(%a -> %a)" pp_monotype type_a pp_monotype type_b
     | TypePair (type_a, type_b) -> Format.fprintf ppf "(%a * %a)" pp_monotype type_a pp_monotype type_b
     | TypeVar tv -> TypeVar.pp ppf tv
+    | TypeList l -> Format.fprintf ppf "[%a]" pp_monotype l
 
   let pp_polytype ppf (quantifiers, monotype) = 
     if quantifiers = [] then 
