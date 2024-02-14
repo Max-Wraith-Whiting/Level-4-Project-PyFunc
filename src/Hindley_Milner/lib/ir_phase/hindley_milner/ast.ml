@@ -198,22 +198,4 @@ module Expr = struct
       to_buffer buffer tree;
       Buffer.contents buffer
     
-  let rec print_ast acc = function
-    | ExprVar v -> acc ^ v
-    | ExprConst c -> acc ^ (Constant.pp c)
-    | ExprLet (binder, a, b) -> acc ^ "Let " ^ binder ^ " = " ^ (print_ast acc a) ^ " in " ^ (print_ast acc b) ^ " "
-    | ExprOpBinary (op, a, b) -> acc ^ (print_ast acc a) ^ " " ^ (OpBinary.pp op) ^ " " ^ (print_ast acc b)
-    | ExprFunc (binder, a) -> acc ^ "λ (" ^ binder ^ ") (" ^ (print_ast acc a) ^ ")"
-    | ExprApplic (a, b) -> acc ^ "Apply (" ^ (print_ast acc a) ^ ") (" ^ (print_ast acc b) ^ ") "
-    | ExprIf (cond, if_cond, else_cond) -> acc ^ "If:" ^ (print_ast acc cond) ^ " " ^ (print_ast acc if_cond) ^ " " ^ (print_ast acc else_cond) ^ " "
-    | ExprPair (a, b) -> acc ^ "Pair:" ^ (print_ast acc a) ^ ", " ^ (print_ast acc b) ^ " "
-    | _ -> ""
-
-  let output = function
-    | ExprConst c -> Constant.pp c
-    | ExprPair (ExprConst fst, ExprConst snd) -> "(" ^ (Constant.pp fst) ^ ", " ^ (Constant.pp snd) ^ ")"
-    | _ -> "Invalid output node!"
-
-  let pp x = 
-    Format.pp_print_string (Format.get_std_formatter ()) ((print_ast "" x) ^ "\n")
 end
