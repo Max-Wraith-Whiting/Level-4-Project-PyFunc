@@ -39,7 +39,7 @@ module Env = struct
     let is_assigned = List.mem_assoc key env
     in (* Throws error if undefined *)
     if is_assigned then
-      (* Probably need to make this an error. Lack of immutability is dangerous. *)
+      (* Probably need to make this an error. Mutability is dangerous. *)
       let env' = List.remove_assoc key env in
       (key, value) :: env'
     else 
