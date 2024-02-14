@@ -64,6 +64,15 @@ module Type = struct
       Format.fprintf ppf "forall %a. %a" print_quantifiers quantifiers pp_monotype monotype
     
   let pp = pp_monotype
+
+  let rec typ_to_string = function
+    | TypeInt -> "Int"
+    | TypeBool -> "Bool"
+    | TypeString -> "String"
+    | TypeUnit -> "Unit"
+    | TypeFunc (type_a, type_b) -> "(" ^ (typ_to_string type_a) ^ " -> " ^ (typ_to_string type_b) ^ ")"
+    | TypePair (type_a, type_b) -> "(" ^ (typ_to_string type_a) ^ " * " ^ (typ_to_string type_b) ^ ")"
+    | TypeVar v -> TypeVar.var v
     
 end
 
@@ -160,16 +169,13 @@ module Expr = struct
     | _ -> []
     
     let print_tree tree =
-
       let rec iter fn = function
         | [] -> ()
         | [head] -> fn true head
         | head :: tail -> fn false head; iter fn tail
       in
-
       let open Printf in
       let buffer = Buffer.create 1000 in
-      
       let to_buffer ?(line_prefix="") buffer tree = 
         let rec print_root indent tree = 
           bprintf buffer "%s\n" (get_name tree);
