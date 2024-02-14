@@ -19,7 +19,7 @@ let rec pp_value = function
   | Vstring s -> s
   | Vunit _ -> "()"
   | Vvar var -> var
-  | Vtree _ -> "!ast node!"
+  | Vtree _ -> "!ast node!" (* Considered an illegal output! *)
   | Vpair (a, b) -> (pp_value a ^ "*" ^ pp_value b)
   | Vref v -> pp_value (!v)
 
@@ -65,7 +65,7 @@ module Interpreter = struct
     | ExprLet (binder, value, expr) -> eval_let (env : Env.t) binder value expr
     | ExprLetRec (binder, value, expr) -> eval_letrec (env : Env.t) binder value expr
     | ExprApplic (func, arg) -> eval_applic (env : Env.t) arg func
-    | ExprFunc (binder, body) -> print_endline "eval_func"; Vtree (ExprFunc(binder, body))
+    | ExprFunc (binder, body) -> Vtree (ExprFunc(binder, body))
     | ExprPair (first, second) -> eval_pair (env : Env.t) first second
     | ExprLetPair (binder_a, binder_b, expr_a, expr_b) -> eval_let_pair (env : Env.t) binder_a binder_b expr_a expr_b
     | ExprFirst (ExprPair (first, _)) -> eval (env : Env.t) first
