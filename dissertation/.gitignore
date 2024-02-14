@@ -249,3 +249,6 @@ TSWLatexianTemp*
 # Fonts and Images Excluded for reasonable use of git
 /fonts/
 /images/
+
+# Scribbles
+/scribbles/
