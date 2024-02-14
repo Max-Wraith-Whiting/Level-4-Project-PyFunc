@@ -23,6 +23,7 @@ module Type = struct
     | TypePair of (t * t)
     | TypeUnit
     | TypeVar of typevar
+    | TypeList of t
   and polyType = quantifier list * monoType
   and t = monoType
 
@@ -73,6 +74,7 @@ module Type = struct
     | TypeFunc (type_a, type_b) -> "(" ^ (typ_to_string type_a) ^ " -> " ^ (typ_to_string type_b) ^ ")"
     | TypePair (type_a, type_b) -> "(" ^ (typ_to_string type_a) ^ " * " ^ (typ_to_string type_b) ^ ")"
     | TypeVar v -> TypeVar.var v
+    | TypeList l -> "[" ^ (typ_to_string l) ^ "]"
     
 end
 
@@ -141,8 +143,9 @@ module Expr = struct
     | ExprLetPair of (variable * variable * tree * tree)
     | ExprFirst of tree
     | ExprSecond of tree
+    | ExprList of tree list
     
-    let get_name = function
+  let get_name = function
     | ExprVar v -> v
     | ExprConst c -> Constant.pp c
     | ExprLet (v, _, _) ->  "Let: " ^ v
@@ -155,7 +158,7 @@ module Expr = struct
     | ExprLetPair (a, b, _, _) -> "Let: (" ^ a ^ ", " ^ b ^ ")"
     | _ -> ""
     
-    let get_children = function
+  let get_children = function
     | ExprVar _ -> []
     | ExprConst _ -> []
     | ExprLet (_, a, b) -> [a; b]
@@ -167,28 +170,28 @@ module Expr = struct
     | ExprPair (a, b) -> [a; b]
     | ExprLetPair (_, _, a, b) -> [a; b]
     | _ -> []
-    
-    let print_tree tree =
-      let rec iter fn = function
-        | [] -> ()
-        | [head] -> fn true head
-        | head :: tail -> fn false head; iter fn tail
-      in
-      let open Printf in
-      let buffer = Buffer.create 1000 in
-      let to_buffer ?(line_prefix="") buffer tree = 
-        let rec print_root indent tree = 
-          bprintf buffer "%s\n" (get_name tree);
-          iter (print_child indent) (get_children tree)
-        and print_child indent is_last tree =
-          let line = match is_last with
-            | true  -> "└─"
-            | false -> "├─"
-          in
-          bprintf buffer "%s%s" indent line;
-          let extra_indent = match is_last with
-            | true  -> "  "
-            | false -> "│ "
+  
+  let print_tree tree =
+    let rec iter fn = function
+      | [] -> ()
+      | [head] -> fn true head
+      | head :: tail -> fn false head; iter fn tail
+    in
+    let open Printf in
+    let buffer = Buffer.create 1000 in
+    let to_buffer ?(line_prefix="") buffer tree = 
+      let rec print_root indent tree = 
+        bprintf buffer "%s\n" (get_name tree);
+        iter (print_child indent) (get_children tree)
+      and print_child indent is_last tree =
+        let line = match is_last with
+          | true  -> "└─"
+          | false -> "├─"
+        in
+        bprintf buffer "%s%s" indent line;
+        let extra_indent = match is_last with
+          | true  -> "  "
+          | false -> "│ "
         in
         print_root (indent ^ extra_indent) tree
         in
