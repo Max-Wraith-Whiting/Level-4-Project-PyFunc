@@ -237,6 +237,23 @@ module Typecheck = struct
           unify b_type TypeInt;
           TypeInt
     in
+
+    let typecheck_list (env : Env.t) list = 
+      let head_type = _typecheck env (List.hd list) in
+      
+      (* Resolve types for all list elements. *)
+      let resolved_list = List.map (_typecheck env) list in
+
+      (* Unify types for all list elements. *)
+      let () =
+      try List.iter (unify head_type) resolved_list with
+        | Errors.Type_Error msg -> print_endline ("Type Error - List type cannot be resolved: " ^ msg)
+        | _ -> print_endline ("[typecheck_list] Something very bad has happened!")
+      in
+      (* Return ListType of head_type if unification successful. *)
+      TypeList head_type
+      in
+
     
     (* Total Typechecker Function *)
     function
@@ -252,7 +269,7 @@ module Typecheck = struct
       | ExprPair (expr_a, expr_b) -> typecheck_pair env expr_a expr_b
       | ExprFirst expr -> typecheck_first env expr
       | ExprSecond expr -> typecheck_second env expr
-      (* | ExprAnn (expr, ann) -> unify (_typecheck env expr) ann; ann *)
+      | ExprList list -> typecheck_list (env : Env.t) list
 
   let rec resolve_types = function
     | TypeVar type_var ->

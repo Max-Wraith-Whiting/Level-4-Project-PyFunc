@@ -14,6 +14,7 @@ module ExprConstructors = struct
   let makePair expr_a expr_b = ExprPair (expr_a, expr_b)
   let makeFirst expr = ExprFirst expr
   let makeSecond expr = ExprSecond expr
+  let makeList list = ExprList list
 end
 
 module TypeConstructors = struct
