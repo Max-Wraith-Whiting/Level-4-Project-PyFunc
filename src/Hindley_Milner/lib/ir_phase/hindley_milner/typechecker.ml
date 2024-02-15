@@ -241,12 +241,7 @@ module Typecheck = struct
           TypeInt
 
         | Cons ->
-          (* let unwrap_list_typ = function
-            | TypeList head_typ -> head_typ
-            | _ -> raise (Errors.Type_Error "Cannot use :: operator on non-list types!")
-          in *)
           unify a_type b_type;
-          (* unify b_type head_type_b; *)
           TypeList a_type
     in
 
