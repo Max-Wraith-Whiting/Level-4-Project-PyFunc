@@ -118,6 +118,9 @@ module Typecheck = struct
           | Resolved type_b -> unify type_b t
         )
       
+      | TypeList a, TypeList b -> 
+        unify a b
+
       | _, _ -> 
         let error = Format.asprintf "[Unification error]: Cannot unify %a with %a" 
           Type.pp type_a 
@@ -236,6 +239,15 @@ module Typecheck = struct
           unify a_type TypeInt;
           unify b_type TypeInt;
           TypeInt
+
+        | Cons ->
+          (* let unwrap_list_typ = function
+            | TypeList head_typ -> head_typ
+            | _ -> raise (Errors.Type_Error "Cannot use :: operator on non-list types!")
+          in *)
+          unify a_type b_type;
+          (* unify b_type head_type_b; *)
+          TypeList a_type
     in
 
     let typecheck_list (env : Env.t) list = 
@@ -251,7 +263,7 @@ module Typecheck = struct
         | _ -> print_endline ("[typecheck_list] Something very bad has happened!")
       in
       (* Return ListType of head_type if unification successful. *)
-      TypeList head_type
+      head_type
       in
 
     
