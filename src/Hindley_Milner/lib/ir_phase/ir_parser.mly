@@ -41,6 +41,7 @@
 %token LT GT GEQ LEQ EQQ NEQ
 %token PLUS MINUS
 %token STAR DIVIDE
+%token CONS
 %token COMMA
 %token FIRST SECOND
 %token EOF
@@ -96,6 +97,7 @@ base_expr:
     | base_expr MINUS base_expr    {makeOpBinary OpBinary.Subtract $1 $3}
     | base_expr STAR base_expr     {makeOpBinary OpBinary.Multiply $1 $3}
     | base_expr DIVIDE base_expr   {makeOpBinary OpBinary.Divide $1 $3}
+    | base_expr CONS base_expr     {makeOpBinary OpBinary.Cons $1 $3}
     | value {$1}
 
 // Base values.
