@@ -25,6 +25,8 @@ rule token = parse
     | "()"      {UNITVAL}
     | '('       {LPAREN}
     | ')'       {RPAREN}
+    | '['       {LBRACK}
+    | ']'       {RBRACK}
     | '='       {EQ}
     | "->"      {ARROW}
     | '.'       {DOT}
