@@ -12,16 +12,25 @@ type value =
   | Vtree of tree 
   | Vref of value ref
   | Vpair of (value * value)
+  | Vlist of value list
 
 let rec pp_value = function
   | Vint i -> string_of_int i
   | Vbool b -> string_of_bool b
-  | Vstring s -> s
+  | Vstring s -> "\"" ^ s ^ "\""
   | Vunit _ -> "()"
   | Vvar var -> var
   | Vtree _ -> "!ast node!" (* Considered an illegal output! *)
   | Vpair (a, b) -> (pp_value a ^ "*" ^ pp_value b)
   | Vref v -> pp_value (!v)
+  | Vlist l -> 
+    let rec join seperator = function
+      | [] -> ""
+      | [x] -> x
+      | ""::xs -> join seperator xs
+      | x::xs -> x ^ seperator ^ (join seperator xs)
+    in
+    "[" ^ (join ", " (List.map pp_value l)) ^ "]"
 
 module Env = struct
   type entry = EntryVar of value | EntryTree of tree
@@ -70,6 +79,7 @@ module Interpreter = struct
     | ExprLetPair (binder_a, binder_b, expr_a, expr_b) -> eval_let_pair (env : Env.t) binder_a binder_b expr_a expr_b
     | ExprFirst (ExprPair (first, _)) -> eval (env : Env.t) first
     | ExprSecond (ExprPair (_, second)) -> eval (env : Env.t) second
+    | ExprList list -> eval_list (env : Env.t) list
     | _ -> print_endline "Oh no! Invalid tree node!"; (Vunit ())
 
   and eval_op_binary (env : Env.t) op expr_a expr_b =
@@ -174,6 +184,10 @@ module Interpreter = struct
     let env' = Env.set env binder_a (EntryVar value_a) in
     let env'' = Env.set env' binder_b (EntryVar value_b) in
       eval env'' scope
+
+  and eval_list (env : Env.t) list =
+    let value_list = List.map (eval env) list in
+    Vlist value_list
 
   let interpret (root_node : tree) =
     eval (Env.make) root_node
