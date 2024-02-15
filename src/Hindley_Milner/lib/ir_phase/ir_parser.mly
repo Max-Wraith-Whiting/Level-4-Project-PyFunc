@@ -32,6 +32,8 @@
 %token UNITVAL
 %token LPAREN
 %token RPAREN
+%token LBRACK
+%token RBRACK
 %token EQ
 %token ARROW
 %token DOT
@@ -97,15 +99,19 @@ base_expr:
     | value {$1}
 
 // Base values.
-value :
+value:
     | LPAREN expr COMMA expr RPAREN {makePair $2 $4}
     | LPAREN expr RPAREN            {$2}
+    | LBRACK value_list RBRACK      {makeList $2}
     | ID                            {try find table $1 with Not_found -> makeVar ($1)}
     | STRINGVAL                     {makeConst (Ast.Constant.ConstString $1)}
     | INTVAL                        {makeConst (Ast.Constant.ConstInt $1)}
     | TRUE                          {makeConst (Ast.Constant.ConstBool true)}
     | FALSE                         {makeConst (Ast.Constant.ConstBool false)}
     | UNITVAL                       {makeConst Ast.Constant.ConstUnit}
+
+value_list:
+    | xs = separated_list(COMMA, value) {xs}
 
 // Entry point.
 expr_main:
