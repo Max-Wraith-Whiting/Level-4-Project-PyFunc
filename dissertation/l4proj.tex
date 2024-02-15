@@ -119,12 +119,12 @@ There exists no truly C-like functional language that does not approach academic
 I have a dream: That the safety and power, nay the \emph{joy} of programming in a functional language can be made accessible even to those only just learning to think like a programmer.
 That the complexity of certain structures in the languages do not breed the sort of terror that things like the word \emph{monad} can evoke in a Java programmer.
 
-\section{Guidance}
+% \section{Guidance}
 
 \textbf{Motivate} first, then state the general problem clearly. 
 
-\section{Writing guidance}
-\subsection{Who is the reader?}
+% \section{Writing guidance}
+% \subsection{Who is the reader?}
 
 This is the key question for any writing. Your reader:
 
@@ -150,7 +150,7 @@ Remember, you will be marked by your supervisor and one or more members
 of staff. You might also have your project read by a prize-awarding
 committee or possibly a future employer. Bear that in mind.
 
-\subsection{References and style guides}
+% \subsection{References and style guides}
 There are many style guides on good English writing. You don't need to
 read these, but they will improve how you write.
 
@@ -179,7 +179,7 @@ read these, but they will improve how you write.
 There is a complete guide on good citation practice by Peter Coxhead available here: \url{http://www.cs.bham.ac.uk/~pxc/refs/index.html}. 
 If you are unsure about how to cite online sources, please see this guide: \url{https://student.unsw.edu.au/how-do-i-cite-electronic-sources}.
 
-\subsection{Plagiarism warning}
+% \subsection{Plagiarism warning}
 
 \begin{highlight_title}{WARNING}
     
@@ -207,9 +207,9 @@ Who is to say.
 
 \section{Strengths of Pythonic Syntax}
 \section{Benefits of the Functional Paradigm}
-\subsection{Type-Systems Hindley-Milner}
+\section{Type-Systems and Hindley-Milner}
 
-\section{Guidance}
+% \section{Guidance}
 % \begin{itemize}    
 %     \item
 %       Don't give a laundry list of references.
@@ -227,8 +227,22 @@ Who is to say.
 \chapter{Analysis/Requirements}
 What is the problem that you want to solve, and how did you arrive at it?
 
-\section{Why bother?}
-\section{What it would take.}
+[NOTE]: What is the problem
+The dominant programming paradigm is imperative, no matter the uptick of interest in functional programming.
+The current state of functional programming does not lend itself to easy entry for new programmers who will be the future of the paradigm.
+The functional paradigm has many pitfalls for new developers:
+\begin{itemize}
+    \item Abstract concepts
+    \item Mathematical foundations
+    \item Lack of familiarity
+    \item Limited resourses and support
+    \item Complex error messages
+    \item Perceived lack of practical applications
+    \item steep learning curve
+\end{itemize}
+
+\section{Aims and Justification}
+\section{Minimal Viable System}
 \subsection{Frontend Syntax}
 \subsection{Type-System}
 The Hindley-Milner Type System offers several advantages in programming:
@@ -240,6 +254,7 @@ The Hindley-Milner Type System offers several advantages in programming:
     This leads to more robust and reliable code.
     \item \textbf{Polymorphism:} Hindley-Milner supports parametric polymorphism, also known as generics in some languages.
     This allows you to write functions and data structures that can operate on a wide range of types without sacrificing type safety.
+    This idea fundamentally aligns with the ideas behind a human-readable syntax, minimising 'boiler-plate' code whilst remaining expressive.
     \item \textbf{Expressiveness:} Despite being statically typed, Hindley-Milner type systems are quite expressive and flexible.
     They can handle complex type constraints and provide powerful abstractions for structuring programs.
     \item \textbf{Efficiency:} The type inference algorithm used in Hindley-Milner systems is efficent, making compilation or interpretation fast compared to more complex type systems.
@@ -251,30 +266,36 @@ As for alternatives:
     \item \textbf{Dynamic Typing:} In languages with dynamic typing, such as Python itself, there is no static typechecking at compile time.
     Instead, types are checked at runtime, which can lead to type-related errors occuring during program execution rather than compile time. 
     While dynamic typing offers flexibility and rapid development, it can also make code harder to understand and maintain, and it may result in runtime type errors that could have been caught at compile time.
+    This would be an underutilisation of the functional paradigm and would leave the language with issues that Python already suffers from, like upredictable type errors at runtime.
     \item \textbf{Dependent Typing:} Dependent type systems, found in languages like Idris and Agda, allow types to depend on values.
     This provides very strong guarantees about program correctness but can be complex to work with and may require explicit type annotations from the programmer.
+    Adding type annotations dominates the syntax of the language, which defeats the point of aiming for a 'Pythonic' syntax.
     \item \textbf{Gradual Typing:} Graudal typing combines elements from static and dynamic typing, allowing programmers to choose when to use type annotations and when to rely on dynamic typing.
     This can be useful when transitioning existing codebases to a statically typed language or when working in areas where static typing is impractical or overly restricitive.
 \end{itemize}
 
 In cases where no type system is used at all, programmers have complete freedom but lose the benefits of type checking, such as early error detection and improved code documentation.
+[NO]It is just insanity to be frank.
 This approach can work well for small projects with dedicated teams but can become problematic as codebases grow larger and more complex.
 
 \subsection{Language Features}
 
-\section{Proposed Requirements}
-\section{Guidance}
+\section{Proposed Minimal Requirements}
+% \section{Guidance}
 Make it clear how you derived the constrained form of your problem via a clear and logical process. 
 
 %==================================================================================================================================
 \chapter{Design}
 How is this problem to be approached, without reference to specific implementation details? 
 \section{Language Pipeline}
+\subsection{AST Transpilation}
+\subsection{To IR or not to IR}
 \section{Frontend Syntax Design}
 \section{IR Specification}
 \section{Typechecking and Hindley Milner}
+\subsection{Unification Algorithm}
 \section{Interpreter's Scope and Constrainted Design}
-\section{Guidance}
+% \section{Guidance}
 % Design should cover the abstract design in such a way that someone else might be able to do what you did, but with a different language or library or tool.
 
 %==================================================================================================================================
@@ -284,23 +305,26 @@ What did you do to implement this idea, and what technical achievements did you 
 \section{IR Syntax and Justification}
 \section{AST and Parsing}
 \section{Hindley-Milner Typechecker}
+\subsection{Type-Environments and Why We Need Them}
 \subsection{Unification}
 \subsection{Generalisation and Other Sins}
+\subsection{The Simple Typechecking Rules}
+\subsection{The Not So Simple Typechecking Rules}
 \subsection{Soundness and Recursion: Bitter Enemies If Any Ever Were!}
-\subsection{General Typechecking Rules}
+\section{}
 
-\section{Guidance}
+% \section{Guidance}
 % You can't talk about everything. Cover the high level first, then cover important, relevant or impressive details.
 
 
 
-\section{General points}
+% \section{General points}
 
 These points apply to the whole dissertation, not just this chapter.
 
 
 
-\subsection{Figures}
+% \subsection{Figures}
 \emph{Always} refer to figures included, like Figure \ref{fig:relu}, in the body of the text. Include full, explanatory captions and make sure the figures look good on the page.
 You may include multiple figures in one float, as in Figure \ref{fig:synthetic}, using \texttt{subcaption}, which is enabled in the template.
 
@@ -346,7 +370,7 @@ You may include multiple figures in one float, as in Figure \ref{fig:synthetic},
 
 \clearpage
 
-\subsection{Equations}
+% \subsection{Equations}
 
 Equations should be typeset correctly and precisely. Make sure you get parenthesis sizing correct, and punctuate equations correctly 
 (the comma is important and goes \textit{inside} the equation block). Explain any symbols used clearly if not defined earlier. 
@@ -357,7 +381,7 @@ For example, we might define:
 \end{equation}    
 where $\hat{f}(\xi)$ is the Fourier transform of the time domain signal $f(x)$.
 
-\subsection{Algorithms}
+% \subsection{Algorithms}
 Algorithms can be set using \texttt{algorithm2e}, as in Algorithm \ref{alg:metropolis}.
 
 % NOTE: line ends are denoted by \; in algorithm2e
@@ -390,7 +414,7 @@ Algorithms can be set using \texttt{algorithm2e}, as in Algorithm \ref{alg:metro
 specialised for normal proposal distributions $q(x^\prime|x) = \mathcal{N}(x, \sigma^2)$. The symmetry of the normal distribution means the acceptance rule takes the simplified form.}\label{alg:metropolis}
 \end{algorithm}
 
-\subsection{Tables}
+% \subsection{Tables}
 
 If you need to include tables, like Table \ref{tab:operators}, use a tool like https://www.tablesgenerator.com/ to generate the table as it is
 extremely tedious otherwise. 
@@ -438,7 +462,7 @@ extremely tedious otherwise.
     % \bottomrule
     \end{tabular}
     \end{table}
-\subsection{Code}
+% \subsection{Code}
 
 Avoid putting large blocks of code in the report (more than a page in one block, for example). Use syntax highlighting if possible, as in Listing \ref{lst:callahan}.
 
@@ -480,9 +504,9 @@ Avoid putting large blocks of code in the report (more than a page in one block,
 \chapter{Evaluation} 
 How good is your solution? How well did you solve the general problem, and what evidence do you have to support that?
 
-\section{Direct Comparison}
+\section{Direct Comparison Code Comparison}
 
-\section{Guidance}
+% \section{Guidance}
 % \begin{itemize}
 %     \item
 %         Ask specific questions that address the general problem.
@@ -495,39 +519,42 @@ How good is your solution? How well did you solve the general problem, and what 
 %         The key thing is to show that you know how to evaluate your work, not
 %         that your work is the most amazing product ever.
 % \end{itemize}
+\section{Testing Agianst The CPython Test-Suite}
 
-\section{Evidence}
-Make sure you present your evidence well. Use appropriate visualisations, reporting techniques and statistical analysis, as appropriate.
+% \section{Evidence}
+% Make sure you present your evidence well. Use appropriate visualisations, reporting techniques and statistical analysis, as appropriate.
 
-If you visualise, follow the basic rules, as illustrated in Figure \ref{fig:boxplot}:
-\begin{itemize}
-\item Label everything correctly (axis, title, units).
-\item Caption thoroughly.
-\item Reference in text.
-\item \textbf{Include appropriate display of uncertainty (e.g. error bars, Box plot)}
-\item Minimize clutter.
-\end{itemize}
+% If you visualise, follow the basic rules, as illustrated in Figure \ref{fig:boxplot}:
+% \begin{itemize}
+% \item Label everything correctly (axis, title, units).
+% \item Caption thoroughly.
+% \item Reference in text.
+% \item \textbf{Include appropriate display of uncertainty (e.g. error bars, Box plot)}
+% \item Minimize clutter.
+% \end{itemize}
 
-See the file \texttt{guide\_to\_visualising.pdf} for further information and guidance.
+% See the file \texttt{guide\_to\_visualising.pdf} for further information and guidance.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=1.0\linewidth]{images/boxplot_finger_distance.pdf}    
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=1.0\linewidth]{images/boxplot_finger_distance.pdf}    
 
-    \caption{Average number of fingers detected by the touch sensor at different heights above the surface, averaged over all gestures. Dashed lines indicate
-    the true number of fingers present. The Box plots include bootstrapped uncertainty notches for the median. It is clear that the device is biased toward 
-    undercounting fingers, particularly at higher $z$ distances.
-    }
+%     \caption{Average number of fingers detected by the touch sensor at different heights above the surface, averaged over all gestures. Dashed lines indicate
+%     the true number of fingers present. The Box plots include bootstrapped uncertainty notches for the median. It is clear that the device is biased toward 
+%     undercounting fingers, particularly at higher $z$ distances.
+%     }
 
-    % use the notation fig:name to cross reference a figure
-    \label{fig:boxplot} 
-\end{figure}
+%     % use the notation fig:name to cross reference a figure
+%     \label{fig:boxplot} 
+% \end{figure}
 
 
-%==================================================================================================================================
-\chapter{Conclusion}    
+% %==================================================================================================================================
+
+
+\chapter{Conclusions}    
 Summarise the whole project for a lazy reader who didn't read the rest (e.g. a prize-awarding committee).
-\section{Guidance}
+% \section{Guidance}
 \begin{itemize}
     \item
         Summarise briefly and fairly.
@@ -551,6 +578,12 @@ Summarise the whole project for a lazy reader who didn't read the rest (e.g. a p
 \begin{appendices}
 
 \chapter{Appendices}
+
+\section{User Guide}
+\subsection{Install}
+\subsection{Shell Commands}
+\subsection{Example Programs}
+\section{Full Parser Grammar}
 
 Typical inclusions in the appendices are:
 
@@ -583,5 +616,7 @@ submitted separately.
 \bibliographystyle{abbrvnat}
 
 \bibliography{l4proj}
+
+
 
 \end{document}
