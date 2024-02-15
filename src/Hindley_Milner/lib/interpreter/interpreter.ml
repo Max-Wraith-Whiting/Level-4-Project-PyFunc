@@ -105,6 +105,8 @@ module Interpreter = struct
     (* Logical operations *)
       | (Vbool a), And, (Vbool b) -> Vbool (a && b)
       | (Vbool a), Or,  (Vbool b) -> Vbool (a || b)
+    (* List Operations *)
+      | (Vlist a), Cons, (Vlist b) -> Vlist (a @ b)
       | _, op, _ -> print_endline ("Oh no! Invalid binary op: " ^ pp op); Vunit ()
 
   and eval_if (env : Env.t) condition expr_a expr_b =
