@@ -94,6 +94,7 @@ module OpBinary = struct
     | NotEqual
     | And
     | Or
+    | Cons
 
   let pp = function
     | Add -> "+"
@@ -108,6 +109,7 @@ module OpBinary = struct
     | NotEqual -> "!="
     | And -> "And"
     | Or -> "Or"
+    | Cons -> "::"
 end
 
 (* Constant declares included primitive types. *)
@@ -146,7 +148,7 @@ module Expr = struct
     | ExprSecond of tree
     | ExprList of tree list
     
-  let get_name = function
+  let rec get_name = function
     | ExprVar v -> v
     | ExprConst c -> Constant.pp c
     | ExprLet (v, _, _) ->  "Let: " ^ v
@@ -157,6 +159,14 @@ module Expr = struct
     | ExprIf _ -> "If"
     | ExprPair _ -> "Pair"
     | ExprLetPair (a, b, _, _) -> "Let: (" ^ a ^ ", " ^ b ^ ")"
+    | ExprList l -> 
+      let rec join seperator = function
+        | [] -> ""
+        | [x] -> x
+        | ""::xs -> join seperator xs
+        | x::xs -> x ^ seperator ^ (join seperator xs)
+      in
+      "[" ^ (join ", " (List.map get_name l)) ^ "]"
     | _ -> ""
     
   let get_children = function
