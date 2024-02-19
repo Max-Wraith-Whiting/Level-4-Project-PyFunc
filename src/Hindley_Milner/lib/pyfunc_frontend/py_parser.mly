@@ -45,19 +45,19 @@
 %%
 
 expr:
-    | IF base_expr COLON scope ELSE scope       {makeIf $2 $4 $6}
-    // | value LPAREN RPAREN                    {makeCall $1 (makeConst ConstUnit)}       // Call without params.
-    | ID LPAREN arg_list RPAREN                 {makeCall $1 $3}    // Call with params.
-    | DEFINE ID LPAREN param_list RPAREN scope  {makeFunc $2 $4 $6} // Define a function.
     | base_expr                                 {$1}
+    // | ID LPAREN RPAREN                          {makeCall $1 ([])}  // Call without params.
+    | ID LPAREN arg_list RPAREN                 {makeCall $1 $3}    // Call with params.
+    | IF base_expr COLON scope ELSE scope       {makeIf $2 $4 $6}
+    | DEFINE ID LPAREN param_list RPAREN scope  {makeFunc $2 $4 $6} // Define a function.
 
 scope: LBRACE expr RBRACE   {$2}
 
 param_list:
-    | xs = separated_nonempty_list(COMMA, ID) { xs }
+    | xs = separated_list(COMMA, ID) { xs }
 
 arg_list:
-    | xs = separated_nonempty_list(COMMA, value) { xs }
+    | xs = separated_list(COMMA, value) { xs }
 
 
 base_expr:
