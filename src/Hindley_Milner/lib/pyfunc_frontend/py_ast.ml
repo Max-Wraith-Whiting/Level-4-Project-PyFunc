@@ -28,20 +28,6 @@ module OpBinary = struct
     | Or -> "Or"
 end
 
-module Constant = struct
-  type t = 
-    | ConstString of string
-    | ConstBool of bool
-    | ConstInt of int
-    | ConstUnit
-
-  let pp = function
-    | ConstString s -> "\"" ^ s ^ "\""
-    | ConstBool b -> string_of_bool b
-    | ConstInt i -> string_of_int i
-    | ConstUnit -> "()"
-end
-
 module Expr = struct
   type variable = string
 
@@ -49,38 +35,35 @@ module Expr = struct
   type param_list = string list
   
   type tree =
-  | Program of tree (* Program wrapper. *)
   | Var of variable
-  | Const of Constant.t
+  | Const of HM.Ast.Constant.t
   | If of (tree * tree * tree) (* Condition, If-true, If-false *)
-  | Args of (tree list) (* A passed value to a function. *)
   | Param of binder (* A specified input variable. *)
   | Func of (binder * param_list * tree) (* Func = (ID * Params * function_expr) This should be loaded from the environment. *)
   | Call of (variable * tree list) (* Function call. Call = (Func * Args)*)
-  (* | Expr of tree *)
   | Assignment of (binder * tree * tree) (* Let binder = tree_1 in tree_2. Tree_2 is in effect the scope of the variable assignment. *)
   | OpBinary of (OpBinary.t * tree * tree)
   
   
   let get_name = function
-    | Program _ -> "Main"
-    | Const c -> Constant.pp c
+    (* | Program _ -> "Main" *)
+    | Const c -> HM.Ast.Constant.pp c
     | Var v -> v
     | OpBinary (op, _, _) -> OpBinary.pp op
     | Func (binder, params, _) -> "Func: " ^ binder ^ " Params: " ^ (String.concat ", " params)
-    | Args _ -> "args"
+    (* | Args _ -> "args" *)
     | Param _ -> "params"
     | Call (v, _) -> "Call: " ^ v
     | If _ -> "If"
     | Assignment (v, _, _) -> "Assign: " ^ v
     
   let get_children = function
-    | Program a -> [a]
+    (* | Program a -> [a] *)
     | Const _ -> []
     | Var _ -> []
     | OpBinary (_, a, b) -> [a; b]
     | Func (_, _, a) -> [a]
-    | Args a -> a
+    (* | Args a -> a *)
     | Param _ -> []
     | Call (_, a) -> a
     | If (c, a, b) -> [c; a; b]
@@ -129,7 +112,6 @@ module Constructor = struct
   let makeCall id args = Expr.Call (id, args) (* Call should load a ref to func Def *)
   let makeAssign id value scope = Expr.Assignment (id, value, scope)
   let makeParam alias = Expr.Param alias
-  let makeArgs value = Expr.Args value
   let makeVar var = Expr.Var var
   let makeFunc id args expr = Expr.Func (id, args, expr)
 end

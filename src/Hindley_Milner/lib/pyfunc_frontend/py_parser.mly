@@ -1,6 +1,5 @@
 %{
     open Hashtbl
-    open Py_ast.Constant
     open Py_ast.Constructor
     open Py_ast.OpBinary
 
