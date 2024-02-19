@@ -27,10 +27,19 @@ module REPL = struct
 
     (* Print the AST. *)
     let () = 
-      try let tree_string = Frontend.pp_ast ast in 
+      try let tree_string = Frontend.pp_ast ast in
+        print_endline "Initial AST:" ;
         print_string tree_string
       with 
         | _ -> print_endline "Something not right happened when printing AST!"
+    in
+    let () = 
+      try 
+        let converted_ast = Frontend.convert ast in
+        print_endline "Printing Converted AST:";
+        print_string (HM.Ast.Expr.print_tree converted_ast)
+      with
+        | _ -> print_endline "Somethine went wrong with IR conversion!"
     in
 (*     
     (* Try to type-check the AST. *)
