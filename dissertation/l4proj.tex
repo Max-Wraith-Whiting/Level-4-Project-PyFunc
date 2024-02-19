@@ -92,6 +92,8 @@
 %==================================================================================================================================
 \chapter{Introduction}
 
+
+
 % reset page numbering. Don't remove this!
 \pagenumbering{arabic} 
 
@@ -287,14 +289,15 @@ Make it clear how you derived the constrained form of your problem via a clear a
 %==================================================================================================================================
 \chapter{Design}
 How is this problem to be approached, without reference to specific implementation details? 
-\section{Language Pipeline}
-\subsection{AST Transpilation}
-\subsection{To IR or not to IR}
 \section{Frontend Syntax Design}
-\section{IR Specification}
+\subsection{IR Specification}
+\section{Language Pipeline}
+\subsection{To IR or not to IR}
+\subsection{IR Conversion}
 \section{Typechecking and Hindley Milner}
 \subsection{Unification Algorithm}
-\section{Interpreter's Scope and Constrainted Design}
+\subsection{Typechecking Rules}
+\section{Evaluation}
 % \section{Guidance}
 % Design should cover the abstract design in such a way that someone else might be able to do what you did, but with a different language or library or tool.
 
@@ -302,16 +305,14 @@ How is this problem to be approached, without reference to specific implementati
 \chapter{Implementation}
 What did you do to implement this idea, and what technical achievements did you make?
 
-\section{IR Syntax and Justification}
-\section{AST and Parsing}
+\section{Parsing and Abstract Syntax Tree}
+\section{Intermediate Representation}
 \section{Hindley-Milner Typechecker}
 \subsection{Type-Environments and Why We Need Them}
 \subsection{Unification}
 \subsection{Generalisation and Other Sins}
-\subsection{The Simple Typechecking Rules}
-\subsection{The Not So Simple Typechecking Rules}
-\subsection{Soundness and Recursion: Bitter Enemies If Any Ever Were!}
-\section{}
+\subsection{Implementing the Typerchecker}
+\subsection{The Not So Simple Typechecking}
 
 % \section{Guidance}
 % You can't talk about everything. Cover the high level first, then cover important, relevant or impressive details.
