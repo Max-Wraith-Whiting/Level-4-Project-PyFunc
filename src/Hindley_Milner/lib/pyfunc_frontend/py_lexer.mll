@@ -17,7 +17,7 @@ rule token = parse
     | "if"      {IF}
     | "elif"    {ELIF}
     | "else"    {ELSE}
-    | "()"      {UNITVAL}
+    | "None"    {UNITVAL}
     | '('       {LPAREN}
     | ')'       {RPAREN}
     | '{'       {LBRACE}
