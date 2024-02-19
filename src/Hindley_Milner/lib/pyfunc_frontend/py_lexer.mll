@@ -15,6 +15,7 @@ rule token = parse
     | "True"    {TRUE}
     | "False"   {FALSE}
     | "if"      {IF}
+    | "elif"    {ELIF}
     | "else"    {ELSE}
     | "()"      {UNITVAL}
     | '('       {LPAREN}

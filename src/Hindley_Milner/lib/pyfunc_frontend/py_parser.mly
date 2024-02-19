@@ -14,6 +14,7 @@
 %token TRUE
 %token FALSE
 %token IF
+%token ELIF
 // %token THEN
 %token ELSE
 %token UNITVAL
@@ -46,10 +47,24 @@
 
 expr:
     | base_expr                                 {$1}
-    // | ID LPAREN RPAREN                          {makeCall $1 ([])}  // Call without params.
+    // | ID LPAREN RPAREN                       {makeCall $1 ([])}  // Call without params.
     | ID LPAREN arg_list RPAREN                 {makeCall $1 $3}    // Call with params.
-    | IF base_expr COLON scope ELSE scope       {makeIf $2 $4 $6}
+    | if_expr                                   {$1}
     | DEFINE ID LPAREN param_list RPAREN scope  {makeFunc $2 $4 $6} // Define a function.
+
+// Control Flow
+
+if_expr:
+    | IF base_expr COLON scope elif_expr   {makeIf $2 $4 $5}
+    | IF base_expr COLON scope else_expr   {makeIf $2 $4 $5}
+
+elif_expr:
+    | ELIF base_expr COLON scope elif_expr {makeIf $2 $4 $5}
+    | ELIF base_expr COLON scope else_expr {makeIf $2 $4 $5}
+
+else_expr:
+    | ELSE COLON scope {$3}
+
 
 scope: LBRACE expr RBRACE   {$2}
 
