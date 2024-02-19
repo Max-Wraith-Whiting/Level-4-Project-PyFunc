@@ -1,10 +1,11 @@
 (* Start REPL *)
 
-open HM.Errors
+(* open HM.Errors *)
 open HM.Typechecker
 open HM.Ast.Type
 open Ir
-open Interpreter
+(* open Interpreter *)
+open Frontend
 
 module REPL = struct
   module Type = HM.Ast.Type
@@ -14,24 +15,24 @@ module REPL = struct
   (* module Interpreter = Interpreter *)
 
   let reset_state = TypeVar.reset
-
-  let generate_ast source =
-    REPL_Parser.parse_string source
+(* 
+  let generate_ir_ast source =
+    REPL_Parser.parse_string source *)
 
   let repl ?(prompt="") () =
     reset_state ();
     print_string (prompt ^ "> ");
     let input_string = read_line () in
-    let ast = generate_ast input_string in
+    let ast = Frontend.generate_ast input_string in
 
     (* Print the AST. *)
     let () = 
-      try let tree_string = HM.Ast.Expr.print_tree ast in 
+      try let tree_string = Frontend.pp_ast ast in 
         print_string tree_string
       with 
         | _ -> print_endline "Something not right happened when printing AST!"
     in
-    
+(*     
     (* Try to type-check the AST. *)
     let () =
       try
@@ -44,8 +45,8 @@ module REPL = struct
         | exn -> print_endline ("[Error] " ^ (Printexc.to_string exn));
     in
     (* Format.print_flush (); *)
-    print_string ("Output: " ^ (pp_value (Interpreter.interpret ast)) ^ "\n")
-
+    print_string ("Output: " ^ (pp_value (Interpreter.interpret ast)) ^ "\n") *)
+    ()
 end
 
 let () =
