@@ -47,7 +47,6 @@
 
 expr:
     | base_expr                                 {$1}
-    // | ID LPAREN RPAREN                       {makeCall $1 ([])}  // Call without params.
     | ID LPAREN arg_list RPAREN                 {makeCall $1 $3}    // Call with params.
     | if_expr                                   {$1}
     | DEFINE ID LPAREN param_list RPAREN scope  {makeFunc $2 $4 $6} // Define a function.
