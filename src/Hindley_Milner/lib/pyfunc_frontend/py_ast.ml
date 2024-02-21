@@ -35,7 +35,7 @@ module Expr = struct
   type param_list = string list
   
   type tree =
-  | Var of variable
+  | Var of variable (* Just a variable in use. *)
   | Const of HM.Ast.Constant.t
   | If of (tree * tree * tree) (* Condition, If-true, If-false *)
   | Param of binder (* A specified input variable. *)

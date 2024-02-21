@@ -18,6 +18,7 @@ module Frontend = struct
 
   let rec convert = function
     | Const c -> IR.ExprConst c
+    | Var v -> IR.ExprVar v
     | If (cond, if_expr, else_expr) -> IR.ExprIf (convert cond, convert if_expr, convert else_expr)
     | OpBinary (op, expr_a, expr_b) -> convert_binary_op op expr_a expr_b
     (* | Func (binder, param_list, body) -> convert_func binder param_list body *)
