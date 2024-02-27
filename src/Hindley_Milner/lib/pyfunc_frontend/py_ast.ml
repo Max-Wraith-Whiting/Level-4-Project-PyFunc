@@ -35,8 +35,8 @@ module Expr = struct
   type param_list = string list
 
   type tree =
-  | Program of ((tree list) ref * tree)
-  | Binding of (binder * tree) (* A way to resolve a binding. *)
+  | Program of ((tree list) ref * tree) (* Global scope. *)
+  | Binding of (binder * tree) (* Local bindings scopes. *)
   | Var of variable (* Just a variable in use. *)
   | Const of HM.Ast.Constant.t
   | If of (tree * tree * tree) (* Condition, If-true, If-false *)
