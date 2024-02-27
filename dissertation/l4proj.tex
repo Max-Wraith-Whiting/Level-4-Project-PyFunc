@@ -97,8 +97,28 @@
 % reset page numbering. Don't remove this!
 \pagenumbering{arabic} 
 
+% STARTSTART
+-------------------
 
-Why should the reader care about what are you doing and what are you actually doing?
+In modern software development there is a search for languages that offer the expressiveness, readability, and robustness.
+Python is one of the most popular first languages among new learners standing as a highly readable, simple, versatile introduction to programming.
+However, despite its popularity Python suffers from its imperative nature and poses challenges for developers embracing the increasingly popular functional paradigm.
+This paper introduces a novel functional programming language inspired by Python’s syntax but with additional catering to functional programming.
+The language aims to bridge the gap between the accessibility of Python and the robustness of languages like Haskell and Ocaml.
+The core contributions of this project lie in the development and implementation of the language’s features:
+
+\begin{itemize}
+    \item Friendly Python-like Syntax
+    \item Hindley-Milner Type System
+    \item Simple Functional Constructs
+\end{itemize}
+
+
+
+% ENDEND
+-------------------
+
+\textbf{Why should the reader care about what are you doing and what are you actually doing?}
 
 The C-like syntax of imperative languages is by far the most read and used programming syntax.
 It lends itself to simplicity and variably terse series of instructions.
@@ -107,19 +127,19 @@ Functional programming languages are however completely distinct from this synta
 They often follow predecessors languages, like Lisp, more closely than their ubiquitous descendant.
 
 The functional paradigm is one not generally approached by novice programmers.
-It is not a place that allows easy learning.
+It is not a place that allows easy learning for those inexperienced with programming in general.
 
 Python is often cited [] as being a particularly easy first programming language, due to its friendly syntax, simple style, and powerful constructs.
 The idea behind this project is a simple one.
 Can the inherent safety and power of the functional paradigm be made more accessible to programmers more familiar with Python-like syntax and do Python-like languages benefit from these features.
 
-WHY!
-The functional paradigm itself suffers for lack of novice programmers and its academic ouvre.
-Functional languages have much to offer beyond their "catch-phrase" features.
-There exists no truly C-like functional language that does not approach academic malaise.
+% WHY!
+% The functional paradigm itself suffers for lack of novice programmers and its academic ouvre.
+% Functional languages have much to offer beyond their "catch-phrase" features.
+% There exists no truly C-like functional language that does not approach academic malaise.
 
-I have a dream: That the safety and power, nay the \emph{joy} of programming in a functional language can be made accessible even to those only just learning to think like a programmer.
-That the complexity of certain structures in the languages do not breed the sort of terror that things like the word \emph{monad} can evoke in a Java programmer.
+% I have a dream: That the safety and power, nay the \emph{joy} of programming in a functional language can be made accessible even to those only just learning to think like a programmer.
+% That the complexity of certain structures in the languages do not breed the sort of terror that things like the word \emph{monad} can evoke in a Java programmer.
 
 % \section{Guidance}
 
@@ -208,7 +228,75 @@ Can it be made less opaque, less academic by shoe-horning in the syntax and idea
 Who is to say.
 
 \section{Strengths of Pythonic Syntax}
+
+Why is Python so popular? 
+The language has many 'flaws' that other languages do not.
+Machine Learning and Data Science are fields that from an purely intuitive perspective would value speed over everything, and yet Python is the go to language in a large majority of the technology of the fields.
+Why is it such an attractive language for so many varied fields, from bioinformatics to finance, if it is so slow?
+
+Speed of execution is not the only bottleneck in producing systems.
+The speed of writing code, the speed of making changes, the speed of just attempting to get a working system is far more important than pure CPU execution time.
+Python performs extremely well in these areas.
+A user's time is more valuable than CPU time.
+It's really easy to get started with.
+Python is simple enough for anyone to get started in, but still powerful enough to hanlde large complex projects.
+
+Python is considered slow, but often it is neglected to mention "in what context? Compared to what?"
+
+It has reached the point of a stereotype that Python is slow.
+Oftentimes, the ability to construct a program fast, to iterate quickly, is far more valuable than the CPU time it incurs.
+
+The readablilty also play a significant part in the value of the language.
+It is often stated that code will be read far more than it will be written.
+The statement itself makes it intuitive that code should be inherently aimed at readability.
+
+Python is a descendant of the C-family of syntaxes, with a few unique twists of its own, such as white-space indentation.
+This ancestry gives programmers unfamiliar with the language a grounding, or more accurately an expectation, of how the code will behave based on its syntax.
+Obviously, the exact semantics differ, but certain universals remain.
+
+It is to Python's benefit that there is an effective understanding of the syntax of the language.
+It is also likely why Python is so successful as a beginner language, as it informs new programmers of one of the most prevalent syntax's the collection of all of programming langauges.
+
+So to short: Python's strengths lie in its syntax and semantics, not necessarily its implementation.
+The value that this project aims to extract from it is not in its underlying structure but its front-facing interface.
+
 \section{Benefits of the Functional Paradigm}
+
+Functional programming is a programming paradigm that treats computation as the evaluation of mathematical functions.
+It avoids mutable state, often by enforcing data immutability.
+
+Some of the key concepts include:
+
+\begin{itemize}
+    \item \textbf{Pure Functions:} Functions that, given the same input, always return the same output.
+    This requires the restriction of access to mutable state inside functions that could interfere in the functions execution.
+    (I.e., Functions do not depend on or modify variables outside of their scope.)
+    \item \textbf{Immutable Data:} Data cannot be changed in-situ after creation.
+    Instead of modification of data, functional programming encourages the creation of new variables with the desired changes.
+    \item \textbf{Higher Order Functions:} Functions that can take functions as arguments or return them as results.
+    A simple example is \emph{Map} which maps a function onto a give structure.
+    \item \textbf{Referential Transparency:} The property that an expression can be replaced with its value without changing the program's behaviour. 
+\end{itemize}
+
+All of these concepts can be considered spectrums rather than hard rules, as many popular functional languages bend these concepts for usabilities sake.\footnote{Ocaml for instance is not a \emph{purely} functional programming language. It technically is a functional, imperative, and object-oritened programming language.}
+Though these languages do make behaviour outside of the norm specified by these rules explicit and force the programmer to be deliberate with their forays outside of the paradigm.
+
+Functional programming offers several advantages and addresses certain challenges inherent in other paradigms, such as imperative and object-oritened programming. 
+
+\begin{itemize}
+    \item \textbf{Clarity and Maintainability:} Functional programming emphasises (and sometimes enforces) pure functions and immutable data.
+    By avoiding side-effects and mutable state, functional programs tend to be easier to reason about and maintain.
+    \item \textbf{Conciseness and Expressiveness:} Functional programming languages often provide high-level abstractions and expressive syntax for common programming patterns, such as map, filter, and reduce operations.
+    This can lead to shorter, more concise code that is easier to write and understand.
+    \item \textbf{Robustness and Predictability:} Pure functions and immutable data make functional programs more robust and predictable.
+    Since pure functions have no side effects, they can be unit-tested and debugged easily.
+    Additionally, immutable data structures can help prevent common bugs related to unintended modifications of data.
+    \item \textbf{Formal Verification:} Functional programming languages and techniques are often amenable to formal verification techniques, which can provide guarantees about the correctness of a program.
+    This is a valuable trait in safety-critical and high-assurance applications.
+\end{itemize}
+
+These numerous powerful and useful features work across many contexts, but functional programming languages are not as commonly used as other languages like Python, Java, or JavaScript. 
+
 \section{Type-Systems and Hindley-Milner}
 
 % \section{Guidance}
