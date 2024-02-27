@@ -28,3 +28,5 @@ let parse_string str =
 (* Generates a Unix-like tree of the AST*)
 let get_ast str =
   Py_ast.Expr.print_tree (parse_string str)
+
+let func_bindings = ref ([] : Py_ast.Expr.tree list);;

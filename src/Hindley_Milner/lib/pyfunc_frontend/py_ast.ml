@@ -33,8 +33,10 @@ module Expr = struct
 
   type binder = string
   type param_list = string list
-  
+
   type tree =
+  | Program of ((tree list) ref * tree)
+  | Binding of (binder * tree) (* A way to resolve a binding. *)
   | Var of variable (* Just a variable in use. *)
   | Const of HM.Ast.Constant.t
   | If of (tree * tree * tree) (* Condition, If-true, If-false *)
@@ -56,6 +58,7 @@ module Expr = struct
     | Call (v, _) -> "Call: " ^ v
     | If _ -> "If"
     | Assignment (v, _, _) -> "Assign: " ^ v
+    | _ -> ""
     
   let get_children = function
     (* | Program a -> [a] *)
@@ -68,6 +71,7 @@ module Expr = struct
     | Call (_, a) -> a
     | If (c, a, b) -> [c; a; b]
     | Assignment (_, a, b) -> [a; b]
+    | _ -> []
     
     let print_tree tree =
 
@@ -105,6 +109,7 @@ end
 
 
 module Constructor = struct
+  let makeProgram binding_list program_body = Expr.Program (binding_list, program_body)
   let makeConst const = Expr.Const const
   let makeIf condition if_expr else_expr = Expr.If (condition, if_expr, else_expr)
   let makeOpBinary op expr_a expr_b = Expr.OpBinary (op, expr_a, expr_b)
@@ -113,5 +118,5 @@ module Constructor = struct
   let makeAssign id value scope = Expr.Assignment (id, value, scope)
   let makeParam alias = Expr.Param alias
   let makeVar var = Expr.Var var
-  let makeFunc id args expr = Expr.Func (id, args, expr)
+  let makeFunc id params expr = Expr.Func (id, params, expr)
 end

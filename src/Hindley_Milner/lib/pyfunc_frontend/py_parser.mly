@@ -4,6 +4,15 @@
     open Py_ast.OpBinary
 
     let var_table = create 1024;;
+
+    let func_bindings = ref ([] : Py_ast.Expr.tree list);;
+    
+    let update_binding_list (new_binding : Py_ast.Expr.tree) = 
+      let current_bindings = !func_bindings in
+      let new_list = new_binding :: current_bindings in
+        func_bindings := new_list
+      
+
 %}
 
 %start start
@@ -45,10 +54,16 @@
 %%
 
 expr:
+    | DEFINE ID LPAREN param_list RPAREN scope  {update_binding_list(makeFunc $2 $4 $6); makeConst ConstUnit} // Define a function.
+    | DEFINE ID LPAREN param_list RPAREN scope expr  {update_binding_list(makeFunc $2 $4 $6); $7}
     | base_expr                                 {$1}
     | ID LPAREN arg_list RPAREN                 {makeCall $1 $3}    // Call with params.
     | if_expr                                   {$1}
-    | DEFINE ID LPAREN param_list RPAREN scope  {makeFunc $2 $4 $6} // Define a function.
+
+// assignment:
+    // | ID EQ value {makeAssign $1 $3 } // Requires a heap scope.
+
+scope: LBRACE expr RBRACE   {$2}
 
 // Control Flow
 
@@ -64,7 +79,7 @@ else_expr:
     | ELSE COLON scope {$3}
 
 
-scope: LBRACE expr RBRACE   {$2}
+// Functions
 
 param_list:
     | xs = separated_list(COMMA, ID) { xs }
@@ -72,6 +87,7 @@ param_list:
 arg_list:
     | xs = separated_list(COMMA, value) { xs }
 
+// Binary ops
 
 base_expr:
     | base_expr AND base_expr    {makeOpBinary And $1 $3}
@@ -89,7 +105,6 @@ base_expr:
     | value                      {$1}
 
 
-
 value:
     | LPAREN expr RPAREN {$2}
     | ID                 {try find var_table $1 with Not_found -> makeVar ($1)}
@@ -100,4 +115,4 @@ value:
     | UNITVAL            {makeConst ConstUnit}
 
 start:
-    | expr EOF {$1}
+    | expr EOF {makeProgram func_bindings $1}
