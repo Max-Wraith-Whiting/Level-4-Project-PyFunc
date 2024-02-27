@@ -1,3 +1,4 @@
 echo "Running..."
+dune clean
 dune build
 dune exec pyfunc
