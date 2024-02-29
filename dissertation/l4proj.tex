@@ -332,8 +332,27 @@ The functional paradigm has many pitfalls for new developers:
 \end{itemize}
 
 \section{Aims and Justification}
+
+The project aims to address the inherent limitations of Python for functional programming while leveraging its renowned readability and simplicity.
+Python, although popular, lacks native support for functional constructs and a robust type system, making it challenging for developers to embrace the functional paradigm fully.
+In response, this paper proposes a novel functional programming language inspired by Python's syntax but enhanced with features tailored for functional programming, such as immutability, first-class functions, and a Hindley-Milner type system.
+By melding Python's approachability with the advantages of functional programming, such as enhanced code reliability and ease of maintenance, the language seeks to lower the barrier to entry for newcomers to functional programming while providing seasoned developers with a powerful tool for building large-scale, maintainable applications.
+The project's core contributions lie in the development and implementation of features like a friendly Python-like syntax, a Hindley-Milner type system, and simple functional constructs.
+Through meticulous research, language design, and implementation in Ocaml, the project endeavors to deliver a language that offers the best of both worlds, thereby facilitating smoother transitions to functional programming paradigms and improving the overall quality and maintainability of software systems.
+
+
+
+
+
+
 \section{Minimal Viable System}
+
+The Minimal Viable System (MVS) for the prototype language, adhering to the outlined specifications, will prioritise essential features to demonstrate core functionality while deferring more advanced or less critical features. 
+
 \subsection{Frontend Syntax}
+
+
+
 \subsection{Type-System}
 The Hindley-Milner Type System offers several advantages in programming:
 
@@ -371,8 +390,50 @@ This approach can work well for small projects with dedicated teams but can beco
 \subsection{Language Features}
 
 \section{Proposed Minimal Requirements}
+
+After the previous analysis it was determined that the MVS should include the following:
+
+MUST HAVE:
+\begin{itemize}
+    \item \textbf{Functional REPL and shell tool:} Without this there is not much of a tool.
+    \item \textbf{Full Language Pipeline:} A fully incorporated pipeline for all of the disparate features of the language is a must have.
+    \item \textbf{Basic Primitives:} The fundamental primitives that must be included in the language are: Integers, Strings, Floats, Booleans, and a Unit\footnote{Much like in OCaml, the Unit value or () is the equivalent of a null type in many ways, but disimilar in that expressions treat evaluating to () as being voided.} value.
+    \item \textbf{Basic Arithmetic:} The inclusion of basic arithmetic is an obvious inclusion but one worth stating as the type-system requires appropriate operations for types.
+    (I.e., Integer addition and float addition internally are different operations, that appear the same in the frontend.)
+    To be explicit the arithmetic operations to include are: +, -, $\times$, ÷, ==, >=, <=, >, <, !=.
+    \item \textbf{Basic Control Structures:} Basic controls structures are a must-have feature. They must include: If-else expressions, match-expressions.
+    \item \textbf{Functions:} Simple non-recursive functions and recursive functions must be included. Without recursive functions the language cannot support looping.
+    \item \textbf{Lists and Appropriate Operations:} List are the major data structure in Python and for any resemblanace to be accurate the prototype language must implement them in atleast a basic form.
+    \item \textbf{Hindley-Milner Type System:} The type system is a fundamental structure that the language hinges upon, and therefore any implementation lacking it is a failure.
+\end{itemize}
+
+SHOULD HAVE:
+\begin{itemize}
+    \item \textbf{Standard Functions:} Python includes an array of keywords to do common tasks, the prototype language should do something similar.
+    (E.g., include keywords such as \verb|len| or \verb|any| to simplify code.)
+    \item \textbf{List Comprehensions:} List comprehensions are an incredibly useful feature of Python that fit nicely into the functional ethos whilst being relatively easy to read and parse.
+    Such a useful construct would be a boon to the prototype languages though not critical.
+    \item \textbf{String Manipulation:} Whilst any true language implementation should include some measure of string manipulation, for this prototype it falls outside of truly critical featuers, whilst being an important addition to potentially add.
+    \item \textbf{Basic IO:} A program that cannot take input or produce an output is fundamentally useless, and therefore some amount of IO (no matter how minimal) should be included to this prototype.
+\end{itemize}
+
+COULD HAVE:
+\begin{itemize}
+    \item \textbf{Inner Functions:} Inner functions are a useful tool for encapsulating relevant functions within other function scopes.
+    However, managing the potentially complex scoping involved might require semantic analysis and more work than they are worth in a prototype language.
+    \item \textbf{Closures:} Being an unusually hidden piece of syntax, closures are not as commonly used in Python though it supports them.
+    Closures are undeniably very powerful, but much like inner functions, the scoping rules involved introduces additional complexity into the implementation of function scopes. 
+    \item \textbf{Sets and Dictionaries:} Whilst a commonly used feature, sets and dictionaries are not significant enough to be a primary implementation concern.
+\end{itemize}
+
+WILL NOT HAVE:
+\begin{itemize}
+    \item \textbf{Objects:} Implementing objects into the prototype language would be closer to what users would expect of Python. However, the functional paradigm is the focus and it would defeat the point of the project to focus on Objects.
+    \item \textbf{Standard Library}: Python has a large collection of modules in its standard library, therefore due to its multitudionous nature, it would be unreasonable to even attempt to include any significant proportion of the Python standard library in the prototype language. 
+\end{itemize}
+
 % \section{Guidance}
-Make it clear how you derived the constrained form of your problem via a clear and logical process. 
+% Make it clear how you derived the constrained form of your problem via a clear and logical process. 
 
 %==================================================================================================================================
 \chapter{Design}
