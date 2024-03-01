@@ -378,7 +378,7 @@ As for alternatives:
     This would be an underutilisation of the functional paradigm and would leave the language with issues that Python already suffers from, like upredictable type errors at runtime.
     \item \textbf{Dependent Typing:} Dependent type systems, found in languages like Idris and Agda, allow types to depend on values.
     This provides very strong guarantees about program correctness but can be complex to work with and may require explicit type annotations from the programmer.
-    Adding type annotations dominates the syntax of the language, which defeats the point of aiming for a 'Pythonic' syntax.
+    Adding type annotations dominates the syntax of the language, which defeats the point of aiming for a 'Pythonic' syntax. \footnote{Wells, Joe B. "Typability and type checking in System F are equivalent and undecidable." Annals of Pure and Applied Logic 98.1-3 (1999): 111-156.}
     \item \textbf{Gradual Typing:} Graudal typing combines elements from static and dynamic typing, allowing programmers to choose when to use type annotations and when to rely on dynamic typing.
     This can be useful when transitioning existing codebases to a statically typed language or when working in areas where static typing is impractical or overly restricitive.
 \end{itemize}
@@ -437,8 +437,29 @@ WILL NOT HAVE:
 
 %==================================================================================================================================
 \chapter{Design}
-How is this problem to be approached, without reference to specific implementation details? 
+
+% How is this problem to be approached, without reference to specific implementation details? 
+
+In this dissertation, the focus lies on crafting a prototype programming language that serves as a bridge between the clarity of easily readable imperative languages and the robustness of less approachable functional programming paradigms.
+\textbf{Previous chapters, if applicable, are revisited to highlight the foundational elements they contribute to this endeavor.}
+
+Central to the development of this language is the emphasis on achieving low coupling between its internal modules.
+As a prototype, it must possess the flexibility necessary for future extensions and modifications.
+Even seemingly minor design alterations can yield substantial differences in user experience, underscoring the critical importance of maintaining low coupling from the outset of development.
+
 \section{Frontend Syntax Design}
+
+The frontend of the system draws inspiration from Python, aligning with the language's renowned emphasis on accessibility, particularly for novice programmers.
+At its core, the design prioritizes ease of use, catering to individuals new to programming who may find traditional languages intimidating.
+This emphasis on simplicity permeates the syntax of the language, reflecting Python's renowned straightforwardness.
+By adopting a simple syntax, the language aims to lower the barrier to entry, allowing newcomers to focus more on solving problems and less on deciphering complex code structures.
+This approach mirrors Python's philosophy of readability and simplicity, fostering a welcoming environment for learners to explore programming concepts with confidence.
+
+Moreover, the frontend borrows common syntax elements from widely used C-like programming languages, further enhancing its familiarity and ease of adoption.
+By incorporating familiar constructs, such as loops, conditionals, and variable declarations, the language aims to provide a comfortable transition for programmers already acquainted with languages like C, Java, or JavaScript.
+This familiarity not only facilitates the learning process but also encourages the reuse of existing knowledge and skills.
+By leveraging established conventions, the frontend aims to strike a balance between innovation and familiarity, offering a platform where users can harness the power of Python-inspired simplicity within a framework reminiscent of widely adopted programming paradigms.
+
 \subsection{IR Specification}
 \section{Language Pipeline}
 \subsection{To IR or not to IR}
