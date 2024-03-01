@@ -1,6 +1,7 @@
 open Ast 
 open Type
 open OpBinary
+open OpUnary
 open Expr
 
 
@@ -118,6 +119,7 @@ module Typecheck = struct
           | Resolved type_b -> unify type_b t
         )
       
+      (* List Operation *)
       | TypeList a, TypeList b -> 
         unify a b
 
@@ -241,25 +243,38 @@ module Typecheck = struct
           TypeInt
 
         | Cons ->
-          unify a_type b_type;
-          TypeList a_type
+          let fresh_var = new_var () in
+          unify a_type fresh_var;
+          unify b_type (TypeList fresh_var);
+          b_type
     in
 
     let typecheck_list (env : Env.t) list = 
-      let head_type = _typecheck env (List.hd list) in
+      let fresh_var = new_var () in
       
       (* Resolve types for all list elements. *)
       let resolved_list = List.map (_typecheck env) list in
 
       (* Unify types for all list elements. *)
       let () =
-      try List.iter (unify head_type) resolved_list with
+      try List.iter (fun x -> unify x fresh_var) resolved_list with
         | Errors.Type_Error msg -> print_endline ("Type Error - List type cannot be resolved: " ^ msg)
         | _ -> print_endline ("[typecheck_list] Something very bad has happened!")
       in
       (* Return ListType of head_type if unification successful. *)
-      head_type
-      in
+      TypeList fresh_var
+    in
+
+    let typecheck_op_unary env op expr = 
+      let typ = _typecheck env expr in
+      match op with
+        | Positive | Negative ->
+          unify typ TypeInt;
+          TypeInt;
+        | Not ->
+          unify typ TypeBool;
+          TypeBool;
+    in 
 
     
     (* Total Typechecker Function *)
@@ -267,6 +282,7 @@ module Typecheck = struct
       | ExprVar value -> instantiate (Env.find value env)
       | ExprFunc (binder, body) -> typecheck_func env binder body
       | ExprApplic (expr_func, expr_arg) -> typecheck_applic env expr_func expr_arg
+      | ExprOpUnary (op, expr) -> typecheck_op_unary env op expr
       | ExprOpBinary (op, expr_a, expr_b) -> typecheck_opbinary env op expr_a expr_b
       | ExprConst const -> typecheck_const const
       | ExprIf (expr_cond, expr_if, expr_else) -> typecheck_if env expr_cond expr_if expr_else
@@ -287,6 +303,7 @@ module Typecheck = struct
       )
     | TypeFunc (type_a, type_b) -> TypeFunc (resolve_types type_a, resolve_types type_b)
     | TypePair (type_a, type_b) -> TypePair (resolve_types type_a, resolve_types type_b)
+    | TypeList type_var -> TypeList (resolve_types type_var)
     | type_var -> type_var
 
   let typecheck expr =
