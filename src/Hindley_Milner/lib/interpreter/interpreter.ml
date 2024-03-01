@@ -2,6 +2,7 @@
 open HM.Ast.Expr
 open HM.Ast.Constant
 open HM.Ast.OpBinary
+open HM.Ast.OpUnary
 
 type value = 
   | Vint of int 
@@ -69,6 +70,7 @@ module Interpreter = struct
     function
     | ExprConst c -> eval_const c
     | ExprVar var -> eval_var env var
+    | ExprOpUnary (op, expr) -> eval_op_unary (env: Env.t) op expr
     | ExprOpBinary (op, expr_a, expr_b) -> eval_op_binary (env : Env.t) op expr_a expr_b
     | ExprIf (condition, expr_a, expr_b) -> eval_if (env : Env.t) condition expr_a expr_b
     | ExprLet (binder, value, expr) -> eval_let (env : Env.t) binder value expr
@@ -81,6 +83,14 @@ module Interpreter = struct
     | ExprSecond (ExprPair (_, second)) -> eval (env : Env.t) second
     | ExprList list -> eval_list (env : Env.t) list
     | _ -> print_endline "Oh no! Invalid tree node!"; (Vunit ())
+
+  and eval_op_unary (env: Env.t) op expr = 
+    let expr_value = eval env expr in
+    match op, expr_value with
+      | Positive, (Vint i) -> Vint (~+i)
+      | Negative, (Vint i) -> Vint (~-i)
+      | Not, (Vbool b) -> Vbool (not b)
+      | _, _ -> print_endline ("Oh no! Invalid unary op: " ^ op_unary_pp op); Vunit ()
 
   and eval_op_binary (env : Env.t) op expr_a expr_b =
     (* print_endline "eval_op_binary"; *)
@@ -106,8 +116,8 @@ module Interpreter = struct
       | (Vbool a), And, (Vbool b) -> Vbool (a && b)
       | (Vbool a), Or,  (Vbool b) -> Vbool (a || b)
     (* List Operations *)
-      | (Vlist a), Cons, (Vlist b) -> Vlist (a @ b)
-      | _, op, _ -> print_endline ("Oh no! Invalid binary op: " ^ pp op); Vunit ()
+      | (a), Cons, (Vlist b) -> Vlist (a :: b)
+      | _, op, _ -> print_endline ("Oh no! Invalid binary op: " ^ op_binary_pp op); Vunit ()
 
   and eval_if (env : Env.t) condition expr_a expr_b =
     (* print_endline "eval_if"; *)
