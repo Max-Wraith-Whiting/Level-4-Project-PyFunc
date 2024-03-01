@@ -96,7 +96,7 @@ module OpBinary = struct
     | Or
     | Cons
 
-  let pp = function
+  let op_binary_pp = function
     | Add -> "+"
     | Subtract -> "-" 
     | Multiply -> "*"
@@ -110,6 +110,18 @@ module OpBinary = struct
     | And -> "And"
     | Or -> "Or"
     | Cons -> "::"
+end
+
+module OpUnary = struct
+  type t = 
+    | Positive
+    | Negative
+    | Not
+
+  let op_unary_pp = function
+    | Positive -> "+"
+    | Negative -> "-"
+    | Not -> "!"
 end
 
 (* Constant declares included primitive types. *)
@@ -133,11 +145,14 @@ module Expr = struct
   type binder = string
   type variable = string
 
+
+
   type tree = 
     | ExprVar of variable
     | ExprConst of Constant.t
     | ExprLet of (binder * tree * tree)
     | ExprLetRec of (binder * tree * tree) (* Binder, e, and e'*)
+    | ExprOpUnary of (OpUnary.t * tree)
     | ExprOpBinary of (OpBinary.t * tree * tree)
     | ExprFunc of (binder * tree)
     | ExprApplic of (tree * tree)
@@ -153,7 +168,8 @@ module Expr = struct
     | ExprConst c -> Constant.pp c
     | ExprLet (v, _, _) ->  "Let: " ^ v
     | ExprLetRec (v, _, _) -> "Letrec " ^ v
-    | ExprOpBinary (op, _, _) -> OpBinary.pp op
+    | ExprOpUnary (op, _) -> OpUnary.op_unary_pp op
+    | ExprOpBinary (op, _, _) -> OpBinary.op_binary_pp op
     | ExprFunc (binder, _) -> "λ" ^ binder
     | ExprApplic _ -> "Apply"
     | ExprIf _ -> "If"
@@ -174,6 +190,7 @@ module Expr = struct
     | ExprConst _ -> []
     | ExprLet (_, a, b) -> [a; b]
     | ExprLetRec (_, a, b) -> [a; b]
+    | ExprOpUnary (_, a) -> [a;]
     | ExprOpBinary (_, a, b) -> [a; b]
     | ExprFunc (_, a) -> [a]
     | ExprApplic (a, b) -> [a; b]
