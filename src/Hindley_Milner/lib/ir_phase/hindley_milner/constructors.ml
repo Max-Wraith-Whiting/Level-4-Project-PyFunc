@@ -5,6 +5,7 @@ module ExprConstructors = struct
   let makeConst const = ExprConst const
   let makeVar variable = ExprVar variable
   let makeLet binder expr_a expr_b = ExprLet (binder, expr_a, expr_b)
+  let makeOpUnary op expr = ExprOpUnary (op, expr)
   let makeOpBinary op expr_a expr_b = ExprOpBinary (op, expr_a, expr_b)
   let makeFunc binder body = ExprFunc (binder, body)
   let makeLetRec binder expr_a expr_b = ExprLetRec (binder, expr_a, expr_b)
