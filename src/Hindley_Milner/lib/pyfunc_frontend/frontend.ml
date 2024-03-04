@@ -25,6 +25,7 @@ module Frontend = struct
     | If (cond, if_expr, else_expr) -> IR.ExprIf (convert cond, convert if_expr, convert else_expr)
     | OpBinary (op, expr_a, expr_b) -> convert_binary_op op expr_a expr_b
     | Program (binding_list, program_body) -> convert_global_bindings binding_list program_body
+    | List (value_list) -> convert_list value_list
     (* | Func (binder, param_list, body) -> convert_func binder param_list body *)
     | _ -> raise_unimpl "Not implemented currently!"
 
@@ -44,7 +45,12 @@ module Frontend = struct
       | NotEqual      -> ExprOpBinary (Op.NotEqual, left, right)
       | And           -> ExprOpBinary (Op.And, left, right)
       | Or            -> ExprOpBinary (Op.Or, left, right)
-
+      | Cons          -> ExprOpBinary (Op.Cons, left, right)
+  
+  and convert_list value_list = 
+    let converted_list = List.map (convert) (value_list) in
+    ExprList converted_list
+  
   and convert_global_bindings binding_list program_body = 
     let program = convert program_body in
     let blist = !binding_list in

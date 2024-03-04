@@ -12,6 +12,7 @@ module OpBinary = struct
     | NotEqual
     | And
     | Or
+    | Cons
 
   let pp = function
     | Add -> "+"
@@ -26,6 +27,7 @@ module OpBinary = struct
     | NotEqual -> "!="
     | And -> "And"
     | Or -> "Or"
+    | Cons -> "::"
 end
 
 module Expr = struct
@@ -45,9 +47,10 @@ module Expr = struct
   | Call of (variable * tree list) (* Function call. Call = (Func * Args)*)
   | Assignment of (binder * tree * tree) (* Let binder = tree_1 in tree_2. Tree_2 is in effect the scope of the variable assignment. *)
   | OpBinary of (OpBinary.t * tree * tree)
+  | List of (tree list)
   
   
-  let get_name = function
+  let rec get_name = function
     (* | Program _ -> "Main" *)
     | Const c -> HM.Ast.Constant.pp c
     | Var v -> v
@@ -58,6 +61,14 @@ module Expr = struct
     | Call (v, _) -> "Call: " ^ v
     | If _ -> "If"
     | Assignment (v, _, _) -> "Assign: " ^ v
+    | List l -> 
+      let rec join seperator = function
+        | [] -> ""
+        | [x] -> x
+        | ""::xs -> join seperator xs
+        | x::xs -> x ^ seperator ^ (join seperator xs)
+      in
+      "[" ^ (join ", " (List.map get_name l)) ^ "]"
     | _ -> ""
     
   let get_children = function
@@ -71,6 +82,7 @@ module Expr = struct
     | Call (_, a) -> a
     | If (c, a, b) -> [c; a; b]
     | Assignment (_, a, b) -> [a; b]
+    | List l -> l
     | _ -> []
     
     let print_tree tree =
@@ -119,4 +131,5 @@ module Constructor = struct
   let makeParam alias = Expr.Param alias
   let makeVar var = Expr.Var var
   let makeFunc id params expr = Expr.Func (id, params, expr)
+  let makeList args = Expr.List args
 end

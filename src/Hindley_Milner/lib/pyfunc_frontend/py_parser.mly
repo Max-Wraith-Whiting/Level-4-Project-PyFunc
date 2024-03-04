@@ -30,11 +30,14 @@
 %token RPAREN
 %token LBRACE
 %token RBRACE
+%token LBRACK
+%token RBRACK
 // %token EQ
 %token AND OR
 %token LT GT GEQ LEQ EQQ NEQ
 %token PLUS MINUS
 %token STAR DIVIDE
+%token CONS
 %token COMMA
 %token COLON
 %token DEFINE
@@ -50,6 +53,7 @@
 %left LT GT GEQ LEQ EQQ NEQ
 %left PLUS MINUS
 %left STAR DIVIDE
+%right CONS
 
 %%
 
@@ -85,7 +89,7 @@ param_list:
     | xs = separated_list(COMMA, ID) { xs }
 
 arg_list:
-    | xs = separated_list(COMMA, value) { xs }
+    | xs = separated_list(COMMA, expr) { xs }
 
 // Binary ops
 
@@ -101,12 +105,14 @@ base_expr:
     | base_expr PLUS base_expr   {makeOpBinary Add $1 $3}
     | base_expr MINUS base_expr  {makeOpBinary Subtract $1 $3}
     | base_expr STAR base_expr   {makeOpBinary Multiply $1 $3}
-    | base_expr DIVIDE base_expr {makeOpBinary Divide $1 $3} 
+    | base_expr DIVIDE base_expr {makeOpBinary Divide $1 $3}
+    | base_expr CONS base_expr   {makeOpBinary Cons $1 $3}
     | value                      {$1}
 
 
 value:
     | LPAREN expr RPAREN {$2}
+    | LBRACK arg_list RBRACK {makeList $2}
     | ID                 {try find var_table $1 with Not_found -> makeVar ($1)}
     | STRINGVAL          {makeConst (ConstString $1)}
     | INTVAL             {makeConst (ConstInt $1)}

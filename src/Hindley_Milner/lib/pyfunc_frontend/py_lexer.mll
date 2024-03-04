@@ -22,6 +22,8 @@ rule token = parse
     | ')'       {RPAREN}
     | '{'       {LBRACE}
     | '}'       {RBRACE}
+    | '['       {LBRACK}
+    | ']'       {RBRACK}
     (* | '='       {EQ} *)
     (* | '.'       {DOT} *)
     | "and"     {AND}
@@ -37,6 +39,7 @@ rule token = parse
     | '-'       {MINUS}
     | '*'       {STAR}
     | '/'       {DIVIDE}
+    | "::"      {CONS}
     | ','       {COMMA}
     | ':'       {COLON}
     | eof       {EOF}
