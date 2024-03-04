@@ -40,6 +40,8 @@ module REPL = struct
         print_string (HM.Ast.Expr.print_tree converted_ast);
         converted_ast
       with
+        | Frontend.BadConversion msg -> print_endline msg; ExprConst (ConstUnit)
+        | Frontend.Unimplemented msg -> print_endline msg; ExprConst (ConstUnit)
         | _ -> print_endline "Somethine went wrong with IR conversion!"; ExprConst (ConstUnit)
     in
     

@@ -1,3 +1,16 @@
+module OpUnary = struct
+  type t = 
+    | Positive
+    | Negative
+    | Not
+
+  let op_unary_pp = function
+    | Positive -> "+"
+    | Negative -> "-"
+    | Not -> "!"
+
+end
+
 module OpBinary = struct
   type t =
     | Add
@@ -37,17 +50,18 @@ module Expr = struct
   type param_list = string list
 
   type tree =
-  | Program of ((tree list) ref * tree) (* Global scope. *)
-  | Binding of (binder * tree) (* Local bindings scopes. *)
-  | Var of variable (* Just a variable in use. *)
-  | Const of HM.Ast.Constant.t
-  | If of (tree * tree * tree) (* Condition, If-true, If-false *)
-  | Param of binder (* A specified input variable. *)
-  | Func of (binder * param_list * tree) (* Func = (ID * Params * function_expr) This should be loaded from the environment. *)
-  | Call of (variable * tree list) (* Function call. Call = (Func * Args)*)
-  | Assignment of (binder * tree * tree) (* Let binder = tree_1 in tree_2. Tree_2 is in effect the scope of the variable assignment. *)
-  | OpBinary of (OpBinary.t * tree * tree)
-  | List of (tree list)
+    | Program of (tree list) (* Global scope. *)
+    | Binding of (binder * tree) (* Local bindings scopes. *)
+    | Var of variable (* Just a variable in use. *)
+    | Const of HM.Ast.Constant.t
+    | If of (tree * tree * tree) (* Condition, If-true, If-false *)
+    | Param of binder (* A specified input variable. *)
+    | Func of (binder * param_list * tree) (* Func = (ID * Params * function_expr) This should be loaded from the environment. *)
+    | Call of (variable * tree list) (* Function call. Call = (Func * Args)*)
+    | Assignment of (binder * tree * tree) (* Let binder = tree_1 in tree_2. Tree_2 is in effect the scope of the variable assignment. *)
+    | OpBinary of (OpBinary.t * tree * tree)
+    | OpUnary of (OpUnary.t * tree)
+    | List of (tree list)
   
   
   let rec get_name = function
@@ -121,9 +135,11 @@ end
 
 
 module Constructor = struct
-  let makeProgram binding_list program_body = Expr.Program (binding_list, program_body)
+  let makeProgram binding_list = Expr.Program binding_list
+  let makeBinding binder expr = Expr.Binding (binder, expr)
   let makeConst const = Expr.Const const
   let makeIf condition if_expr else_expr = Expr.If (condition, if_expr, else_expr)
+  let makeOpUnary op expr = Expr.OpUnary (op, expr)
   let makeOpBinary op expr_a expr_b = Expr.OpBinary (op, expr_a, expr_b)
   let makeDefineFunc id param func_expr = Expr.Func (id, param, func_expr)
   let makeCall id args = Expr.Call (id, args) (* Call should load a ref to func Def *)
