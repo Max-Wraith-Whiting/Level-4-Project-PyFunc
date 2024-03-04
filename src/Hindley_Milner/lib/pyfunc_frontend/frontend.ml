@@ -63,41 +63,6 @@ module Frontend = struct
     let converted_list = List.map (convert) (value_list) in
     ExprList converted_list
   
-  (* and convert_global_bindings binding_list program_body = 
-    let program = convert program_body in
-    let blist = !binding_list in
-
-    let split_func_def func_def =
-      match func_def with
-      | Func (binder, param_list, body) -> (binder, param_list, body)
-      | _ -> raise (BadConversion "Non-func definition passed to global bindings converter!")
-    in
-
-    let convert_func func_binder func_param_list func_body scope =
-      let p_list = List.rev func_param_list in
-
-      let rec func_to_lambdas p_list (body : IR.tree) =
-        if List.is_empty p_list then
-          body
-        else
-          let lambda_body = IR.ExprFunc (List.hd p_list, body) in
-          func_to_lambdas (List.tl p_list) lambda_body
-      in
-      let lambdas = func_to_lambdas p_list (convert func_body) in
-        IR.ExprLetRec (func_binder, lambdas, scope)
-    in
-    let rec convert_bindings binding_list (program : IR.tree) = 
-      if List.is_empty binding_list then
-        program
-      else
-        let name, params, body = split_func_def (List.hd binding_list) in
-        let func_instance = convert_func name params body program in
-        convert_bindings (List.tl binding_list ) func_instance
-      in
-      let result = convert_bindings blist program in
-      binding_list := []; (* This dictates that the binding list ref is cleared!*)
-      result  *)
-
   and convert_program (binding_list : tree list) =
 
     let unwrap_binding = function
