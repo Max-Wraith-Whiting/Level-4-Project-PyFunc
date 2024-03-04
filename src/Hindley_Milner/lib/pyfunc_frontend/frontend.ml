@@ -23,14 +23,16 @@ module Frontend = struct
   let raise_conversion msg = raise (BadConversion msg)
 
   let rec convert = function
-    | Const c -> IR.ExprConst c
+    | Program (bindings_list) -> convert_program bindings_list
+    (* | Binding (binder, expr) ->  *)
     | Var v -> IR.ExprVar v
+    | Const c -> IR.ExprConst c
     | If (cond, if_expr, else_expr) -> IR.ExprIf (convert cond, convert if_expr, convert else_expr)
     | OpBinary (op, expr_a, expr_b) -> convert_binary_op op expr_a expr_b
-    | Program (bindings_list) -> convert_program bindings_list
+    | OpUnary (op, expr) -> convert_unary_op op expr
     | List (value_list) -> convert_list value_list
     (* | Func (binder, param_list, body) -> convert_func binder param_list body *)
-    | _ -> print_endline "Dunno"; raise_unimpl "Not implemented currently!"
+    | x -> print_endline (get_name x); raise_unimpl "Not implemented currently!"
 
   and convert_binary_op op expr_a expr_b =
     let left = convert expr_a in
@@ -61,7 +63,7 @@ module Frontend = struct
     let converted_list = List.map (convert) (value_list) in
     ExprList converted_list
   
-  and convert_global_bindings binding_list program_body = 
+  (* and convert_global_bindings binding_list program_body = 
     let program = convert program_body in
     let blist = !binding_list in
 
@@ -94,7 +96,7 @@ module Frontend = struct
       in
       let result = convert_bindings blist program in
       binding_list := []; (* This dictates that the binding list ref is cleared!*)
-      result 
+      result  *)
 
   and convert_program (binding_list : tree list) =
 
@@ -143,6 +145,20 @@ module Frontend = struct
         | _ -> raise (Unimplemented "Currently only functions are supported as bindings.")
     in
 
+    let convert_func func_binder func_param_list func_body scope =
+      let p_list = List.rev func_param_list in
+
+      let rec func_to_lambdas p_list (body : IR.tree) =
+        if List.is_empty p_list then
+          body
+        else
+          let lambda_body = IR.ExprFunc (List.hd p_list, body) in
+          func_to_lambdas (List.tl p_list) lambda_body
+      in
+      let lambdas = func_to_lambdas p_list (convert func_body) in
+        IR.ExprLetRec (func_binder, lambdas, scope)
+    in
+
     let rec convert_bindings (blist : tree list) (main_expr : IR.tree)  = 
       if List.is_empty blist then 
         main_expr
@@ -152,6 +168,15 @@ module Frontend = struct
         convert_bindings (List.tl blist) (new_expr)
     in
 
-    let main_expr = convert (get_main binding_list) in
+    let split_func_def func_def =
+      match func_def with
+      | Func (binder, param_list, body) -> (binder, param_list, body)
+      | _ -> raise (BadConversion "Non-func definition passed to global bindings converter!")
+    in
+    let main_ast = (get_main binding_list) in
+
+    let main_binder, main_param_list, main_body = split_func_def main_ast in
+    let main_expr = convert_func main_binder main_param_list main_body (IR.ExprVar ("main")) in
+
     convert_bindings (get_bindings binding_list) main_expr
 end

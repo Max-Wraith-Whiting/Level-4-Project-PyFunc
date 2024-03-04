@@ -65,12 +65,13 @@ module Expr = struct
   
   
   let rec get_name = function
-    (* | Program _ -> "Main" *)
+    | Program _ -> "Main"
     | Const c -> HM.Ast.Constant.pp c
     | Var v -> v
     | OpBinary (op, _, _) -> OpBinary.pp op
     | Func (binder, params, _) -> "Func: " ^ binder ^ " Params: " ^ (String.concat ", " params)
     (* | Args _ -> "args" *)
+    | Binding (v, _) -> "Binder: " ^ v
     | Param _ -> "params"
     | Call (v, _) -> "Call: " ^ v
     | If _ -> "If"
@@ -86,7 +87,8 @@ module Expr = struct
     | _ -> ""
     
   let get_children = function
-    (* | Program a -> [a] *)
+    | Program a -> a
+    | Binding (_, a) -> [a]
     | Const _ -> []
     | Var _ -> []
     | OpBinary (_, a, b) -> [a; b]
