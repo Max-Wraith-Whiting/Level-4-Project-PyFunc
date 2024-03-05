@@ -5,7 +5,7 @@ open HM.Typechecker
 open HM.Ast.Type
 open Ir
 open Interpreter
-open Frontend
+(* open Frontend *)
 
 module REPL = struct
   module Type = HM.Ast.Type
@@ -23,10 +23,17 @@ module REPL = struct
     reset_state ();
     print_string (prompt ^ "> ");
     let input_string = read_line () in
-    let ast = Frontend.generate_ast input_string in
-
-    (* Print the AST. *)
+    (* let ast = Frontend.generate_ast input_string in *)
+    let converted_ast = Ir.Parse.parse_string input_string in
     let () = 
+      try let tree_string = HM.Ast.Expr.print_tree converted_ast in
+        print_endline "HM AST: " ;
+        print_endline tree_string
+      with
+        | _ -> print_endline "AST print error!";
+    in
+    (* Print the AST. *)
+    (* let () = 
       try let tree_string = Frontend.pp_ast ast in
         print_endline "Initial AST:" ;
         print_string tree_string
@@ -43,7 +50,7 @@ module REPL = struct
         | Frontend.BadConversion msg -> print_endline msg; ExprConst (ConstUnit)
         | Frontend.Unimplemented msg -> print_endline msg; ExprConst (ConstUnit)
         | _ -> print_endline "Somethine went wrong with IR conversion!"; ExprConst (ConstUnit)
-    in
+    in *)
     
     (* Try to typecheck the AST. *)
     let () =

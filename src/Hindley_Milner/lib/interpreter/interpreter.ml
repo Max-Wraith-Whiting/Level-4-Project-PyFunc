@@ -153,16 +153,16 @@ module Interpreter = struct
       | EntryVar v -> v             (* Return the value from scope. *)
       | EntryTree t -> (eval env t) (* Return the evaluated tree node. *)
 
-  and eval_applic (env : Env.t) arg (func_or_var : tree) =
+  (* and eval_applic (env : Env.t) arg (func_or_var : tree) =
     (* print_endline "eval_applic"; *)
     let unwrap_vtree = function
       | Vtree t -> t
       | _ -> raise (Errors.Runtime_Error "Non-Vtree value presented!")
     in
     let get_func_node (env : Env.t) = function
-    | ExprFunc node -> ExprFunc node                 (* If lambda is raw. *)
-    | ExprVar var -> unwrap_vtree (eval_var env var) (* If lambda is called by via a variable. *)
-    | x -> raise (Errors.Runtime_Error ("Called non-functional node:" ^ (get_name x)))
+      | ExprFunc node -> ExprFunc node                 (* If lambda is raw. *)
+      | ExprVar var -> unwrap_vtree (eval_var env var) (* If lambda is called by via a variable. *)
+      | x -> raise (Errors.Runtime_Error ("Called non-functional node:" ^ (get_name x)))
     in
     let get_body_and_binder = function
       | ExprFunc (body, binder) -> (body, binder)
@@ -171,8 +171,9 @@ module Interpreter = struct
     let binder, body = get_body_and_binder (get_func_node env func_or_var) in 
     let arg_value = eval env arg in
     let env' = Env.set env binder (EntryVar arg_value) in
-      eval env' body
+      eval env' body *)
 
+  and eval_applic (env : Env.t) 
 
   and eval_pair (env : Env.t) first second =
     (* print_endline "eval_pair"; *)
