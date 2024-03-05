@@ -57,7 +57,7 @@ module Expr = struct
     | If of (tree * tree * tree) (* Condition, If-true, If-false *)
     | Param of binder (* A specified input variable. *)
     | Func of (binder * param_list * tree) (* Func = (ID * Params * function_expr) This should be loaded from the environment. *)
-    | Call of (variable * tree list) (* Function call. Call = (Func * Args)*)
+    | Call of (binder * tree list) (* Function call. Call = (Func * Args)*)
     | Assignment of (binder * tree * tree) (* Let binder = tree_1 in tree_2. Tree_2 is in effect the scope of the variable assignment. *)
     | OpBinary of (OpBinary.t * tree * tree)
     | OpUnary of (OpUnary.t * tree)

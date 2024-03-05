@@ -25,6 +25,7 @@ module Frontend = struct
   let rec convert = function
     | Program (bindings_list) -> convert_program bindings_list
     (* | Binding (binder, expr) ->  *)
+    (* | Call (binder, arg_list) -> convert_call binder arg_list *)
     | Var v -> IR.ExprVar v
     | Const c -> IR.ExprConst c
     | If (cond, if_expr, else_expr) -> IR.ExprIf (convert cond, convert if_expr, convert else_expr)
@@ -32,7 +33,11 @@ module Frontend = struct
     | OpUnary (op, expr) -> convert_unary_op op expr
     | List (value_list) -> convert_list value_list
     (* | Func (binder, param_list, body) -> convert_func binder param_list body *)
-    | x -> print_endline (get_name x); raise_unimpl "Not implemented currently!"
+    | x -> raise_unimpl ("[" ^ get_name x ^ "] Not implemented currently!")
+
+  (* and convert_call binder arg_list = *)
+    (* 1. Assume the function is already defined. *)
+    (* 2. Generate  *)
 
   and convert_binary_op op expr_a expr_b =
     let left = convert expr_a in
