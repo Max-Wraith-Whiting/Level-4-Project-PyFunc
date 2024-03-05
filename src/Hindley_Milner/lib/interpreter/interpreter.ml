@@ -13,7 +13,16 @@ module Errors = struct
   let lookup_error msg = Lookup_Error msg
 end
 
-
+type value = 
+  | Vint of int 
+  | Vbool of bool 
+  | Vstring of string 
+  | Vunit of unit 
+  | Vvar of string 
+  | Vtree of (tree) 
+  | Vref of value ref
+  | Vpair of (value * value)
+  | Vlist of value list
 
 let rec pp_value = function
   | Vint i -> string_of_int i
@@ -33,16 +42,7 @@ let rec pp_value = function
     in
     "[" ^ (join ", " (List.map pp_value l)) ^ "]"
 
-type value = 
-  | Vint of int 
-  | Vbool of bool 
-  | Vstring of string 
-  | Vunit of unit 
-  | Vvar of string 
-  | Vtree of (tree) 
-  | Vref of value ref
-  | Vpair of (value * value)
-  | Vlist of value list
+
 
 module Env = struct
   type entry = EntryVar of value | EntryTree of tree
@@ -65,19 +65,27 @@ module Env = struct
       (key, value) :: env'
     else 
       (key, value) :: env
+
+  let remove (env : t) (key : string) = 
+    let is_assigned = List.mem_assoc key env in
+    if is_assigned then
+      let env' = List.remove_assoc key env in
+      env'
+    else
+      env
 end
 
 
 
 module Interpreter = struct
-
+(* 
   let ref_env = ref Env.make
 
   let clear_ref_env = 
     ref_env := Env.make
 
   let set_ref_env env =
-    ref_env := env
+    ref_env := env *)
 
   let eval_const = function
     | ConstInt i -> Vint i
@@ -159,7 +167,6 @@ module Interpreter = struct
     eval env' in_expr
 
   and eval_letrec (env : Env.t) binder let_expr in_expr =
-    (* print_endline "eval_letrec"; *)
     (* Set variable into the Env before evaluation. *)
     let env' = Env.set env binder (EntryTree let_expr) in
     (* Compute value with recursive referencing. *)
@@ -178,26 +185,6 @@ module Interpreter = struct
       | Errors.Lookup_Error msg -> raise (Errors.Lookup_Error msg)
       | _ -> raise (Errors.runtime_error "Oh shit.")  
 
-  (* and eval_applic (env : Env.t) arg (func_or_var : tree) =
-    (* print_endline "eval_applic"; *)
-    let unwrap_vtree = function
-      | Vtree t -> t
-      | _ -> raise (Errors.Runtime_Error "Non-Vtree value presented!")
-    in
-    let get_func_node (env : Env.t) = function
-      | ExprFunc node -> ExprFunc node                 (* If lambda is raw. *)
-      | ExprVar var -> unwrap_vtree (eval_var env var) (* If lambda is called by via a variable. *)
-      | x -> raise (Errors.Runtime_Error ("Called non-functional node:" ^ (get_name x)))
-    in
-    let get_body_and_binder = function
-      | ExprFunc (body, binder) -> (body, binder)
-      | _ -> raise (Errors.Runtime_Error ("Attempted non-lambda node unwrap!")) 
-    in
-    let binder, body = get_body_and_binder (get_func_node env func_or_var) in 
-    let arg_value = eval env arg in
-    let env' = Env.set env binder (EntryVar arg_value) in
-      eval env' body *)
-
   and eval_applic (env : Env.t) arg (unchecked_node : tree) =
 
     let func_lookup (env : Env.t) var = 
@@ -209,11 +196,6 @@ module Interpreter = struct
           | Vtree t -> t 
           | _ -> raise (Errors.runtime_error "Oh fuck!")
     in
-
-    (* let is_applic = function
-      | ExprApplic (_, _) -> true
-      | _ -> false
-    in *)
 
     let get_node = function
       | Vtree t -> t
@@ -233,18 +215,6 @@ module Interpreter = struct
       (* print_endline applic_tree; *)
       eval env' func_body
 
-    (* Assign arg_value to binder in the env before evalutating func_body. *)
-(*     
-    let binder, func_body = 
-      if is_applic unchecked_node then
-        unwrap_tree (get_node (eval env unchecked_node))
-      else
-        unwrap_tree unchecked_node
-    in
-    let arg_value = eval env arg in
-    let env' = Env.set env binder (EntryVar arg_value) in
-      eval env' func_body *)
-
 
   and eval_pair (env : Env.t) first second =
     (* print_endline "eval_pair"; *)
@@ -255,8 +225,6 @@ module Interpreter = struct
 
   
   and eval_let_pair (env : Env.t) binder_a binder_b definition scope =   
-    (* print_endline "eval_let_pair"; *)
-    (* Evaluate assinged expression. *)
     let pair_definition = 
     match eval env definition with
       | Vpair (a, b) -> (a, b)
