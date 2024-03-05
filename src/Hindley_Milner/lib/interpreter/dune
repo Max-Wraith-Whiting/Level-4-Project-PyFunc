@@ -1,3 +1,4 @@
 (library
- (name interpreter )
+ (name interpreter)
+ (modules interpreter errors)
  (libraries ir))

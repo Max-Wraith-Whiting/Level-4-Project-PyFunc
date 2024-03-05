@@ -4,16 +4,16 @@ open HM.Ast.Constant
 open HM.Ast.OpBinary
 open HM.Ast.OpUnary
 
-type value = 
-  | Vint of int 
-  | Vbool of bool 
-  | Vstring of string 
-  | Vunit of unit 
-  | Vvar of string 
-  | Vtree of tree 
-  | Vref of value ref
-  | Vpair of (value * value)
-  | Vlist of value list
+module Errors = struct
+  (* Basic runtime error management *)
+  exception Runtime_Error of string
+  exception Lookup_Error of string
+
+  let runtime_error msg = Runtime_Error msg
+  let lookup_error msg = Lookup_Error msg
+end
+
+
 
 let rec pp_value = function
   | Vint i -> string_of_int i
@@ -33,6 +33,17 @@ let rec pp_value = function
     in
     "[" ^ (join ", " (List.map pp_value l)) ^ "]"
 
+type value = 
+  | Vint of int 
+  | Vbool of bool 
+  | Vstring of string 
+  | Vunit of unit 
+  | Vvar of string 
+  | Vtree of (tree) 
+  | Vref of value ref
+  | Vpair of (value * value)
+  | Vlist of value list
+
 module Env = struct
   type entry = EntryVar of value | EntryTree of tree
   type t = (string * entry) list
@@ -42,7 +53,7 @@ module Env = struct
   let get (env : t) key =
     let result = 
       try List.assoc key env with 
-      Not_found -> raise (Errors.raise_lookup_error "Undefined variable look up!") in
+      Not_found -> raise (Errors.lookup_error ("Undefined variable '" ^ key ^ "' !")) in
     result
 
   let set (env : t) (key : string) (value : entry) = 
@@ -56,7 +67,17 @@ module Env = struct
       (key, value) :: env
 end
 
+
+
 module Interpreter = struct
+
+  let ref_env = ref Env.make
+
+  let clear_ref_env = 
+    ref_env := Env.make
+
+  let set_ref_env env =
+    ref_env := env
 
   let eval_const = function
     | ConstInt i -> Vint i
@@ -76,7 +97,7 @@ module Interpreter = struct
     | ExprLet (binder, value, expr) -> eval_let (env : Env.t) binder value expr
     | ExprLetRec (binder, value, expr) -> eval_letrec (env : Env.t) binder value expr
     | ExprApplic (func, arg) -> eval_applic (env : Env.t) arg func
-    | ExprFunc (binder, body) -> Vtree (ExprFunc(binder, body)) (* First-order functions can be values. *)
+    | ExprFunc (binder, body) -> set_ref_env env; print_endline ("lambda: " ^ binder); print_endline (HM.Ast.Expr.print_tree (ExprFunc (binder, body)));Vtree (ExprFunc(binder, body)) (* First-order functions can be values. *)
     | ExprPair (first, second) -> eval_pair (env : Env.t) first second
     | ExprLetPair (binder_a, binder_b, expr_a, expr_b) -> eval_let_pair (env : Env.t) binder_a binder_b expr_a expr_b
     | ExprFirst (ExprPair (first, _)) -> eval (env : Env.t) first
@@ -126,7 +147,7 @@ module Interpreter = struct
       | Vbool true -> eval env expr_a
       | Vbool false -> eval env expr_b
       | Vvar var -> eval_var env var
-      | _ -> raise (Errors.Runtime_Error "Oh no! Invalid condition: Must be a boolean!")
+      | _ -> raise (Errors.runtime_error "Oh no! Invalid condition: Must be a boolean!")
 
   and eval_let (env : Env.t) binder let_expr in_expr =
     (* print_endline "eval_let"; *)
@@ -148,10 +169,14 @@ module Interpreter = struct
   and eval_var (env : Env.t) var =
     (* print_endline "eval_var"; *)
     (* Attempt to get var from env *)
-    let result = Env.get env var in
-    match result with
-      | EntryVar v -> v             (* Return the value from scope. *)
-      | EntryTree t -> (eval env t) (* Return the evaluated tree node. *)
+    try let result = Env.get env var in
+      match result with
+        | EntryVar v -> v             (* Return the value from scope. *)
+        | EntryTree t -> (eval env t) (* Return the evaluated tree node. *)
+
+    with
+      | Errors.Lookup_Error msg -> raise (Errors.Lookup_Error msg)
+      | _ -> raise (Errors.runtime_error "Oh shit.")  
 
   (* and eval_applic (env : Env.t) arg (func_or_var : tree) =
     (* print_endline "eval_applic"; *)
@@ -173,7 +198,53 @@ module Interpreter = struct
     let env' = Env.set env binder (EntryVar arg_value) in
       eval env' body *)
 
-  and eval_applic (env : Env.t) 
+  and eval_applic (env : Env.t) arg (unchecked_node : tree) =
+
+    let func_lookup (env : Env.t) var = 
+      let entry = Env.get env var in 
+      match entry with
+        | EntryTree tree -> tree
+        | EntryVar l -> 
+          match l with 
+          | Vtree t -> t 
+          | _ -> raise (Errors.runtime_error "Oh fuck!")
+    in
+
+    (* let is_applic = function
+      | ExprApplic (_, _) -> true
+      | _ -> false
+    in *)
+
+    let get_node = function
+      | Vtree t -> t
+      | v -> raise (Errors.runtime_error ("Cannot call '" ^ pp_value v ^ "'!"))
+    in
+
+    let rec unwrap_tree = function
+      | ExprFunc (binder, body) -> (binder, body)
+      | ExprVar (var) -> unwrap_tree (func_lookup env var)
+      | _ -> raise (Errors.runtime_error "Invalid node passed to (eval_applic) unwrap_tree!");
+    in
+    (* let applic_tree = HM.Ast.Expr.print_tree (get_node (eval env unchecked_node)) in *)
+    let arg_value = eval env arg in
+    let binder, func_body = unwrap_tree (get_node (eval env unchecked_node)) in
+    let env' = Env.set env binder (EntryVar arg_value) in
+      print_endline ("applic (" ^ pp_value arg_value ^ ") to " ^ binder);
+      (* print_endline applic_tree; *)
+      eval env' func_body
+
+    (* Assign arg_value to binder in the env before evalutating func_body. *)
+(*     
+    let binder, func_body = 
+      if is_applic unchecked_node then
+        unwrap_tree (get_node (eval env unchecked_node))
+      else
+        unwrap_tree unchecked_node
+    in
+    let arg_value = eval env arg in
+    let env' = Env.set env binder (EntryVar arg_value) in
+      eval env' func_body *)
+
 
   and eval_pair (env : Env.t) first second =
     (* print_endline "eval_pair"; *)
@@ -189,7 +260,7 @@ module Interpreter = struct
     let pair_definition = 
     match eval env definition with
       | Vpair (a, b) -> (a, b)
-      | _ -> raise (Errors.Runtime_Error ("Let-Pair definition does not return a pair value!"))
+      | _ -> raise (Errors.runtime_error ("Let-Pair definition does not return a pair value!"))
     in
     (* Extract the pair values. *)
     let (value_a, value_b) = pair_definition in
@@ -197,6 +268,7 @@ module Interpreter = struct
     let env' = Env.set env binder_a (EntryVar value_a) in
     let env'' = Env.set env' binder_b (EntryVar value_b) in
       eval env'' scope
+
 
   and eval_list (env : Env.t) list =
     let value_list = List.map (eval env) list in

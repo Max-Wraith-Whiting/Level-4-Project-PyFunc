@@ -1,20 +1,13 @@
 (* Start REPL *)
 
-open HM.Errors
-open HM.Typechecker
-open HM.Ast.Type
-open Ir
-open Interpreter
-(* open Frontend *)
-
 module REPL = struct
   module Type = HM.Ast.Type
   module Expr = HM.Ast.Expr
-  module REPL_Parser = Parse
-  module Typechecker = Typecheck
+  module REPL_Parser = Ir.Parse
+  module Typechecker = HM.Typechecker.Typecheck
   (* module Interpreter = Interpreter *)
 
-  let reset_state = TypeVar.reset
+  let reset_state = HM.Ast.Type.TypeVar.reset
 (* 
   let generate_ir_ast source =
     REPL_Parser.parse_string source *)
@@ -58,8 +51,8 @@ module REPL = struct
         let typ = Typechecker.typecheck converted_ast in
         print_endline ("Type: " ^ (HM.Ast.Type.typ_to_string typ))
       with
-        | Parse_Error err -> print_endline ("[Parse error] " ^ err);
-        | Type_Error err -> print_endline ("[Type error] " ^ err);
+        | HM.Errors.Parse_Error err -> print_endline ("[Parse error] " ^ err);
+        | HM.Errors.Type_Error err -> print_endline ("[Type error] " ^ err);
         (* | Unsupported feat -> "[Unsupported] Feature %s is unsupported in language %s\n" feat prompt *)
         | exn -> print_endline ("[Error] " ^ (Printexc.to_string exn));
     in
@@ -67,10 +60,12 @@ module REPL = struct
     (* Try to interpret the converted and typechecked AST. *)
     let () = 
       try 
-        let output = Interpreter.interpret converted_ast in
-        print_endline ("Output: " ^ (pp_value output))
+        let output = Interpreter.Interpreter.interpret converted_ast in
+        print_endline ("Output: " ^ (Interpreter.pp_value output))
       with
-        | _ -> print_endline "Something went wrong during interpretation!"
+        | Interpreter.Errors.Runtime_Error msg -> print_endline msg
+        | Interpreter.Errors.Lookup_Error msg -> print_endline msg
+        | x -> print_endline ("[ERROR]: " ^ (Printexc.to_string x))
     in
     ()
 end
