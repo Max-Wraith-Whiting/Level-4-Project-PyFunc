@@ -404,7 +404,7 @@ MUST HAVE:
     \item \textbf{Basic Control Structures:} Basic controls structures are a must-have feature. They must include: If-else expressions, match-expressions.
     \item \textbf{Functions:} Simple non-recursive functions and recursive functions must be included. Without recursive functions the language cannot support looping.
     \item \textbf{Lists and Appropriate Operations:} List are the major data structure in Python and for any resemblanace to be accurate the prototype language must implement them in atleast a basic form.
-    \item \textbf{Hindley-Milner Type System:} The type system is a fundamental structure that the language hinges upon, and therefore any implementation lacking it is a failure.
+    \item \textbf{Hindley-Milner Type System:} The type system is a fundamental structure that the benefits of this language hinge upon, and therefore it is an essential feature.
 \end{itemize}
 
 SHOULD HAVE:
@@ -459,8 +459,52 @@ Moreover, the frontend borrows common syntax elements from widely used C-like pr
 By incorporating familiar constructs, such as loops, conditionals, and variable declarations, the language aims to provide a comfortable transition for programmers already acquainted with languages like C, Java, or JavaScript.
 This familiarity not only facilitates the learning process but also encourages the reuse of existing knowledge and skills.
 By leveraging established conventions, the frontend aims to strike a balance between innovation and familiarity, offering a platform where users can harness the power of Python-inspired simplicity within a framework reminiscent of widely adopted programming paradigms.
+\clearpage
+\subsection{Syntax and Semantics}
 
-\subsection{IR Specification}
+% Pyfunc Operations
+\begin{table}[h!]
+    \caption{The standard table of operators in PyFunc, along with their syntax and accepted types. It should be noted that though operations can accept multiple types, they \textbf{must} match in an expression.}\label{tab:operators}
+    %\tt 
+    \rowcolors{2}{}{gray!3}
+    \begin{center}
+    \begin{tabular}{@{}|l|l|l|@{}}
+    \hline
+    %\toprule
+    \textbf{Operation}    & \textbf{Syntax}       &   \textbf{Valid Types}    \\ %\midrule % optional rule for header
+    \hline
+    Addition              & \texttt{a + b}        &   \texttt{float, integer} \\
+    Subtraction           & \texttt{a - b}        &   \texttt{float, integer} \\
+    Multiplication        & \texttt{a * b}        &   \texttt{float, integer} \\
+    Division              & \texttt{a / b}        &   \texttt{float, integer} \\
+    Positive              & \texttt{+ a}          &   \texttt{float, integer} \\
+    Negation (Arithmetic) & \texttt{- a}          &   \texttt{float, integer} \\
+    Modulo                & \texttt{a \% b}       &   \texttt{float, integer} \\
+    % \hline
+    And                   & \texttt{a and b}      &   \texttt{boolean}        \\
+    Or                    & \texttt{a or b}       &   \texttt{boolean}        \\
+    Negation (Logical)    & \texttt{not a}        &   \texttt{boolean}        \\
+    % \hline
+    Less                  & \texttt{a < b}        &   \texttt{float, integer} \\
+    Greater               & \texttt{a > b}        &   \texttt{float, integer} \\
+    Less or Equal         & \texttt{a <= b}       &   \texttt{float, integer} \\
+    Greater or Equal      & \texttt{a >= b}       &   \texttt{float, integer} \\
+    Equality              & \texttt{a == b}       &   \texttt{float, integer, boolean} \\
+    Exponentiation        & \texttt{a ** b}       &   \texttt{float, integer} \\
+    % \hline
+    Concatenation         & \texttt{a + b}        &   \texttt{list, string}   \\
+    Indexing              & \texttt{a{[}k{]}}     &   \texttt{list, string}   \\
+    Sequence Repetition   & \texttt{a * i}        &   \texttt{list, string}   \\
+    Slicing               & \texttt{a{[}i:j{]}}   &   \texttt{list, string}   \\
+    % \bottomrule
+    \hline
+    \end{tabular}
+    \end{center}
+\end{table}
+
+
+
+\section{IR Specification}
 \section{Language Pipeline}
 \subsection{To IR or not to IR}
 \subsection{IR Conversion}
