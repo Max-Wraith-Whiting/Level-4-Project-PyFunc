@@ -165,5 +165,5 @@ module Frontend = struct
     let main_binder, main_param_list, main_body = split_func_def main_ast in
     let main_expr = convert_func main_binder main_param_list main_body (IR.ExprVar ("main")) in
 
-    convert_bindings (get_bindings binding_list) main_expr
+    convert_bindings (get_bindings binding_list) main_expr 
 end

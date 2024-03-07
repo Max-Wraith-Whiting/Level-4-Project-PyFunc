@@ -143,6 +143,7 @@ module Typecheck = struct
 
     (* Typechecking Functions *)
     let typecheck_func env binder body =
+      print_endline "tc-func";
       let type_ann = new_var () in
       let env' = Env.bind binder type_ann env in
       let body_typ = _typecheck env' body in
@@ -152,6 +153,7 @@ module Typecheck = struct
     
     (* Typechecking Applications *)
     let typecheck_applic env expr_func expr_arg =
+      print_endline "tc-applic";
       let fresh_var = new_var () in
       let func_type = _typecheck env expr_func in
       let arg_type = _typecheck env expr_arg in
@@ -161,6 +163,7 @@ module Typecheck = struct
     
     (* Typechecking ifs *)
     let typecheck_if env expr_cond expr_if expr_else = 
+      print_endline "tc-if";
       let cond_type = _typecheck env expr_cond in
       let if_type = _typecheck env expr_if in 
       let else_type = _typecheck env expr_else in
@@ -175,11 +178,13 @@ module Typecheck = struct
       let a_type = _typecheck env' expr_a in
       let env'' = Env.bind_polytype binder (generalise env' a_type) env' in
       let b_type = _typecheck env'' expr_b in
+      print_endline ("tc-letrec " ^ binder ^ ": " ^ (typ_to_string b_type));
         b_type
     in
 
     (* Typechecking Lets *)
     let typecheck_let env binder expr_a expr_b = 
+      print_endline ("tc-let " ^ binder);
       let a_type = _typecheck env expr_a in
       let env' = 
         if is_value expr_a then
@@ -192,6 +197,7 @@ module Typecheck = struct
     in
 
     let typecheck_let_pair env a b expr_a expr_b =
+      print_endline "tc-letpair";
       let a_type = _typecheck env expr_a in
       let var_a = new_var () in
       let var_b = new_var () in
@@ -203,23 +209,27 @@ module Typecheck = struct
     in
 
     let typecheck_pair env expr_a expr_b =
+      print_endline "tc-pair";
       let a_type = _typecheck env expr_a in 
       let b_type = _typecheck env expr_b in
         TypePair (a_type, b_type)
     in
 
     let typecheck_first env expr =
+      print_endline "tc-first";
       let typ = _typecheck env expr in
       TypePair (typ, new_var ())
     in
   
     let typecheck_second env expr =
+      print_endline "tc-second";
       let typ = _typecheck env expr in
       TypePair (new_var (), typ)
     in
 
     (* Typechecking Binary Operations *)
     let typecheck_opbinary env op expr_a expr_b =
+      print_endline "tc-binop";
       let a_type = _typecheck env expr_a in
       let b_type = _typecheck env expr_b in
       match op with
@@ -250,6 +260,7 @@ module Typecheck = struct
     in
 
     let typecheck_list (env : Env.t) list = 
+      print_endline "tc-list";
       let fresh_var = new_var () in
       
       (* Resolve types for all list elements. *)
@@ -266,6 +277,7 @@ module Typecheck = struct
     in
 
     let typecheck_op_unary env op expr = 
+      print_endline "tc-unaryop";
       let typ = _typecheck env expr in
       match op with
         | Positive | Negative ->
