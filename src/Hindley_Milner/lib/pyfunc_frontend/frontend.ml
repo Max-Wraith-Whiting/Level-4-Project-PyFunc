@@ -25,7 +25,7 @@ module Frontend = struct
   let rec convert = function
     | Program (bindings_list) -> convert_program bindings_list
     (* | Binding (binder, expr) ->  *)
-    (* | Call (binder, arg_list) -> convert_call binder arg_list *)
+    | Call (binder, arg_list) -> convert_call binder arg_list
     | Var v -> IR.ExprVar v
     | Const c -> IR.ExprConst c
     | If (cond, if_expr, else_expr) -> IR.ExprIf (convert cond, convert if_expr, convert else_expr)
@@ -68,6 +68,23 @@ module Frontend = struct
     let converted_list = List.map (convert) (value_list) in
     ExprList converted_list
   
+  and convert_call binder arg_list = 
+    (* Lookup binder *)
+    (* If binder is function then: *)
+      (* Create applic nodes for each given arg in the correct order. *)
+      let processed_list = List.map (convert) arg_list in
+      let function_node = IR.ExprVar (binder) in
+      let rec call_to_applic a_list (body : IR.tree) = 
+        if List.is_empty a_list then 
+          body
+        else
+          let call_body = IR.ExprApplic (body, List.hd a_list) in
+          call_to_applic (List.tl a_list) call_body
+      in
+      call_to_applic processed_list function_node
+
+    (* Else: Throw cannot call binder! *)
+
   and convert_program (binding_list : tree list) =
 
     let unwrap_binding = function

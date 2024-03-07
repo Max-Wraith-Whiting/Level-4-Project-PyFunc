@@ -105,7 +105,7 @@ module Interpreter = struct
     | ExprLet (binder, value, expr) -> eval_let binder value expr
     | ExprLetRec (binder, value, expr) -> eval_letrec binder value expr
     | ExprApplic (func, arg) -> eval_applic arg func
-    | ExprFunc (binder, body) -> print_endline ("lambda: " ^ binder); print_endline (HM.Ast.Expr.print_tree (ExprFunc (binder, body)));Vtree (ExprFunc(binder, body)) (* First-order functions can be values. *)
+    | ExprFunc (binder, body) -> Vtree (ExprFunc(binder, body)) (* First-order functions can be values. *)
     | ExprPair (first, second) -> eval_pair first second
     | ExprLetPair (binder_a, binder_b, expr_a, expr_b) -> eval_let_pair binder_a binder_b expr_a expr_b
     | ExprFirst (ExprPair (first, _)) -> eval first
@@ -213,11 +213,9 @@ module Interpreter = struct
     in
     (* let applic_tree = HM.Ast.Expr.print_tree (get_node (eval env unchecked_node)) in *)
     let arg_value = eval arg in
-    let binder, func_body = print_endline "Applic eval node ->";unwrap_tree (get_node (eval unchecked_node)) in
+    let binder, func_body = unwrap_tree (get_node (eval unchecked_node)) in
     let env = !ref_env in
     let env' = Env.set env binder (EntryVar arg_value) in
-      print_endline ("applic (" ^ pp_value arg_value ^ ") to " ^ binder);
-      (* print_endline applic_tree; *)
       ref_env := env';
       eval func_body
 

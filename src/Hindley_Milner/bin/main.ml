@@ -16,18 +16,18 @@ module REPL = struct
     reset_state ();
     print_string (prompt ^ "> ");
     let input_string = read_line () in
-    (* let ast = Frontend.generate_ast input_string in *)
-    let converted_ast = Ir.Parse.parse_string input_string in
+    let ast = Frontend.Frontend.generate_ast input_string in
+    (* let converted_ast = Ir.Parse.parse_string input_string in
     let () = 
       try let tree_string = HM.Ast.Expr.print_tree converted_ast in
         print_endline "HM AST: " ;
         print_endline tree_string
       with
         | _ -> print_endline "AST print error!";
-    in
+    in *)
     (* Print the AST. *)
-    (* let () = 
-      try let tree_string = Frontend.pp_ast ast in
+    let () = 
+      try let tree_string = Frontend.Frontend.pp_ast ast in
         print_endline "Initial AST:" ;
         print_string tree_string
       with 
@@ -35,15 +35,15 @@ module REPL = struct
     in
     let converted_ast  = 
       try 
-        let converted_ast = Frontend.convert ast in
+        let converted_ast = Frontend.Frontend.convert ast in
         print_endline "Printing Converted AST:";
         print_string (HM.Ast.Expr.print_tree converted_ast);
         converted_ast
       with
-        | Frontend.BadConversion msg -> print_endline msg; ExprConst (ConstUnit)
-        | Frontend.Unimplemented msg -> print_endline msg; ExprConst (ConstUnit)
+        | Frontend.Frontend.BadConversion msg -> print_endline msg; ExprConst (ConstUnit)
+        | Frontend.Frontend.Unimplemented msg -> print_endline msg; ExprConst (ConstUnit)
         | _ -> print_endline "Somethine went wrong with IR conversion!"; ExprConst (ConstUnit)
-    in *)
+    in
     
     (* Try to typecheck the AST. *)
     let () =

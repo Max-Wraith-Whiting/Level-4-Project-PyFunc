@@ -35,18 +35,23 @@
 %token COLON
 %token DEFINE
 %token EOF
-// %token NL
+// Keywords
+%token FILTER
+%token MAP
+%token REDUCE 
+
 %token <string> ID
 %token <string> STRINGVAL
 %token <int> INTVAL
 // %token LIST // On a probationary status.
 
 // Precedence
-// %left AND OR
+// %right CONS NOT
+// %right UPLUS UMINUS
 // %left LT GT GEQ LEQ EQQ NEQ
 // %left PLUS MINUS
 // %left STAR DIVIDE
-// %right CONS
+// %left AND OR
 
 %%
 start:
@@ -60,55 +65,69 @@ scope: LBRACE expr RBRACE   {$2}
 
 expr:
     // | DEFINE ID LPAREN param_list RPAREN scope expr  {update_binding_list(makeFunc $2 $4 $6); $7}
-    | logic_or                                  {$1}
+    | base_expr                                 {$1}
     | if_expr                                   {$1}
 
     // | ID EQ value {makeAssign $1 $3 } // Requires a heap scope.
 
+base_expr:
+    | expr OR expr      {makeOpBinary OpBinary.And $1 $3}
+    | expr AND expr     {makeOpBinary OpBinary.Or $1 $3}
+    | expr NEQ expr     {makeOpBinary OpBinary.NotEqual $1 $3}
+    | expr EQQ expr     {makeOpBinary OpBinary.Equal $1 $3}
+    | expr LT expr      {makeOpBinary OpBinary.Less $1 $3}
+    | expr LEQ expr     {makeOpBinary OpBinary.LessEqual $1 $3}
+    | expr GT expr      {makeOpBinary OpBinary.Greater $1 $3}
+    | expr GEQ expr     {makeOpBinary OpBinary.GreaterEqual $1 $3}
+    | expr MINUS expr   {makeOpBinary OpBinary.Subtract $1 $3}
+    | expr PLUS expr    {makeOpBinary OpBinary.Add $1 $3}
+    | expr DIVIDE expr  {makeOpBinary OpBinary.Divide $1 $3}
+    | expr STAR expr    {makeOpBinary OpBinary.Multiply $1 $3}
+    | unary             {$1}
 // Control Flow
 
 if_expr:
-    | IF logic_or COLON scope elif_expr   {makeIf $2 $4 $5}
-    | IF logic_or COLON scope else_expr   {makeIf $2 $4 $5}
+    | IF expr COLON scope elif_expr   {makeIf $2 $4 $5}
+    | IF expr COLON scope else_expr   {makeIf $2 $4 $5}
 
 elif_expr:
-    | ELIF logic_or COLON scope elif_expr {makeIf $2 $4 $5}
-    | ELIF logic_or COLON scope else_expr {makeIf $2 $4 $5}
+    | ELIF expr COLON scope elif_expr {makeIf $2 $4 $5}
+    | ELIF expr COLON scope else_expr {makeIf $2 $4 $5}
 
 else_expr:
     | ELSE COLON scope {$3}
 
 // Expressions with explicit precedence.
 
-logic_or:
-    | logic_and OR logic_and {makeOpBinary OpBinary.And $1 $3}
-    | logic_and {$1}
+// logic_or:
+//     | logic_and OR logic_and {makeOpBinary OpBinary.And $1 $3}
+//     | logic_and {$1}
 
-logic_and:
-    | equality AND equality {makeOpBinary OpBinary.Or $1 $3}
-    | equality {$1}
+// logic_and:
+//     | equality AND equality {makeOpBinary OpBinary.Or $1 $3}
+//     | equality {$1}
 
-equality:
-    | comparison NEQ comparison {makeOpBinary OpBinary.NotEqual $1 $3}
-    | comparison EQQ comparison {makeOpBinary OpBinary.Equal $1 $3}
-    | comparison {$1}
+// equality:
+//     | comparison NEQ comparison {makeOpBinary OpBinary.NotEqual $1 $3}
+//     | comparison EQQ comparison {makeOpBinary OpBinary.Equal $1 $3}
+//     | comparison {$1}
 
-comparison:
-    | term LT term  {makeOpBinary OpBinary.Less $1 $3}
-    | term LEQ term {makeOpBinary OpBinary.LessEqual $1 $3}
-    | term GT term  {makeOpBinary OpBinary.Greater $1 $3}
-    | term GEQ term {makeOpBinary OpBinary.GreaterEqual $1 $3}
-    | term {$1}
+// comparison:
+//     | term LT term  {makeOpBinary OpBinary.Less $1 $3}
+//     | term LEQ term {makeOpBinary OpBinary.LessEqual $1 $3}
+//     | term GT term  {makeOpBinary OpBinary.Greater $1 $3}
+//     | term GEQ term {makeOpBinary OpBinary.GreaterEqual $1 $3}
+//     | term {$1}
 
-term:
-    | factor MINUS factor {makeOpBinary OpBinary.Subtract $1 $3}
-    | factor PLUS factor  {makeOpBinary OpBinary.Add $1 $3}
-    | factor {$1}
+// term:
+//     | factor MINUS factor {makeOpBinary OpBinary.Subtract $1 $3}
+//     | factor PLUS factor  {makeOpBinary OpBinary.Add $1 $3}
+//     | factor {$1}
 
-factor:
-    | unary DIVIDE unary {makeOpBinary OpBinary.Divide $1 $3}
-    | unary STAR unary   {makeOpBinary OpBinary.Multiply $1 $3}
-    | unary {$1}
+// factor:
+//     | unary DIVIDE unary {makeOpBinary OpBinary.Divide $1 $3}
+//     | unary STAR unary   {makeOpBinary OpBinary.Multiply $1 $3}
+//     | unary {$1}
 
 unary:
     | NOT unary   {makeOpUnary OpUnary.Not $2}

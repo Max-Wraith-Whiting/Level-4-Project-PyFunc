@@ -7,4 +7,4 @@ let rec f = \n. if n == 0 then 0 else if n == 1 then 1 else f (n - 1) in f 10
 let rec x = \n. if n == true then true else x(true) in x(false)
 
 Factorial:
-let rec fact = (\n. if (n <= 0) then 1 else (n * (fact (n - 1)))) in fact 5
+let rec fact = \n. if (n <= 0) then 1 else n * (fact (n - 1)) in fact(5)
