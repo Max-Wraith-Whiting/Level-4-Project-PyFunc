@@ -125,12 +125,22 @@ module Interpreter = struct
     (* print_endline "eval_op_binary"; *)
     let left = eval expr_a in
     let right = eval expr_b in
+
+    let modulo x y = 
+      let remainder = x mod y in
+        if remainder >= 0 then 
+          remainder
+        else
+          remainder + y
+      in
+
     match left, op, right with
     (* Integer operations *)
       | (Vint a), Add,      (Vint b) ->  Vint (a + b)
       | (Vint a), Subtract, (Vint b) ->  Vint (a - b)
       | (Vint a), Multiply, (Vint b) ->  Vint (a * b)
       | (Vint a), Divide,   (Vint b) ->  Vint (a / b)
+      | (Vint a), Mod,      (Vint b) ->  Vint (modulo a b)
     (* Comparitive Int operations *)
       | (Vint a), Less,         (Vint b) -> Vbool (a < b)
       | (Vint a), Greater,      (Vint b) -> Vbool (a > b)

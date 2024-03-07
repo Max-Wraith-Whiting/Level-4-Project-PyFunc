@@ -26,6 +26,7 @@ module OpBinary = struct
     | And
     | Or
     | Cons
+    | Mod
 
   let pp = function
     | Add -> "+"
@@ -41,6 +42,7 @@ module OpBinary = struct
     | And -> "And"
     | Or -> "Or"
     | Cons -> "::"
+    | Mod -> "%"
 end
 
 module Expr = struct

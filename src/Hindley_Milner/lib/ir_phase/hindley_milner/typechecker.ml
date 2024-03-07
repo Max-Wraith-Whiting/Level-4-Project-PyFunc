@@ -247,7 +247,7 @@ module Typecheck = struct
           unify b_type TypeInt;
           TypeBool
           
-        | Add | Multiply | Subtract | Divide ->
+        | Add | Multiply | Subtract | Divide | Mod ->
           unify a_type TypeInt;
           unify b_type TypeInt;
           TypeInt

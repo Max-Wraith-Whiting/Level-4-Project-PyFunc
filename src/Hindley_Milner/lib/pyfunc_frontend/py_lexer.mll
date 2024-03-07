@@ -45,6 +45,7 @@ rule token = parse
     | '*'       {STAR}
     | '/'       {DIVIDE}
     | "::"      {CONS}
+    | '%'       {MOD}
     | ','       {COMMA}
     | ':'       {COLON}
     | eof       {EOF}

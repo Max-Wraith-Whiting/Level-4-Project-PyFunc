@@ -31,6 +31,7 @@
 %token STAR DIVIDE
 %token NOT
 %token CONS
+%token MOD
 %token COMMA
 %token COLON
 %token DEFINE
@@ -83,6 +84,7 @@ base_expr:
     | expr PLUS expr    {makeOpBinary OpBinary.Add $1 $3}
     | expr DIVIDE expr  {makeOpBinary OpBinary.Divide $1 $3}
     | expr STAR expr    {makeOpBinary OpBinary.Multiply $1 $3}
+    | expr MOD expr     {makeOpBinary OpBinary.Mod $1 $3}
     | unary             {$1}
 // Control Flow
 

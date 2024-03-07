@@ -56,6 +56,7 @@ module Frontend = struct
       | And           -> ExprOpBinary (BinOp.And, left, right)
       | Or            -> ExprOpBinary (BinOp.Or, left, right)
       | Cons          -> ExprOpBinary (BinOp.Cons, left, right)
+      | Mod           -> ExprOpBinary (BinOp.Mod, left, right)
   
   and convert_unary_op op expr = 
     let right = convert expr in
