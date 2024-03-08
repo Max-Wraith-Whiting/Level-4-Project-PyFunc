@@ -229,10 +229,22 @@ Who is to say.
 
 \section{Strengths of Pythonic Syntax}
 
-Why is Python so popular? 
-The language has many 'flaws' that other languages do not.
-Machine Learning and Data Science are fields that from an purely intuitive perspective would value speed over everything, and yet Python is the go to language in a large majority of the technology of the fields.
-Why is it such an attractive language for so many varied fields, from bioinformatics to finance, if it is so slow?
+Python is popular.
+Its popularity is an indispuitable fact, supported by the likes of TIOBE index ranking it first in its popularity rankings for February 2024. [\cite{TIOBE}]
+So the language's popularity is not the question, but rather: \emph{Why} is Python so popular? 
+
+There are many reasons to dislike the language, as it has many 'flaws' that other languages do not.
+For example, Machine Learning and Data Science are fields that from an purely intuitive perspective would value speed over everything.
+
+Performance is something Python fundamentally lacks due to its internal structure, being a dynamically typed interpreted language. (Both traits adding significant runtime processing requirements.)
+It would be a lie to say Python cannot be relatively fast, but performance is not its \emph{raison d'être
+}.
+
+
+The need to compute large volumes of data efficently is almost comically opposite Python's ability, and yet Python is the go-to language in those fields.
+In fact, why is it such an attractive language for so many varied fields, from bioinformatics to finance, if it is so slow?
+
+The answer is somewhat obvious: \emph{Because Python is fast.}
 
 Speed of execution is not the only bottleneck in producing systems.
 The speed of writing code, the speed of making changes, the speed of just attempting to get a working system is far more important than pure CPU execution time.
@@ -241,7 +253,7 @@ A user's time is more valuable than CPU time.
 It's really easy to get started with.
 Python is simple enough for anyone to get started in, but still powerful enough to hanlde large complex projects.
 
-Python is considered slow, but often it is neglected to mention "in what context? Compared to what?"
+Python is considered slow, but often it is neglected to mention "In what context? Compared to what?"
 
 It has reached the point of a stereotype that Python is slow.
 Oftentimes, the ability to construct a program fast, to iterate quickly, is far more valuable than the CPU time it incurs.
@@ -258,12 +270,13 @@ It is to Python's benefit that there is an effective understanding of the syntax
 It is also likely why Python is so successful as a beginner language, as it informs new programmers of one of the most prevalent syntax's the collection of all of programming langauges.
 
 So to short: Python's strengths lie in its syntax and semantics, not necessarily its implementation.
-The value that this project aims to extract from it is not in its underlying structure but its front-facing interface.
+The value that this project aims to extract from it is not in its underlying structure but its front-facing interface as a means to producing easily comprehensible code.
 
 \section{Benefits of the Functional Paradigm}
 
 Functional programming is a programming paradigm that treats computation as the evaluation of mathematical functions.
 It avoids mutable state, often by enforcing data immutability.
+[Way to state the obvious...]
 
 Some of the key concepts include:
 
@@ -295,7 +308,19 @@ Functional programming offers several advantages and addresses certain challenge
     This is a valuable trait in safety-critical and high-assurance applications.
 \end{itemize}
 
-These numerous powerful and useful features work across many contexts, but functional programming languages are not as commonly used as other languages like Python, Java, or JavaScript. 
+These numerous powerful and useful features work across many contexts, so why are functional programming languages not as commonly used as other languages like Python, Java, or JavaScript?
+
+There is no definitive answer, but the general sentiment is that functional programming is \emph{hard.}
+
+Most FP languages do not allow careless side-effects; most make mutability (if even possible) explicit; most virtually require the use of higher order functions. 
+These features are not, in my opinion, what makes it difficult to learn functional programming. 
+
+\emph{It is the fact that you need to know what these concepts are, before you start.}
+
+In most popular languages, the barrier to entry is not conceptual, but syntactical.
+Python, as our standard example, requires only rudimentary knowledge of the syntax to hack together something that works out of the box.
+
+Whilst getting a functional language to print something to the standard output is often like pulling teeth by comparison.
 
 \section{Type-Systems and Hindley-Milner}
 
@@ -502,6 +527,21 @@ By leveraging established conventions, the frontend aims to strike a balance bet
     \end{center}
 \end{table}
 
+
+\begin{table}[!h]
+    \caption{Table of additional syntax in PyFunc.}
+    \begin{center}
+    \rowcolors{2}{}{gray!3}
+    \begin{tabular}{@{}|l|l|l|@{}}
+        \hline
+        \textbf{Expression}  &   \textbf{Syntax}     &   \textbf{Additional Notes}   \\
+        \hline
+        If else expressions  &   \texttt{if \textbf{boolean}: else:} & 123           \\
+        \hline
+    \end{tabular}
+    \end{center}
+\end{table}
+
 An example program in PyFunc might look like this:
 \begin{figure}[!h]
 \begin{lstlisting}[language=python, caption={The simple recursive function to calculate a given fibonacci number.}, label=lst:callahan]
@@ -548,6 +588,11 @@ Now with these three structures, there need to be rules for computations to be p
 
 So for example:
 
+[BLARG]
+
+\subsection{PyFunc-IR: An Extended Lambda Calculus}
+
+
 
 \section{Language Pipeline}
 
@@ -563,7 +608,7 @@ Non-technical explanation of type theory and inference
 
 Give a practical example
 
-Now say why HM is better. (Type inference without annotations. Complete.)
+Now say why HM is better. (Type inference without annotations. Complete. Decideable.)
 
 How does it work? (Baby steps...)
 
@@ -571,11 +616,11 @@ Simply typed lambda calculus and monomorphic types.
 
 Atomic types $T$ or function types $T \rightarrow T$
 
-$3 : Number$ and $add 3 4 : Number$ and $add : Number \rightarrow Number \rightarrow Number$
+$3 : Number$ and $add$ $3$ $4$ : $Number$ and $add : Number \rightarrow Number \rightarrow Number$
 
 The untyped lambda calculus is agnostic to typing, much in the way binary is. You can add non numeric types in languages like C, but they lose any sort of reasonable significance in the process. (Unless one is being very clever indeed.)
 
-Now as contrast to monomorphic (lit. single form, or in other words atomic) types, we have polymorphic types (lit. many forms).
+Now as contrast to monomorphic (lit. of one form, or in other words atomic) types, we have polymorphic types (lit. of many forms).
 
 In general polymorphism means that operations accept values of multiple types. In this case specifically, this polymorphism is \emph{parametric} as it is entirely predicated on parameters alone.
 
@@ -585,11 +630,14 @@ For example, \texttt{cons : forall a . a -> List a -> List a}
 
 a is quantified in such a way that irrespective of what a is, cons only cares that both the first parameter (a) and the second (List a) have the \emph{same} a.
 
-Now in lambda calculus computation is represented by substitution. You sub-in values incrementally to compute expressions, and in the case of type-inference this means that as subsitutions occur their polymorphic types get constrainted until they are monomorphic.
+Now in lambda calculus computation is represented by substitution.
+You sub-in values incrementally to compute expressions, and in the case of type-inference this means that as subsitutions occur their polymorphic types get constrainted repeatedly until they are monomorphic (or in some cases they remain polymorphic if the constraints never reach the point of monomorphic).
 
 For example, a monomorphic instance of id: \texttt{id' : String -> String} as id has been supplied a string argument, the function is a monomorphic function of string to string.
 
-Most programming languages approach type systems from the monomorphic perspective, where atmoic types are outlined, and evermore complex constructions out of them build a type system. (In some languages this is more explicit like C, where making structs is in effect building new monomorphic types as composites of other atomic types.) \footnote{As an interesting side note, union type structs in C are not disimilar to polymorphic types in this analogy, though they are only as polymorphic as they are explicitly made.}
+Most programming languages approach type systems from the monomorphic perspective, where atmoic types are outlined, and evermore complex constructions out of them build a type system.
+(In some languages this is more explicit like C, where making structs is in effect building new monomorphic types as composites of other atomic types.)
+\footnote{As an interesting side note, union type structs in C are not disimilar to polymorphic types in this analogy, though they are only as polymorphic as they are explicitly made.}
 
 HM is designed from the opposite direction where parametric polymorphism is emphasised.
 % A key thing to know before hand is that whilst HM is polymorphic, it does have a fundamental restriction.
