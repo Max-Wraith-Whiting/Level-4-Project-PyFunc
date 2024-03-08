@@ -464,7 +464,7 @@ By leveraging established conventions, the frontend aims to strike a balance bet
 
 % Pyfunc Operations
 \begin{table}[h!]
-    \caption{The standard table of operators in PyFunc, along with their syntax and accepted types. It should be noted that though operations can accept multiple types, they \textbf{must} match in an expression.}\label{tab:operators}
+    \caption{The standard table of operations in PyFunc, along with their syntax and accepted types. It should be noted that though operations can accept multiple types, they \textbf{must} match in an expression.}\label{tab:operators}
     %\tt 
     \rowcolors{2}{}{gray!3}
     \begin{center}
@@ -502,13 +502,112 @@ By leveraging established conventions, the frontend aims to strike a balance bet
     \end{center}
 \end{table}
 
+An example program in PyFunc might look like this:
+\begin{figure}[!h]
+\begin{lstlisting}[language=python, caption={The simple recursive function to calculate a given fibonacci number.}, label=lst:callahan]
+    # Calculate a given Fibonacci number.
+    def fibonacci(n):
+        if n <= 1:
+            n
+        else:
+            fibonacci(n - 1) + fibonacci(n - 2)
 
+    # Program entry point.
+    def main():
+        fibonacci(7) # Returns 8
+\end{lstlisting}
+\end{figure}
 
 \section{IR Specification}
-\section{Language Pipeline}
 \subsection{To IR or not to IR}
+The decision to use an Intermediate Representation (IR) was a particularly easy one for PyFunc.
+IRs offer several significant advantages, but come with an additional step of compiliation.
+The main advantage for using an IR in PyFuncs is the ease of development of the interpreter \emph{and} the type checker.
+The IR effectively abstracts the complexities of the syntax of PyFunc away, leaving a simple and far easier to process language.
+The specification of the IR however is somewhat atypical, as they are often designed with performance in mind whereas for PyFunc the focus is ease-of-development.
+
+Specifically, the ease-of-development of the Type System.
+
+\subsection{A Brief Review of Lambda Calculus}
+
+The IR of PyFunc is an extended lambda calculus, and therefore a brief review of the lambda calculus is appropriate before adding to it.
+
+The minimal formal system designed by Alonzo Church is very minimal by intention:
+
+\begin{enumerate}
+    \item $x$: A variable is a character of string representing a parameter.
+    \item $(\lambda x . M)$: A lambda abstraction is a function defintion, taking as input the bound variable $x$ (between the $\lambda$ and the dot) and returning the body $M$.
+    \item $(M N)$: An application, applying function $M$ to an argument $N$. Both $M$ and $N$ are lambda terms.
+\end{enumerate}
+
+Now with these three structures, there need to be rules for computations to be possible, and there are two:
+\begin{itemize}
+    \item $(\lambda x . M [x]) \rightarrow (\lambda y . M[y])$: $\alpha$-conversion, renaming bound variables in the expression. Used to avoid name collisions.
+    \item $((\lambda x . M) N) \rightarrow (M [x := N])$: $\beta$-reduction, replacing bound variables with the argument expression in the body of the abstraction.
+\end{itemize}
+
+So for example:
+
+
+\section{Language Pipeline}
+
+\begin{figure}[!h]
+    \includegraphics[width=\textwidth]{images/Language_Pipeline.png}
+\end{figure}    
 \subsection{IR Conversion}
-\section{Typechecking and Hindley Milner}
+
+\section{Type Inference and Polymorphism}
+Inference
+
+Non-technical explanation of type theory and inference
+
+Give a practical example
+
+Now say why HM is better. (Type inference without annotations. Complete.)
+
+How does it work? (Baby steps...)
+
+Simply typed lambda calculus and monomorphic types.
+
+Atomic types $T$ or function types $T \rightarrow T$
+
+$3 : Number$ and $add 3 4 : Number$ and $add : Number \rightarrow Number \rightarrow Number$
+
+The untyped lambda calculus is agnostic to typing, much in the way binary is. You can add non numeric types in languages like C, but they lose any sort of reasonable significance in the process. (Unless one is being very clever indeed.)
+
+Now as contrast to monomorphic (lit. single form, or in other words atomic) types, we have polymorphic types (lit. many forms).
+
+In general polymorphism means that operations accept values of multiple types. In this case specifically, this polymorphism is \emph{parametric} as it is entirely predicated on parameters alone.
+
+Polymorphic types also give rise to the quantification of polymorphic types.
+
+For example, \texttt{cons : forall a . a -> List a -> List a}
+
+a is quantified in such a way that irrespective of what a is, cons only cares that both the first parameter (a) and the second (List a) have the \emph{same} a.
+
+Now in lambda calculus computation is represented by substitution. You sub-in values incrementally to compute expressions, and in the case of type-inference this means that as subsitutions occur their polymorphic types get constrainted until they are monomorphic.
+
+For example, a monomorphic instance of id: \texttt{id' : String -> String} as id has been supplied a string argument, the function is a monomorphic function of string to string.
+
+Most programming languages approach type systems from the monomorphic perspective, where atmoic types are outlined, and evermore complex constructions out of them build a type system. (In some languages this is more explicit like C, where making structs is in effect building new monomorphic types as composites of other atomic types.) \footnote{As an interesting side note, union type structs in C are not disimilar to polymorphic types in this analogy, though they are only as polymorphic as they are explicitly made.}
+
+HM is designed from the opposite direction where parametric polymorphism is emphasised.
+% A key thing to know before hand is that whilst HM is polymorphic, it does have a fundamental restriction.
+
+Now, typed-lambda calculus is all well and good, but there is a fundamental problem. Type inference in polymorphic lambda calculus is not decideable. (In logic, in a true/false decision problem is only decideable if there exists an effective method for derviving the correct answer.)
+
+\texttt{($\lambda$ id . ... (id 3) ... (id "text") ...) ($\lambda$ x . x)}
+
+So, HM does the next best thing: let-polymorphism.
+
+\texttt{let id = $\lambda$ x . x in ... (id 3) ... (id "text") ...}
+
+Let-polymorphism restricts the binding mechanism in an extension of the expression syntax. Only values bound in a let construct are subject to instantiation, i.e., are polymorphic, while parameters in lambda-abstractions are treated as monomorphic.
+
+\subsection{Type System Formalims and Definitions}
+
+\subsection{Hindley-Milner}
+
 \subsection{Unification Algorithm}
 \subsection{Typechecking Rules}
 \section{Evaluation}
@@ -518,10 +617,12 @@ By leveraging established conventions, the frontend aims to strike a balance bet
 %==================================================================================================================================
 \chapter{Implementation}
 What did you do to implement this idea, and what technical achievements did you make?
-
 \section{Parsing and Abstract Syntax Tree}
 \section{Intermediate Representation}
 \section{Hindley-Milner Typechecker}
+
+
+
 \subsection{Type-Environments and Why We Need Them}
 \subsection{Unification}
 \subsection{Generalisation and Other Sins}
