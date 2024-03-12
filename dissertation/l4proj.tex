@@ -20,26 +20,32 @@
 %==============================================================================
 %% ABSTRACT
 \begin{abstract}
-    Every abstract follows a similar pattern. Motivate; set aims; describe work; explain results.
-    \vskip 0.5em
-    ``XYZ is bad. This project investigated ABC to determine if it was better. 
-    ABC used XXX and YYY to implement ZZZ. This is particularly interesting as XXX and YYY have
-    never been used together. It was found that  
-    ABC was 20\% better than XYZ, though it caused rabies in half of subjects.''
+    % Every abstract follows a similar pattern. Motivate; set aims; describe work; explain results.
+    % \vskip 0.5em
+    % ``XYZ is bad. This project investigated ABC to determine if it was better. 
+    % ABC used XXX and YYY to implement ZZZ. This is particularly interesting as XXX and YYY have
+    % never been used together. It was found that  
+    % ABC was 20\% better than XYZ, though it caused rabies in half of subjects.''
 
 
-    (Introduction) - The goal of the project is to produce a proof-of-concept functional programming language that utilises a Hindley-Milner type system.
-     This is for the explicit purpose of utilising Python's ease of use whilst leveraging functional programming's correctness and type-safety.
-    (Methods) - In this project I made the prototype language and ran it in contrast to Python 3.* over several test benchmarks.
-    (Results) - The new language proved to be [GOOD / BAD]
-    (Discussion) - The future relevance of this type of language is significant as the the computer science world turns its attentions to the functional paradigm.
+    % (Introduction) - The goal of the project is to produce a proof-of-concept functional programming language that utilises a Hindley-Milner type system.
+    %  This is for the explicit purpose of utilising Python's ease of use whilst leveraging functional programming's correctness and type-safety.
+    % (Methods) - In this project I made the prototype language and ran it in contrast to Python 3.* over several test benchmarks.
+    % (Results) - The new language proved to be [GOOD / BAD]
+    % (Discussion) - The future relevance of this type of language is significant as the the computer science world turns its attentions to the functional paradigm.
 
 
-    The allowance of state in modern high-level programming is a mistake.
-    Many of the most popular programming languages of today are riddled with state, for example: Python.
-    This project aims to explore and mitigate the issue of state whilst rendering runtime-errors an unlikely possiblity instead of an inevitability.
-    The [functional language] was created purely in OCaml, implementing the full language pipeline.
-    FPL performed in a [similar/disimilar] manner to Python in the selected test-suites, though as a prototype, it could not compare for more advanced features.
+    % The allowance of state in modern high-level programming is a mistake.
+    % Many of the most popular programming languages of today are riddled with state, for example: Python.
+    % This project aims to explore and mitigate the issue of state whilst rendering runtime-errors an unlikely possiblity instead of an inevitability.
+    % The [functional language] was created purely in OCaml, implementing the full language pipeline.
+    % FPL performed in a [similar/disimilar] manner to Python in the selected test-suites, though as a prototype, it could not compare for more advanced features.
+
+    In modern software development there is a search for languages that offer the expressiveness, readability, and robustness.
+    Python is one of the most popular first languages among new learners standing as a highly readable, simple, versatile introduction to programming.
+    However, despite its popularity Python suffers from its imperative nature and poses challenges for developers embracing the increasingly popular functional paradigm.
+    This paper introduces a novel functional programming language inspired by Python’s syntax but with additional catering to functional programming.
+    The language aims to bridge the gap between the accessibility of Python and the robustness of languages like Haskell and Ocaml.
 
 \end{abstract}
 
@@ -98,40 +104,63 @@
 \pagenumbering{arabic} 
 
 % STARTSTART
--------------------
-
-In modern software development there is a search for languages that offer the expressiveness, readability, and robustness.
-Python is one of the most popular first languages among new learners standing as a highly readable, simple, versatile introduction to programming.
-However, despite its popularity Python suffers from its imperative nature and poses challenges for developers embracing the increasingly popular functional paradigm.
-This paper introduces a novel functional programming language inspired by Python’s syntax but with additional catering to functional programming.
-The language aims to bridge the gap between the accessibility of Python and the robustness of languages like Haskell and Ocaml.
-The core contributions of this project lie in the development and implementation of the language’s features:
-
-\begin{itemize}
-    \item Friendly Python-like Syntax
-    \item Hindley-Milner Type System
-    \item Simple Functional Constructs
-\end{itemize}
+\begin{center}
+    -------------------
+\end{center}
 
 
 
+The C-like syntax of imperative languages stands as the predominant and extensively utilized programming syntax, prized for its readability and capacity to succinctly express sequences of instructions.
+Conversely, functional programming languages represent a departure from this "conventional" syntax, tracing their lineage back to predecessors like Lisp and ML rather than their widely adopted descendant.
+The functional paradigm, though lauded for its robustness and expressiveness, often presents a formidable barrier to entry for novice programmers, lacking the intuitive accessibility characteristic of more familiar programming styles.
+In contrast, Python emerges as a beacon of approachability in the programming realm, frequently heralded as an ideal introductory language owing to its user-friendly syntax, clear structure, and potent features.
+It is against this backdrop that the present project idea arises—a simple inquiry into the feasibility of bridging the gap between the safety and potency inherent in functional programming and the familiar terrain of Python-like syntax.
+Can the principles of the functional paradigm be rendered more accessible to programmers accustomed to Python's simplicity, and conversely, do Python-like languages stand to gain from incorporating these features?
+
+This project aims to address the inherent limitations of Python for functional programming while leveraging its renowned readability and simplicity.
+Python, although popular, lacks native support for functional constructs and a robust type system, making it challenging for developers to embrace the functional paradigm fully.
+In response, this paper proposes a novel functional programming language (PyFunc) inspired by Python's syntax but enhanced with features tailored for functional programming, such as being expression-based, including first-class functions, and having a Hindley-Milner type system.
+By melding Python's approachability with the advantages of a robust type system, such as enhanced code reliability and ease of maintenance, the language seeks to lower the barrier to entry for newcomers to functional style programming while providing a prototype of a powerful tool for building large-scale, maintainable applications.
+The project's core contributions lie in the development and implementation of features like a friendly Python-like syntax, a Hindley-Milner type system, and simple functional constructs.
+Through research, language design, and an implementation in Ocaml, the project endeavors to deliver a language that offers the best of both worlds, thereby facilitating smoother transitions to functional programming paradigms and improving the overall quality and maintainability of software systems.
+
+This project does not aim to introduce groundbreaking ideas or sophisticated algorithms. 
+Instead, it's about combining existing an exisiting functional programming base with Python's user-friendly and efficient nature.
+Python is known for being easy to learn and quick to write code in, making it a solid starting point for read-able syntax.
+On the other hand, functional programming offers powerful tools but can be hard to grasp for some due to its terse syntax.
+By blending functional programming principles into Python, I hope to make these concepts more accessible to a wider audience.
+However, whether this integration will effectively simplify functional programming remains an open question.
+
+% \textbf{Contributions}
+
+% The core contributions of this project lie in the development and implementation of the language’s features:
+
+% \begin{itemize}
+%     \item Friendly Python-like Syntax.
+%     \item Hindley-Milner Type System.
+%     \item Support for simple functional programming.
+% \end{itemize}
+
+\begin{center}
+    -------------------
+\end{center}
 % ENDEND
--------------------
 
-\textbf{Why should the reader care about what are you doing and what are you actually doing?}
 
-The C-like syntax of imperative languages is by far the most read and used programming syntax.
-It lends itself to simplicity and variably terse series of instructions.
+% \textbf{Why should the reader care about what are you doing and what are you actually doing?}
 
-Functional programming languages are however completely distinct from this syntax style.
-They often follow predecessors languages, like Lisp, more closely than their ubiquitous descendant.
+% The C-like syntax of imperative languages is by far the most read and used programming syntax.
+% It lends itself to simplicity and variably terse series of instructions.
 
-The functional paradigm is one not generally approached by novice programmers.
-It is not a place that allows easy learning for those inexperienced with programming in general.
+% Functional programming languages are however completely distinct from this syntax style.
+% They often follow predecessors languages (Lisp, ML, etc.), more closely than their ubiquitous descendant.
 
-Python is often cited [] as being a particularly easy first programming language, due to its friendly syntax, simple style, and powerful constructs.
-The idea behind this project is a simple one.
-Can the inherent safety and power of the functional paradigm be made more accessible to programmers more familiar with Python-like syntax and do Python-like languages benefit from these features.
+% The functional paradigm is one not generally approached by novice programmers.
+% It is not a place that allows easy learning for those inexperienced with programming in general.
+
+% Python is often cited [] as being a particularly easy first programming language, due to its friendly syntax, simple style, and powerful constructs.
+% The idea behind this project is a simple one.
+% Can the inherent safety and power of the functional paradigm be made more accessible to programmers more familiar with Python-like syntax and do Python-like languages benefit from these features.
 
 % WHY!
 % The functional paradigm itself suffers for lack of novice programmers and its academic ouvre.
@@ -212,21 +241,22 @@ Can the inherent safety and power of the functional paradigm be made more access
 
 %==================================================================================================================================
 \chapter{Background}
-\textbf{What did other people do, and how is it relevant to what you want to do?}
+% \textbf{What did other people do, and how is it relevant to what you want to do?}
 
-This project doesn't aim to introduce groundbreaking ideas or sophisticated algorithms. 
-Instead, it's about combining existing functional programming concepts with Python's user-friendly and efficient nature.
-Python is known for being easy to learn and quick to write code in, making it a solid foundation.
-On the other hand, functional programming offers powerful tools but can be hard to grasp for some due to its terse syntax.
-By blending functional programming principles into Python, we hope to make these concepts more accessible to a wider audience.
-However, whether this integration will effectively simplify functional programming remains an open question.
+The realm of programming languages boasts a rich diversity, offering numerous options known for their straightforward and easily comprehensible syntax.
+Notable examples include Ruby and Python, celebrated for their simplicity and readability.
+Additionally, a significant number of languages integrate elements of the Hindley-Milner type system, particularly within functional programming paradigms.
+This system, renowned for its robust type inference capabilities, serves as the backbone for languages that prioritize expressive and concise code.
+Academic research has made substantial contributions to the field of type inference systems, exploring various approaches and techniques to enhance type checking and inference processes.
+Furthermore, scholarly endeavors have delved into language implementations, such as MiniML, to explore the intricacies of language design and implementation.
+This section aims to offer a cohesive overview of these distinct areas, providing the foundation from which this project derives inspiration and insight.
 
-This sections intends to give a brief overview of the background ideas this project relies on, namely:
-\begin{itemize}
-    \item Python's Syntax
-    \item Functional Programming
-    \item Hindley-Milner Type Systems
-\end{itemize}
+% This sections intends to give a brief overview of the background ideas this project relies on, namely:
+% \begin{itemize}
+%     \item Python's Syntax
+%     \item Functional Programming
+%     \item Hindley-Milner Type Systems
+% \end{itemize}
 
 \section{Strengths of Pythonic Syntax}
 
@@ -241,23 +271,36 @@ This sections intends to give a brief overview of the background ideas this proj
 % It would be a lie to say Python cannot be relatively fast, but performance is not its \emph{raison d'être
 % }.
 
-Python's popularity is well-established, evidenced by its consistent top ranking in the \cite{TIOBE} index for February 2024. So, for what reason is Python so popular and why?
+% Python's popularity is well-established, evidenced by its consistent top ranking in the \cite{TIOBE} index for February 2024 and PYPL Popularity Index (March 2024). So, for what reason is Python so popular and why?
 
-[THIS IS PURILE FLUFF]
+% [THIS IS PURILE FLUFF]
 
-While Python has garnered widespread adoption, it is not without its critics, especially regarding performance concerns.
-Python's dynamic typing and interpreted nature inherently limit its performance capabilities, resulting in significant runtime processing requirements.
-However, Python's popularity in fields like machine learning and data science seems paradoxical given its sluggishness.
+% While Python has garnered widespread adoption, it is not without its critics, especially regarding performance concerns.
+% Python's dynamic typing and interpreted nature inherently limit its performance capabilities, resulting in significant runtime processing requirements.
+% However, Python's popularity in fields like machine learning and data science seems paradoxical given its sluggishness.
 
-The answer is somewhat counter-intuitive: \emph{Because Python is fast.}
+% The answer is somewhat counter-intuitive: \emph{Because Python is fast.}
 
 
-The answer lies in its surprising speed: Python's strength lies not in pure CPU execution time but in its efficiency in coding, making changes, and quickly producing functional systems.
-Python's simplicity makes it accessible to beginners while remaining powerful enough for complex projects.
-Despite its reputation for slowness, Python's ability to construct programs rapidly often outweighs the CPU time it consumes.
-Readability is another significant factor in Python's appeal; its syntax, influenced by the C-family, provides a familiar structure for programmers and aids comprehension.
-Python's success as a beginner language stems from its ability to teach fundamental programming syntax.
-In essence, Python's strengths lie in its syntax and semantics rather than its performance, emphasizing its value in producing easily comprehensible code.
+% The answer lies in its surprising speed: Python's strength lies not in pure CPU execution time but in its efficiency in coding, making changes, and quickly producing functional systems.
+% Python's simplicity makes it accessible to beginners while remaining powerful enough for complex projects.
+% Despite its reputation for slowness, Python's ability to construct programs rapidly often outweighs the CPU time it consumes.
+% Readability is another significant factor in Python's appeal; its syntax, influenced by the C-family, provides a familiar structure for programmers and aids comprehension.
+% Python's success as a beginner language stems from its ability to teach fundamental programming syntax.
+% In essence, Python's strengths lie in its syntax and semantics rather than its performance, emphasizing its value in producing easily comprehensible code.
+
+
+Python's popularity is undeniable, evident from its consistent top rankings on indices like the TIOBE Index (February 2024) and the PYPL Index (March 2024).
+But what makes Python so widely favored? One of its key strengths lies in its unparalleled agility, enabling rapid iteration and fostering a development environment conducive to experimentation and quick prototyping.
+Moreover, Python's simplicity and readability contribute significantly to its appeal, making it accessible to both novice and experienced programmers alike.
+The language's syntax, often resembling plain English, further enhances its beginner-friendly nature, minimizing the learning curve for newcomers.
+However, despite its myriad advantages, Python is not without its critics.
+Some argue that its performance is subpar, although it's important to note that performance isn't the primary focus of the language.
+Additionally, Python's type system, characterized by duck typing, may be considered less sophisticated, leading to potential type errors at runtime.
+Nevertheless, the essence of Python's allure lies not in its implementation, but rather in the inherent strengths of its syntax and semantics.
+
+To highlight the benefits of the syntax, the following examples will contrast the same program in both Python and Ocaml.
+
 
 % Speed of execution is not the only bottleneck in producing systems.
 % The speed of writing code, the speed of making changes, the speed of just attempting to get a working system is far more important than pure CPU execution time.
@@ -334,7 +377,7 @@ In most popular languages, the barrier to entry is not conceptual, but syntactic
 Python, as our standard example, requires only rudimentary knowledge of the syntax to hack together something that works out of the box.
 
 Whilst getting a functional language to print something to the standard output is often like pulling teeth by comparison.
-
+\newpage
 \section{Type Systems and Hindley-Milner}
 
 % \section{Guidance}
@@ -351,34 +394,33 @@ Whilst getting a functional language to print something to the standard output i
 %       references for further information.
 % \end{itemize}
 
-What are type systems?
+% What are type systems?
 
 Type systems are a fundamental concept in programming languages.
 They define a set of rules and constraints for categorising and manipulating data based on the type of data it is.
 A type refers to a classification that specifies what kind of data a variable can hold and what operations can be performed on it.
 
-What is a Hindley-Milner Type System?
+% What is a Hindley-Milner Type System?
 
 The Hindley-Milner (HM) Type System is a type system used in statically typed functional langauges to automatically deduce the types of expressions without explicit type annotations.
 It also supports polymorphic functions 
 $\tilde{}$ It was independantly developed by Rogder Hindley in () and later extended by Robin Milner in ().
 The most well known implementation of the system is in the programming language ML (Meta Language), though it exists in many langauges, such as Haskell, OCaml, and Clean.
 
-\subsection{Typing Rules and Notation}
+\subsection{Typing Systems and Notation}
 
-In type theory, a typing rule refers to an inference rule that describes how a type system assigns types.
-Practically, a type system is a set of typing rules which when applied to a program indicate whether the program is well-typed. (I.e., A valid program.)
+In type theory, a typing rule (also called an inference rule) describes how a type system assigns types.
+In a general sense, a type system is a set of typing rules which when applied to a program indicate whether the program is well-typed. (I.e., A valid program.)
 
 The notation of these typing rules is somewhat unusual but relatively straight forward.
 A given rule specifies the structure of syntax to the appropriate type.
 The most basic part of the notation is a type relation:
 
 \[3 : Int\]
-\[true : Bool\]
 \[e : \tau\]
 
 Literal values have a definitive type, $3$ is \emph{literally} an Int value, as \texttt{true} is a boolean.
-The more general rule for $e$ being of type $\tau$ is not particularly useful in this context but can easily be read as "$e$ is of type $\tau$".
+The more general rule for $e$ being of type $\tau$ is not particularly useful in this context but can easily be read as "$e$ is of type $\tau$", where $e$ refers to some expression and $\tau$ to some type.
 
 Now, in proof theory there already exists a notation for inference rules called \textbf{natural deduction}, which typing rules use extensively.
 The general structure of a rule is as a collection of propositions on the top, and the conclusions below.
@@ -389,37 +431,39 @@ The general structure of a rule is as a collection of propositions on the top, a
 
 Here is a simple example of a non-typing inference rule:
 \begin{equation} \label{eq:inference-example}
-{(A \wedge B) \; true}
+\frac{A : true \;\;\; B : true}{(A \wedge B) \; true}
 \end{equation}
 
-This rule can be read as: 'If the proposition A is \texttt{true} and proposition B is \texttt{true} we can conclude A \emph{and} B is \texttt{true}'.
+This rule can be read as: 'If A is \texttt{true} and B is \texttt{true} we can conclude A \emph{and} B is \texttt{true}'.
 
-For a typing example, the following type rules specify the typing relations for a simple language of booleans:
+For a typing example, the following type rules specify the typing relations for a simple integer addition:
 
-\begin{equation} \label{eq:boolean-type-rules}
-\frac{}{\text{true : Bool}} \;\; \frac{}{\text{false : Bool}} \;\; \frac{e_1 :\text{Bool} \;\; e_2 : \tau \;\; e_3 : \tau}{\text{if}\; e_1 \;\text{then} \;\; e_2 \; \text{else} \; e_3 : \tau}
+\begin{equation} \label{eq:add-type-rule}
+\frac{}{5 : int} \;\;\; \frac{}{7 : int} \;\;\; \frac{e_1 : int \;\;\; e_2 : int}{e_1 + e_2 : int}
 \end{equation}
 
 The first two rules have no propositions and therefore can be universally concluded, which makes them \textbf{axioms}.
-The third rule is an inference rule, with three expressions given as propositions.
+The third rule is an inference rule, with two integer expressions given as propositions.
 
-The final piece of notation to understand, which is of key importance to programming languages, is binding.
-The type of a variable depends on where is is bound, which requires context-sensitive typing rules.
-These rules are given by a typing judgements (sometimes refered to as assertions), usually written in the form:
+This brief outline of the natural deduction typing notation should suffice for the extent of this project. 
 
-\begin{equation} \label{eq:context-example}
-    \Gamma \vdash e : \tau
-\end{equation}
+% The final piece of notation to understand, which is of key importance to programming languages, is binding.
+% The type of a variable depends on where is is bound, which requires context-sensitive typing rules.
+% These rules are given by a typing judgements (sometimes refered to as assertions), usually written in the form:
 
-which can be read as 'expression $e$ has type $\tau$ under the typing context $\Gamma$'. On occasion it is necessary for there to be cases where these typing contexts are shown to contain specific typed variables.
+% \begin{equation} \label{eq:context-example}
+%     \Gamma \vdash e : \tau
+% \end{equation}
 
-\begin{equation} \label{eq:context-introduction}
-    \frac{e:\tau \in \Gamma}{\Gamma \vdash x:\tau}
-\end{equation}
+% which can be read as 'expression $e$ has type $\tau$ under the typing context $\Gamma$'. On occasion it is necessary for there to be cases where these typing contexts are shown to contain specific typed variables.
 
-\ref{eq:context-introduction} shows the relatively simple inference that if expression $e$ of type $\tau$ is a member of context $\Gamma$ then it can be infered that context $\Gamma$ contains expression $e$ of type $\tau$.
+% \begin{equation} \label{eq:context-introduction}
+%     \frac{e:\tau \in \Gamma}{\Gamma \vdash x:\tau}
+% \end{equation}
 
-This brief outline of the natural deduction typing notation should suffice for the extent of this project.
+% \ref{eq:context-introduction} shows the relatively simple inference that if expression $e$ of type $\tau$ is a member of context $\Gamma$ then it can be infered that context $\Gamma$ contains expression $e$ of type $\tau$.
+
+
 
 % ================================================================================
 
@@ -467,42 +511,82 @@ Now with these three structures, there are two further rules for actually runnin
 
 %==================================================================================================================================
 \chapter{Analysis/Requirements}
-What is the problem that you want to solve, and how did you arrive at it?
+% What is the problem that you want to solve, and how did you arrive at it?
 
-[NOTE]: What is the problem
-The dominant programming paradigm is imperative, no matter the uptick of interest in functional programming.
-The current state of functional programming does not lend itself to easy entry for new programmers who will be the future of the paradigm.
-The functional paradigm has many pitfalls for new developers:
-\begin{itemize}
-    \item Abstract concepts
-    \item Mathematical foundations
-    \item Lack of familiarity
-    \item Limited resourses and support
-    \item Complex error messages
-    \item Perceived lack of practical applications
-    \item steep learning curve
-\end{itemize}
+% [NOTE]: What is the problem
+% The dominant programming paradigm is imperative, no matter the uptick of interest in functional programming.
+% The current state of functional programming does not lend itself to easy entry for new programmers who will be the future of the paradigm.
+% The functional paradigm has many pitfalls for new developers:
+% \begin{itemize}
+%     \item Abstract concepts
+%     \item Mathematical foundations
+%     \item Lack of familiarity
+%     \item Limited resourses and support
+%     \item Complex error messages
+%     \item Perceived lack of practical applications
+%     \item steep learning curve
+% \end{itemize}
 
-\section{Aims and Justification}
+% \section{Aims and Justification}
 
-The project aims to address the inherent limitations of Python for functional programming while leveraging its renowned readability and simplicity.
-Python, although popular, lacks native support for functional constructs and a robust type system, making it challenging for developers to embrace the functional paradigm fully.
-In response, this paper proposes a novel functional programming language inspired by Python's syntax but enhanced with features tailored for functional programming, such as immutability, first-class functions, and a Hindley-Milner type system.
-By melding Python's approachability with the advantages of functional programming, such as enhanced code reliability and ease of maintenance, the language seeks to lower the barrier to entry for newcomers to functional programming while providing seasoned developers with a powerful tool for building large-scale, maintainable applications.
-The project's core contributions lie in the development and implementation of features like a friendly Python-like syntax, a Hindley-Milner type system, and simple functional constructs.
-Through meticulous research, language design, and implementation in Ocaml, the project endeavors to deliver a language that offers the best of both worlds, thereby facilitating smoother transitions to functional programming paradigms and improving the overall quality and maintainability of software systems.
-
-
-
-
-
+The aim of the project is to make functional \emph{prototype} language, where the foundational aspects of the language are set up.
+This section should emphasise the actual scope for the project and create the boundaries that determine whether a feature is inside or outside the scope of the project.
+There are several interesting and valuable aspects to Python, Functional programming, and type-systems that this entire project could focus on.
+Yet, with feasibility in mind, the extent to which these topics can be covered has to be rigourously delineated.
 
 \section{Minimal Viable System}
 
-The Minimal Viable System (MVS) for the prototype language, adhering to the outlined specifications, will prioritise essential features to demonstrate core functionality while deferring more advanced or less critical features. 
+The Minimal Viable System (MVS) for the prototype language, adhering to the outlined specifications, will prioritise essential features to demonstrate core functionality while deferring more advanced or less critical features.
+To do this, certain constraints must be put in place:
+
+\begin{itemize}
+    \item First, the frontend does not need to replicate each and every piece of Python syntax.
+    Python has many interesting syntactic ideas which would add excessive focus onto the structure of the grammar and parsing it. 
+    \item The type system needs to be fully functional over the entire language, otherwise it cannot be called a valid type system.
+    \item The interpreter does not need to do anything more than run the code.
+    Whilst many powerful optimisations could be implemented, it would go beyond the proof-of-concept prototype that this is.
+\end{itemize}
 
 \subsection{Frontend Syntax}
 
+To attempt to include all the features of a mature programing language would be far greater than the expected scope of this project.
+Therefore, to rein in expected features of the project, limitations will be imposed on the extent of the frontend syntax.
+These limitations should, in effect, propagate through the requirements of the whole language, whilst retaining the fundamental concepts that make the language worth building.
+
+First, it must be considered what a programming language cannot do without.
+There are a few things no useful language does not have, which include: arithmetic, control structures, functions.
+Arithmetic is mandatory and not a major constraint as the base implementation of operators will be necessary, but attention should be paid to making sure the implementation is extensible.
+
+There are many possible control structures that could be used, but for the sake of simplicity, only the if-expressions will be guaranteed to be included. 
+
+Of the things that the language cannot live without, functions are at the top of the list.
+It would be ironic if a functional style language was bereft of functions.
+However, whilst functions must be included, not all of Python's varied uses of them are necessary.
+
+\textbf{Closures}
+For example, Python includes the ability to create "closures" which can recall values in their defined scope even if they are not present anymore with the \texttt{nonlocal} keyword.
+
+\begin{lstlisting}[language=Python, caption={An example of a closure in Python. See the use of the 'nonlocal' keyword to pull the surrounding defintion of 'current\_count' into the scope of 'inner\_function'.}, label={lst:py-closure}]
+# Create a counter.
+def make_counter():
+    current_count = 0
+    
+    def inner_function():
+        nonlocal current_count # Pull the variable into scope.
+        current_count += 1
+        return current_count
+
+    return inner_function
+
+counter = make_counter()
+print(counter()) # 1
+print(counter()) # 2
+print(counter()) # 3
+\end{lstlisting}
+
+Whilst it would be possible to include such a feature, the priority of such a task would be of a much lower priority than others.
+
+\textbf{}
 
 
 \subsection{Type-System}
@@ -643,6 +727,7 @@ The only structures in the language that are not expression based are the functi
     Less or Equal         & \texttt{a <= b}       &   \texttt{float, integer} \\
     Greater or Equal      & \texttt{a >= b}       &   \texttt{float, integer} \\
     Equality              & \texttt{a == b}       &   \texttt{float, integer, boolean} \\
+    Not Equality          & \texttt{a != b}       &   \texttt{float, integer, boolean} \\
     Exponentiation        & \texttt{a ** b}       &   \texttt{float, integer} \\
     % \hline
     Cons                  & \texttt{a :: b}       &   \texttt{$\forall \alpha$.$\alpha$, $\alpha \rightarrow$ List $\alpha \rightarrow$ List $\alpha$} \\
@@ -675,6 +760,8 @@ The only structures in the language that are not expression based are the functi
         \hline
         Function Definition & def <name>(<p$_1$>, ..., <p$_n$>): \newline \-\ <expression> & Function definition\\
         \hline
+        Lambda Definition & lambda(<p$_1$>, ..., <p$_n$>): <expression> & Lambda definition \\
+        \hline
         
     \end{tabular}
     \end{center}
@@ -697,7 +784,7 @@ An example program in PyFunc might look like this:
 \end{figure}
 
 \section{IR Specification}
-\subsection{To IR or not to IR}
+% \subsection{To IR or not to IR}
 The decision to use an Intermediate Representation (IR) was a particularly easy one for PyFunc.
 IRs offer several significant advantages, but come with an additional step of compiliation.
 The main advantage for using an IR in PyFunc is the ease of development of the interpreter \emph{and} the type checker.
@@ -768,6 +855,8 @@ However, there exisits a few special cases that need to be considered to allow t
 \emph{- To build an abstract syntax tree for the IR, a full description of the possible tree nodes needs to be created.
 - Using the above defined primitive types and additionally including the previously outlined common extensions to the lambda calculus we can write a specification for the abstract syntax tree.}
 
+\subsection*{Abstract Syntax}
+
 To construct an abstract syntax tree (AST) for the intermediate representation (IR), it is imperative to meticulously delineate all potential tree nodes.
 This comprehensive description encompasses both primitive types and the incorporation of prevalent extensions to lambda calculus.
 By amalgamating the specified primitive types with the previously outlined lambda calculus extensions, a detailed specification for the AST can be formulated.
@@ -775,34 +864,63 @@ This specification serves as a foundational blueprint, guiding the development o
 Through this systematic approach, the AST can accurately capture the intricacies of the IR, facilitating efficient analysis and manipulation within the context of the specified computational model.
 
 The abstract syntax give below describes the extended lambda calculus used as PyFunc's IR.
-\begin{figure}[h!]
-    \begin{center}
-    \begin{small}
-\begin{verbatim}
-Contstructors
-    'Expr'
-        Var         :  String 
-        Const       :  Constant
-        Let         :  binder * Expr * Expr
-        LetRec      :  binder * Expr * Expr
-        OpUnary     :  Unary_operator * ast_node
-        OpBinary    :  Binary_operator * Expr * Expr
-        Func        :  binder * Expr
-        Applic      :  function * value
-        If          :  Expr * Expr * Expr
-        Pair        :  first_value * second_value
-        LetPair     :  binder_a * binder_b * Expr * Expr
-        First       :  ast_node
-        Second      :  ast_node
-        List        :  ast_node list
-\end{verbatim}
-\end{small}
-\caption{The abstract syntax for PyFunc's IR.}
-\end{center}
-\end{figure}
+
+\begin{lstlisting}[language=Caml, caption=The Abstract Syntax for the IR, ]
+type tree = 
+    | ExprVar of variable
+    | ExprConst of Constant.t
+    | ExprLet of (binder * tree * tree)
+    | ExprLetRec of (binder * tree * tree) (* Binder, e, and e'*)
+    | ExprOpUnary of (OpUnary.t * tree)
+    | ExprOpBinary of (OpBinary.t * tree * tree)
+    | ExprFunc of (binder * tree) (* Var binder, body*)
+    | ExprApplic of (tree * tree) (* Arg, Func *)
+    | ExprIf of (tree * tree * tree)
+    | ExprPair of (tree * tree)
+    | ExprLetPair of (variable * variable * tree * tree)
+    | ExprFirst of tree
+    | ExprSecond of tree
+    | ExprList of tree list
+\end{lstlisting}
 
 
 This \texttt{Expr} type can completely represent the IR extended lambda calculus. 
+The scope of the IR's syntax is relatively minimal, but due to the scope of the project, further extension of this IR would, one, encroach on the frontend language and, two, further complicate the type checker.
+
+This level of complexity, being greater than the standard lambda calculus yet not becoming too distant from it seemed the most reasonable option.
+
+\subsection*{IR Operators}
+With the IR being very regularly structured, and differing rather minimally from the PyFunc frontend AST, it seems appropriate to include all of the available operators in the frontend in the IR itself.
+This would include both binary operators and unary operators.
+
+\begin{table}[]
+    \begin{center}
+        \rowcolors{2}{}{gray!3}
+        \begin{tabular}{|lll|}
+            \hline
+            Left-hand Type   & Binary Operator & Right-hand Type  \\ \hline
+            Int, Float       & +               & Int, Float       \\
+            Int, Float       & -               & Int, Float       \\
+            Int, Float       & $\times$        & Int, Float       \\
+            Int, Float       & ÷       & Int, Float       \\
+            Int, Float       & \%              & Int, Float       \\
+            Int, Float       & **              & Int, Float       \\
+            Int, Float       & \textless{}     & Int, Float       \\
+            Int, Float       & \textgreater{}  & Int, Float       \\
+            Int, Float       & <=    & Int, Float       \\
+            Int, Float       & >= & Int, Float       \\
+            Int, Float, Bool & ==              & Int, Float, Bool \\
+            Int, Float, Bool & !=              & Int, Float, Bool \\
+            $\alpha$         & ::              & List $\alpha$    \\ \hline
+        \end{tabular}
+        \caption{Table of valid binary operators in PyFunc IR with accepted types.}
+    \end{center}
+\end{table}
+% The IR is very regularly structured.
+% The inclusion of all available operators in the frontend in the IR seemed an effective strategy to minimise conversion complexity.
+% It easy to add new operators to the IR
+% It has little overhead
+
 
 % \begin{itemize}
 %     \item Variable
@@ -1093,7 +1211,7 @@ In the context of this project, all type variables are implicitly "all-quantifie
     \item Substitution in typings
     
     Type subsitutions that arise from the above specified type-order are consistent in their replacement.
-    \item Deductive system
+    \item Natural Deduction
     \item Typing rules
     \item Let Polymorphism
     \item Generalisation
