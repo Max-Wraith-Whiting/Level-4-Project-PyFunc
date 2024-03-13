@@ -110,12 +110,12 @@
 
 
 
-The C-like syntax of imperative languages stands as the predominant and extensively utilized programming syntax, prized for its readability and capacity to succinctly express sequences of instructions.
-Conversely, functional programming languages represent a departure from this "conventional" syntax, tracing their lineage back to predecessors like Lisp and ML rather than their widely adopted descendant.
-The functional paradigm, though lauded for its robustness and expressiveness, often presents a formidable barrier to entry for novice programmers, lacking the intuitive accessibility characteristic of more familiar programming styles.
-In contrast, Python emerges as a beacon of approachability in the programming realm, frequently heralded as an ideal introductory language owing to its user-friendly syntax, clear structure, and potent features.
-It is against this backdrop that the present project idea arises—a simple inquiry into the feasibility of bridging the gap between the safety and potency inherent in functional programming and the familiar terrain of Python-like syntax.
-Can the principles of the functional paradigm be rendered more accessible to programmers accustomed to Python's simplicity, and conversely, do Python-like languages stand to gain from incorporating these features?
+% The C-like syntax of imperative languages stands as the predominant and extensively utilized programming syntax, prized for its readability and capacity to succinctly express sequences of instructions.
+% Conversely, functional programming languages represent a departure from this "conventional" syntax, tracing their lineage back to predecessors like Lisp and ML rather than their widely adopted descendant.
+% The functional paradigm, though lauded for its robustness and expressiveness, often presents a formidable barrier to entry for novice programmers, lacking the intuitive accessibility characteristic of more familiar programming styles.
+% In contrast, Python emerges as an approachability in the programming realm, frequently heralded as an ideal introductory language owing to its user-friendly syntax, clear structure, and potent features.
+% It is against this backdrop that the present project idea arises—a simple inquiry into the feasibility of bridging the gap between the safety and potency inherent in functional programming and the familiar terrain of Python-like syntax.
+% Can the principles of the functional paradigm be rendered more accessible to programmers accustomed to Python's simplicity, and conversely, do Python-like languages stand to gain from incorporating these features?
 
 This project aims to address the inherent limitations of Python for functional programming while leveraging its renowned readability and simplicity.
 Python, although popular, lacks native support for functional constructs and a robust type system, making it challenging for developers to embrace the functional paradigm fully.
@@ -126,10 +126,29 @@ Through research, language design, and an implementation in Ocaml, the project e
 
 This project does not aim to introduce groundbreaking ideas or sophisticated algorithms. 
 Instead, it's about combining existing an exisiting functional programming base with Python's user-friendly and efficient nature.
-Python is known for being easy to learn and quick to write code in, making it a solid starting point for read-able syntax.
-On the other hand, functional programming offers powerful tools but can be hard to grasp for some due to its terse syntax.
-By blending functional programming principles into Python, I hope to make these concepts more accessible to a wider audience.
-However, whether this integration will effectively simplify functional programming remains an open question.
+
+For example, here is a simple python program:
+
+\begin{lstlisting}[language=Python, caption=A simple python program to find the factorial of a given number (n).]
+def factorial(n):
+    if n == 1:
+        return 1
+    else:
+        return n * factorial(n - 1)
+
+print(factorial(5)) # 120
+\end{lstlisting}
+
+Now whilst it si very easy to read and follow the logic of the function, Python can provide no guarantees on the type accuracy of this relatively simple code.
+However, in a Hindley-Milner type system, such code could easily have its type infered.
+
+Additionally the syntax will be changed to be expression based instead of statement based.
+
+
+% Python is known for being easy to learn and quick to write code in, making it a solid starting point for read-able syntax.
+% On the other hand, functional programming offers powerful tools but can be hard to grasp for some due to its terse syntax.
+% By blending functional programming principles into Python, I hope to make these concepts more accessible to a wider audience.
+% However, whether this integration will effectively simplify functional programming remains an open question.
 
 % \textbf{Contributions}
 
@@ -696,8 +715,8 @@ In this inital version there will be no inclusion of non-expression statements.
 The only structures in the language that are not expression based are the function declarations which will be interpreted internally as bindings and therefore expressions.
 
 
-\clearpage
-\subsection{Syntax and Semantics}
+% \clearpage
+% \subsection{Syntax and Semantics}
 
 % Pyfunc Operations
 \begin{table}[h!]
@@ -783,6 +802,7 @@ An example program in PyFunc might look like this:
 \end{lstlisting}
 \end{figure}
 
+\clearpage
 \section{IR Specification}
 % \subsection{To IR or not to IR}
 The decision to use an Intermediate Representation (IR) was a particularly easy one for PyFunc.
