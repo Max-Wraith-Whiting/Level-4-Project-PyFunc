@@ -1303,17 +1303,121 @@ In the most basic case, unification of two monotypes will result in either an er
 %==================================================================================================================================
 \chapter{Implementation}
 What did you do to implement this idea, and what technical achievements did you make?
-\section{Parsing and Abstract Syntax Tree}
+
+The language of choice for implementation was OCaml.
+
+All aspects of the project exist by default in OCaml.
+
+Menhir for parsing.
+
+OCamllex for tokenisation.
+
+Everything else was built from scratch in the language.
+
+\section{Parsing ,Lexer and Abstract Syntax Tree}
+
+To aid in a flexible yet easily modifiable syntax the following was done:
+
+0. An initial sourcecode pass that converts white space into explicit scopes.
+
+1. OCamllex was used for tokenisation.
+
+2. Menhir was used as a parser generator.
+
+3. A set of constructor methods are used to generate an abstract syntax tree of the frontend program.
+
+
+\section{IR Converter}
+
+To take the frontend abstract syntax tree and convert it into the equivalent AST in the IR, a conversion process was necessary.
+To do this conversion several things had to be given special attention (whilst others converted almost one-to-one):
+
+1. Bindings are difficult, in that they exist in the top-level where the expression based-nature of the language raises a question: where do you start the program from.
+Python starts the program quite simply at the topmost statement in the running file.
+PyFunc ideally would do something like this but actually implementing this fell to the wayside when trying to correctly convert the bindinggs to an appropriate IR in the correct order.
+Likely having a semantic analysis pass for collecting bindings would be a viable solution, but in the end the easy and effective option is to require a "main" function declaration to be the program entry point.
+
+2. Functions themselves are rather complicated.
+The IR has only lambdas which can take only a single argument, but the frontend allows for an arbitrary number of parameters.
+To deal with this a conversion helper-function was devised.
+This function constructs a let rec binding (let rec to allow recursive function definitions) from the given parameters.
+Inside the let rec a series of lambdas are created for each parameter in reverse order (so as to have partial applications apply the parameters in the same order they appear in the definition).
+
+\[CODE EXAMPLE\]
+
+3. Assignment statements are relatively simple, yet somewhat difficult.
+Having an immutable assignment is very simple to convert, as an immutable assignment or rather binding is just a let expression.
+Having a mutable assignment is one, dangerous to the type system and therefore disallowed... FOR Now
+
+
 \section{Intermediate Representation}
+
+The IR is very much as designed.
+
+Here is the AST.
+
+It also includes these few features.
+
 \section{Hindley-Milner Typechecker}
 
+The type checker is the most technically difficult aspect of this project.
+It required several structures and the implementation of significant pieces of the HM theory already outlined to be encoded into OCaml.
 
-
+\subsection{Type Variables}
 \subsection{Type-Environments and Why We Need Them}
 \subsection{Unification}
-\subsection{Generalisation and Other Sins}
-\subsection{Implementing the Typerchecker}
-\subsection{The Not So Simple Typechecking}
+\subsection{Generalisation}
+\subsection{The Typerchecker}
+% \subsection{The Not So Simple Typechecking}
+
+
+\section{Interpreter}
+
+The interpreter is the final stage of the pipeline.
+It is in a way the simplest part of the project, being a tree-walk interpreter, but a few unusal cases made this marginally harder than expected in some areas.
+
+\subsection{Interpreted Values}
+
+Having an interpreted value type was necessary but also got in the way in one key case: Partial application.
+
+Due to the function not having the sufficent parameters to totally evaluate, the interpreter would need to stop evaluating the expression and leave it be until it had all the necessary arguments.
+
+However, this was very difficult with the structure of the interpreter being a recursive depth-first search of the IR-AST.
+Initally as a patch, the option for a value to be a VTree was added.
+A VTree is literally a segment of the code that will cause an error if evaluated wrapped in the value type.
+
+But for the case of partial application it works very well.
+
+For example, [Example with f(a, b, c) -> let f = $\lambda a. \lambda b. \lambda c. a + b + c$]
+
+With partial application what happens is: [f (1) = VTree ($\lambda b. \lambda c. 1 + b + c$)]
+
+When another application occurs on VTree then the VTree value is unwrapped and applied.
+As it still isn't fully evaluated, it is again wrapped in the value type as a VTree.
+
+When all the requisite applications are done it returns a value type other than a VTree.
+
+Whilst this is still a somewhat clunky solution, it most certainly works effectively.
+
+\subsection{Environment}
+
+Contrary to the evironments in the type checker which were only passed down the ast as an argument, the interpreter uses a reference type to handle the env.
+
+A important reason for using a reference type for the env was because of the complications regarding scope of values in the interpreter.
+
+With a passed env the previous sections use of VTree would be impossible.
+For example, (EXAMPLE) Basically whenever a set of tree nodes get cast a VTree, the env no longer gets passed down the recursive calls, which means that the added bindings relating to the parameters are completely lost in every partial application, resulting unresolvable errors for bindings being in and out of scope.
+
+Using a reference env allows us to completely circumnavigate this issue entirely and set the parameters into scope and remove them only when the function has been fully applied and interpreted.
+
+\subsection{General Rules}
+Beyond these unusal edge cases which required special attention, the rest of the interpreter was largely straightforward evaluations of syntax.
+
+Here are excepts indicating the implementations of the following rules:
+
+1. Unary and Binary operations
+
+2. Yada yada yada.
 
 % \section{Guidance}
 % You can't talk about everything. Cover the high level first, then cover important, relevant or impressive details.
