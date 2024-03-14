@@ -1316,16 +1316,57 @@ Everything else was built from scratch in the language.
 
 \section{Parsing ,Lexer and Abstract Syntax Tree}
 
-To aid in a flexible yet easily modifiable syntax the following was done:
+% To aid in a flexible yet easily modifiable syntax the following was done:
+% 0. An initial pass that converts white space identation into explicit scopes for later parsing.
+% 1. OCamllex was used for tokenisation.
+% 2. Menhir was used as a parser generator.
+% 3. A set of constructor methods are used to generate an abstract syntax tree of the frontend program.
 
-0. An initial sourcecode pass that converts white space into explicit scopes.
+The parsing of Pyfunc is the first major step in the language pipeline, taking the PyFunc code and converting it step by step into the intermediate represention.
+This process was broken down into three steps:
+\begin{enumerate}
+    \item An initial pass that converts whitespace identation into explicit scopes for later parsing.
+    \item Tokenisation is performed using OCamllex.
+    \item The PyFunc parser converts the token stream into the frontend's abstract syntax.
+\end{enumerate}
 
-1. OCamllex was used for tokenisation.
+\textbf{Whitespace Indentation Conversion}
 
-2. Menhir was used as a parser generator.
+Whitespace indentation is a formatting technique used in programming languages to visually structure code.
+By indenting blocks of code with consistent spaces or tabs, developers create a clear hierarchy that reflects the relationships between different parts of the code.
+In many languages this indentation has no functional impact on the code's behavior but greatly enhances readability, making it easier to understand the flow of control and identify nested blocks like loops and conditionals.
+Python enforces strict indentation rules as a means to gain these advantages and to explicitly delineate block scopes for structures like loops and conditionals.
 
-3. A set of constructor methods are used to generate an abstract syntax tree of the frontend program.
+\[Python Example of whitespace indentation levels\]
 
+PyFunc similarly enforces this rule of white space indentation for the delineation of scopes.
+
+The specific rule is as follows:
+
+\begin{center}
+Each layer of indentation is indicated by \emph{4} spaces (tabs are \emph{not} accepted as of yet).
+\end{center}
+
+The implementation for this rule was relatively simple from an algorithm perspective:
+
+\begin{enumerate}
+    \item Take the source as a list of strings, each element representing a line of code.
+    \item For each element in the list of strings:
+    \begin{enumerate}
+        \item Get the indentation of the line.
+        \item Calculate the difference in indentation to the previous line.
+        \item If the new indentation is bigger then insert a '$\{$' character.
+        \item Else if the new indentation is smaller then insert a '$\}$' character.
+        \item Else, the indentation is the same move to the next line.
+    \end{enumerate}
+    \item Return the modified source code.
+\end{enumerate}
+
+In the actual implementation the converter looked like this:
+
+\begin{lstlisting}
+    
+\end{lstlisting}
 
 \section{IR Converter}
 
@@ -1364,6 +1405,56 @@ The type checker is the most technically difficult aspect of this project.
 It required several structures and the implementation of significant pieces of the HM theory already outlined to be encoded into OCaml.
 
 \subsection{Type Variables}
+
+A naive description of a type variable could be something like: "A pair made of a quantifier and 
+
+Before type variables can be implemented, the concept of quantifiers needs to be described.
+The very simple Quantifier module does just that.
+
+\begin{lstlisting}[language=Caml]
+  module Quantifier = struct
+    type t = string
+    let make x = x
+    let of_typeVar (tv, _) = tv
+    let compare = String.compare
+  end
+\end{lstlisting}
+
+The first step in the implementation of type variables, is itself describing the types that type variables will depend on.
+
+\begin{lstlisting}[language=Caml]
+  type resolution_state = Unresolved | Resolved of t
+  and typevar = string * (resolution_state UnionFind.elem)
+  and monoType = 
+    | TypeInt
+    | TypeBool
+    | TypeString
+    | TypeFunc of (t * t) (* A recursive definition refering to monoType. *)
+    | TypePair of (t * t)
+    | TypeUnit
+    | TypeVar of typevar
+    | TypeList of t
+  and polyType = quantifier list * monoType
+  and t = monoType
+\end{lstlisting}
+
+\begin{lstlisting}[language=Caml, caption=The TypeVar module. The module specifies the utility functions for the management of type variables.]
+  module TypeVar = struct
+    let id_count = ref 0
+    let reset () = id_count := 0
+    
+    let fresh_TV ?(scope_prefix="_") () =
+      let id = !id_count in
+      let () = incr id_count in
+      let resolution_state = UnionFind.make Unresolved in
+      (scope_prefix ^ (string_of_int id), resolution_state)
+
+    let var = fst
+    let resolution_state = snd
+    let compare (typeVar_a,_) (typeVar_b,_) = String.compare typeVar_a typeVar_b
+  end
+\end{lstlisting}
+
 \subsection{Type-Environments and Why We Need Them}
 \subsection{Unification}
 \subsection{Generalisation}

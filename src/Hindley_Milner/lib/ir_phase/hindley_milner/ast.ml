@@ -13,7 +13,6 @@ module Type = struct
 
   type quantifier = Quantifier.t
   type resolution_state = Unresolved | Resolved of t
-
   and typevar = string * (resolution_state UnionFind.elem)
   and monoType = 
     | TypeInt

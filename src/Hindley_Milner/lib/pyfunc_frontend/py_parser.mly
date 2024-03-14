@@ -36,10 +36,6 @@
 %token COLON
 %token DEFINE
 %token EOF
-// Keywords
-%token FILTER
-%token MAP
-%token REDUCE 
 
 %token <string> ID
 %token <string> STRINGVAL
@@ -59,7 +55,7 @@ start:
     | binding+ EOF {makeProgram $1}
 
 binding:
-    | DEFINE ID LPAREN param_list RPAREN scope {makeBinding $2 (makeFunc $2 $4 $6)}
+    | DEFINE ID LPAREN param_list RPAREN COLON scope {makeBinding $2 (makeFunc $2 $4 $7)}
     | ID EQ expr {makeBinding $1 $3}
 
 scope: LBRACE expr RBRACE   {$2}

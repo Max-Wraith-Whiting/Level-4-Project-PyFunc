@@ -1,4 +1,5 @@
 echo "Running..."
 dune clean
 dune build
+# dune exec pyfunc test_file.pyf
 dune exec pyfunc

@@ -18,10 +18,6 @@ rule token = parse
     | "elif"    {ELIF}
     | "else"    {ELSE}
     | "None"    {UNITVAL}
-    (* Keywords *)
-    | "filter"  {FILTER}
-    | "map"     {MAP}
-    | "reduce"  {REDUCE}
 
     | '('       {LPAREN}
     | ')'       {RPAREN}
