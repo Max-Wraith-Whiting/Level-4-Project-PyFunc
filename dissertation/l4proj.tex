@@ -109,40 +109,50 @@
 \end{center}
 
 
+\textbf{This is drivel. What is the idea? Why should anyone care? Does it have any value?}
 
-% The C-like syntax of imperative languages stands as the predominant and extensively utilized programming syntax, prized for its readability and capacity to succinctly express sequences of instructions.
-% Conversely, functional programming languages represent a departure from this "conventional" syntax, tracing their lineage back to predecessors like Lisp and ML rather than their widely adopted descendant.
-% The functional paradigm, though lauded for its robustness and expressiveness, often presents a formidable barrier to entry for novice programmers, lacking the intuitive accessibility characteristic of more familiar programming styles.
-% In contrast, Python emerges as an approachability in the programming realm, frequently heralded as an ideal introductory language owing to its user-friendly syntax, clear structure, and potent features.
-% It is against this backdrop that the present project idea arises—a simple inquiry into the feasibility of bridging the gap between the safety and potency inherent in functional programming and the familiar terrain of Python-like syntax.
-% Can the principles of the functional paradigm be rendered more accessible to programmers accustomed to Python's simplicity, and conversely, do Python-like languages stand to gain from incorporating these features?
+[\emph{The C-like syntax of imperative languages stands as the predominant and extensively utilized programming syntax, prized for its readability and capacity to succinctly express sequences of instructions.
+Conversely, functional programming languages represent a departure from this "conventional" syntax, tracing their lineage back to predecessors like Lisp and ML rather than their widely adopted descendant.
+The functional paradigm, though lauded for its robustness and expressiveness, often presents a formidable barrier to entry for novice programmers, lacking the intuitive accessibility characteristic of more familiar programming styles.
+In contrast, Python emerges as an approachability in the programming realm, frequently heralded as an ideal introductory language owing to its user-friendly syntax, clear structure, and potent features.
+It is against this backdrop that the present project idea arises—a simple inquiry into the feasibility of bridging the gap between the safety and potency inherent in functional programming and the familiar terrain of Python-like syntax.
+Can the principles of the functional paradigm be rendered more accessible to programmers accustomed to Python's simplicity, and conversely, do Python-like languages stand to gain from incorporating these features?}]
 
 This project aims to address the inherent limitations of Python for functional programming while leveraging its renowned readability and simplicity.
 Python, although popular, lacks native support for functional constructs and a robust type system, making it challenging for developers to embrace the functional paradigm fully.
 In response, this paper proposes a novel functional programming language (PyFunc) inspired by Python's syntax but enhanced with features tailored for functional programming, such as being expression-based, including first-class functions, and having a Hindley-Milner type system.
 By melding Python's approachability with the advantages of a robust type system, such as enhanced code reliability and ease of maintenance, the language seeks to lower the barrier to entry for newcomers to functional style programming while providing a prototype of a powerful tool for building large-scale, maintainable applications.
 The project's core contributions lie in the development and implementation of features like a friendly Python-like syntax, a Hindley-Milner type system, and simple functional constructs.
-Through research, language design, and an implementation in Ocaml, the project endeavors to deliver a language that offers the best of both worlds, thereby facilitating smoother transitions to functional programming paradigms and improving the overall quality and maintainability of software systems.
+Through research, language design, and an implementation in Ocaml, the project aims to deliver a language that offers the best of both worlds, thereby facilitating smoother transitions to functional programming paradigms and improving the overall quality and maintainability of software systems.
 
 This project does not aim to introduce groundbreaking ideas or sophisticated algorithms. 
 Instead, it's about combining existing an exisiting functional programming base with Python's user-friendly and efficient nature.
 
 For example, here is a simple python program:
-
 \begin{lstlisting}[language=Python, caption=A simple python program to find the factorial of a given number (n).]
-def factorial(n):
-    if n == 1:
-        return 1
-    else:
-        return n * factorial(n - 1)
-
-print(factorial(5)) # 120
+    def factorial(n):
+        if n == 1:
+            return 1
+        else:
+            return n * factorial(n - 1)
+    
+    print(factorial(5)) # 120
 \end{lstlisting}
 
-Now whilst it si very easy to read and follow the logic of the function, Python can provide no guarantees on the type accuracy of this relatively simple code.
+Now whilst it is very easy to read and follow the logic of the function, Python can provide no guarantees on the type accuracy of this relatively simple code.
 However, in a Hindley-Milner type system, such code could easily have its type infered.
+There is no major reason why this syntax, or at least a close expression-based equivalent, cannot have a relatively sophisticated type system.
+The inclusion of a type system onto this fundamental structure would prove only to be beneficial
 
-Additionally the syntax will be changed to be expression based instead of statement based.
+The proposed additions to the familiar language would only marginally modify the syntax:
+
+\begin{lstlisting}[language=Python, caption=A proposed PyFunc program to find the factorial of a given numbe (n).]
+    def factorial(n):
+        if n == 1:
+            1
+        else:
+            n * factorial(n - 1)
+\end{lstlisting}
 
 
 % Python is known for being easy to learn and quick to write code in, making it a solid starting point for read-able syntax.
@@ -150,19 +160,19 @@ Additionally the syntax will be changed to be expression based instead of statem
 % By blending functional programming principles into Python, I hope to make these concepts more accessible to a wider audience.
 % However, whether this integration will effectively simplify functional programming remains an open question.
 
-% \textbf{Contributions}
+\textbf{Contributions}
 
-% The core contributions of this project lie in the development and implementation of the language’s features:
+The core contributions of this project lie in the development and implementation of the language’s features:
 
-% \begin{itemize}
-%     \item Friendly Python-like Syntax.
-%     \item Hindley-Milner Type System.
-%     \item Support for simple functional programming.
-% \end{itemize}
+\begin{itemize}
+    \item Friendly Python-like Syntax.
+    \item Hindley-Milner Type System.
+    \item Support for simple functional programming.
+\end{itemize}
 
-\begin{center}
-    -------------------
-\end{center}
+% \begin{center}
+%     -------------------
+% \end{center}
 % ENDEND
 
 
@@ -396,7 +406,6 @@ In most popular languages, the barrier to entry is not conceptual, but syntactic
 Python, as our standard example, requires only rudimentary knowledge of the syntax to hack together something that works out of the box.
 
 Whilst getting a functional language to print something to the standard output is often like pulling teeth by comparison.
-\newpage
 \section{Type Systems and Hindley-Milner}
 
 % \section{Guidance}
@@ -605,8 +614,14 @@ print(counter()) # 3
 
 Whilst it would be possible to include such a feature, the priority of such a task would be of a much lower priority than others.
 
-\textbf{}
+\textbf{Higher Order Functions}
+A language may want to include higher-order functions to support more expressive and flexible programming paradigms. 
+Higher-order functions allow functions to take other functions as arguments or return functions as results.
+This enables powerful programming techniques such as function composition, partial application, and passing functions as arguments to other functions, which can lead to more concise, modular, and reusable code.
 
+\textbf{Inner Functions}
+The necessity of including inner functions into PyFunc is not apparent.
+Whilst they are of great utility for encapsulation of logic, the potential increase in complexity of bindings makes them an lesser priority than other frontend features like Higher Order Functions.
 
 \subsection{Type-System}
 The Hindley-Milner Type System offers several advantages in programming:
@@ -638,11 +653,10 @@ As for alternatives:
     This can be useful when transitioning existing codebases to a statically typed language or when working in areas where static typing is impractical or overly restricitive.
 \end{itemize}
 
-In cases where no type system is used at all, programmers have complete freedom but lose the benefits of type checking, such as early error detection and improved code documentation.
-[NO]It is just insanity to be frank.
-This approach can work well for small projects with dedicated teams but can become problematic as codebases grow larger and more complex.
+% In cases where no type system is used at all, programmers have complete freedom but lose the benefits of type checking, such as early error detection and improved code documentation.
+% This approach can work well for small projects with dedicated teams but can become problematic as codebases grow larger and more complex.
 
-\subsection{Language Features}
+% \subsection{Language Features}
 
 \section{Proposed Minimal Requirements}
 
@@ -774,8 +788,8 @@ The only structures in the language that are not expression based are the functi
         If else expressions & if <condition>: \newline \-\ <expression\_a> \newline else: \newline \-\ <expression\_b> & <condition> evaluate to a boolean. If <condition> is true, then expression\_a is evaluated, otherwise expression\_b is evaluated.\\
         \hline
         Immutable binding   & \texttt{a := b}   & For all subsequent expressions in a given scope \texttt{a} will alias \texttt{b}. Variable \texttt{a} cannot be rebound. \\
-        \hline
-        Mutable binding & \texttt{a = b} & For all subsequent expressions in a given scope \texttt{a} will alias \texttt{b}. Variable \texttt{a} \emph{can} be rebound.\\
+        % \hline
+        % Mutable binding & \texttt{a = b} & For all subsequent expressions in a given scope \texttt{a} will alias \texttt{b}. Variable \texttt{a} \emph{can} be rebound.\\
         \hline
         Function Definition & def <name>(<p$_1$>, ..., <p$_n$>): \newline \-\ <expression> & Function definition\\
         \hline
@@ -787,7 +801,6 @@ The only structures in the language that are not expression based are the functi
 \end{table}
 
 An example program in PyFunc might look like this:
-\begin{figure}[!h]
 \begin{lstlisting}[language=python, caption={The simple recursive function to calculate a given fibonacci number.}, label=lst:callahan]
     # Calculate a given Fibonacci number.
     def fibonacci(n):
@@ -800,9 +813,8 @@ An example program in PyFunc might look like this:
     def main():
         fibonacci(7) # Returns 8
 \end{lstlisting}
-\end{figure}
 
-\clearpage
+% \clearpage
 \section{IR Specification}
 % \subsection{To IR or not to IR}
 The decision to use an Intermediate Representation (IR) was a particularly easy one for PyFunc.
@@ -885,7 +897,7 @@ Through this systematic approach, the AST can accurately capture the intricacies
 
 The abstract syntax give below describes the extended lambda calculus used as PyFunc's IR.
 
-\begin{lstlisting}[language=Caml, caption=The Abstract Syntax for the IR, ]
+\begin{lstlisting}[language=Caml, caption=The Abstract Syntax for the IR]
 type tree = 
     | ExprVar of variable
     | ExprConst of Constant.t
@@ -913,29 +925,29 @@ This level of complexity, being greater than the standard lambda calculus yet no
 With the IR being very regularly structured, and differing rather minimally from the PyFunc frontend AST, it seems appropriate to include all of the available operators in the frontend in the IR itself.
 This would include both binary operators and unary operators.
 
-\begin{table}[]
-    \begin{center}
-        \rowcolors{2}{}{gray!3}
-        \begin{tabular}{|lll|}
-            \hline
-            Left-hand Type   & Binary Operator & Right-hand Type  \\ \hline
-            Int, Float       & +               & Int, Float       \\
-            Int, Float       & -               & Int, Float       \\
-            Int, Float       & $\times$        & Int, Float       \\
-            Int, Float       & ÷       & Int, Float       \\
-            Int, Float       & \%              & Int, Float       \\
-            Int, Float       & **              & Int, Float       \\
-            Int, Float       & \textless{}     & Int, Float       \\
-            Int, Float       & \textgreater{}  & Int, Float       \\
-            Int, Float       & <=    & Int, Float       \\
-            Int, Float       & >= & Int, Float       \\
-            Int, Float, Bool & ==              & Int, Float, Bool \\
-            Int, Float, Bool & !=              & Int, Float, Bool \\
-            $\alpha$         & ::              & List $\alpha$    \\ \hline
-        \end{tabular}
-        \caption{Table of valid binary operators in PyFunc IR with accepted types.}
-    \end{center}
-\end{table}
+% \begin{table}[]
+%     \begin{center}
+%         \rowcolors{2}{}{gray!3}
+%         \begin{tabular}{|lll|}
+%             \hline
+%             Left-hand Type   & Binary Operator & Right-hand Type  \\ \hline
+%             Int, Float       & +               & Int, Float       \\
+%             Int, Float       & -               & Int, Float       \\
+%             Int, Float       & $\times$        & Int, Float       \\
+%             Int, Float       & ÷       & Int, Float       \\
+%             Int, Float       & \%              & Int, Float       \\
+%             Int, Float       & **              & Int, Float       \\
+%             Int, Float       & \textless{}     & Int, Float       \\
+%             Int, Float       & \textgreater{}  & Int, Float       \\
+%             Int, Float       & <=    & Int, Float       \\
+%             Int, Float       & >= & Int, Float       \\
+%             Int, Float, Bool & ==              & Int, Float, Bool \\
+%             Int, Float, Bool & !=              & Int, Float, Bool \\
+%             $\alpha$         & ::              & List $\alpha$    \\ \hline
+%         \end{tabular}
+%         \caption{Table of valid binary operators in PyFunc IR with accepted types.}
+%     \end{center}
+% \end{table}
 % The IR is very regularly structured.
 % The inclusion of all available operators in the frontend in the IR seemed an effective strategy to minimise conversion complexity.
 % It easy to add new operators to the IR
@@ -985,7 +997,8 @@ This would include both binary operators and unary operators.
 %     \item List
 % \end{itemize}
 \section{Language Pipeline}
-\begin{figure}[!h]
+
+\begin{figure}[h]
     \includegraphics[width=\textwidth]{images/Language_Pipeline.png}
     \caption{A flow chart of the steps in the language pipeline, with general error types.}
 \end{figure}
@@ -1016,12 +1029,12 @@ Some important examples of this are:
 \end{itemize}
 
 The most important of these is the handling of function bindings as the actual structure of PyFunc is dictated by this.
-The language is aimed to be largely expression-based, but the necessary inclusion of declarations in the form of fuction definitions at a layer of complication to this.
-So, as a solution to this, the IR-Converter do the following:
+The language is aimed to be largely expression-based, but the necessary inclusion of declarations in the form of fuction definitions adds a layer of complication.
+So, as a solution to this, the IR-Converter does the following:
 \begin{enumerate}
     \item Take the list of bindings from the AST.
     \item Find the program entry point, i.e., the \texttt{main} function binding.
-    \item Convert all other bindings into \texttt{let} expressions with the \texttt{main} being the "in-scope".
+    \item Convert all other bindings into \texttt{let-rec} expressions with the \texttt{main} being the "in-scope".
 \end{enumerate}
 
 \section{Type Inference and Polymorphism}
@@ -1052,13 +1065,16 @@ Later in the program, if you try to do something like $x +$ \texttt{"hello"}, th
 It should be noted that there are many different styles of type systems with their own inference algorithms, each of which have their own strengths and weaknesses.
 
 The Hindley-Milner type system is highly regarded for its simplicity, efficiency, and ability to infer principal types accurately without requiring explicit type annotations.
-It provides strong type safety guarantees, catching errors at compile time and reducing the likelihood of runtime errors
+It provides strong type safety guarantees, catching errors at compile time and reducing the likelihood of runtime errors.
 Additionally, Hindley-Milner supports type polymorphism, allowing for concise and expressive code while maintaining type correctness. 
 
 \textbf{How does it work? (Baby steps...)}
 
+So how does it work?
+For Hindley-Milner to make much sense as a type-system, the first thing to understand is how types work on lambda calculus at all.
+
 The lambda calculus is agnostic to typing, much in the way binary is.
-The lambda calculus does not consider "type" at all and in its purest form does not have any inherent conception of values at all, which gave rise to concepts such as Church encodings\footnote{Church Encodings are a thing.}. 
+The lambda calculus does not consider "type" at all and in its purest form does not have any inherent conception of values at all, which gave rise to concepts such as Church encodings\footnote{Church encodings are representations of data structures and operations solely through functions and function application, originating from lambda calculus. They enable the representation of primitive data types and operations using only functions.}. 
 
 There is however, an extension of the lambda calculus, called the \textbf{simply typed lambda calculus}, where types are considered.
 There a four typing rules in the simply typed lambda calculus:
@@ -1083,10 +1099,10 @@ There a four typing rules in the simply typed lambda calculus:
 
 A key description of the simply typed lambda calculus is as a monomorphic (lit., one form) type system.
 In type theory, monomorphic types refer to types where variables can only represent a single, specific type.
-In other words, there is no polymorphism present in monomorphic types. Each variable in a monomorphic type system is associated with a fixed, concrete type, and that type cannot change.
+In other words, there is no polymorphism present in monomorphic type systems. Each variable in one is associated with a fixed, concrete type, and that type cannot change.
 
 For example, in a monomorphic type system, a variable x might be declared to have type Int, meaning it can only hold integer values.
-If you attempt to assign a non-integer value to x, or use x in a context where only integers are expected, it would result in a type error.
+If you attempt to assign a non-integer value to x, or use x in a context where integers are not expected, it would result in a type error.
 
 Monomorphic types are in contrast to polymorphic (lit., many form) types, where variables can represent multiple types.
 
@@ -1102,50 +1118,51 @@ Monomorphic types are in contrast to polymorphic (lit., many form) types, where 
 
 In general, polymorphism means that operations accept values of multiple types. For example, the id function:
 
-\begin{eqnarray} 
-   \text{id-type} \; :& \; &\sigma \rightarrow \sigma \label{eq:lambda-id-type}\\
-   \text{id-body} \; :& \; &\lambda x . x \label{eq:lambda-id-body}
-\end{eqnarray}
+\begin{align*} 
+   \text{id-type} \; :& \; \sigma \rightarrow \sigma\\
+   \text{id-body} \; :& \; \lambda x . x
+\end{align*}
 
-In \ref{eq:lambda-id-type}, the type the id function accepts and returns is polymorphic.
-The Hindley-Milner allows what is known as \emph{parametric} polymorphism, which can effectively give a function a "generic" type.
+In the above equation, the type the id function accepts and returns is polymorphic.
+The Hindley-Milner type system allows what is known as \emph{parametric} polymorphism, which can effectively give a function a "generic" type.
 Then the function can be instantiated with a particular type when needed. 
 For example:
 
-\begin{align}\label{eq:lambda-id-instantiated} 
+\begin{align*}\label{eq:lambda-id-instantiated} 
     \text{id-type} \; :& \; int \rightarrow int \\
     \text{id-body} \; :& \; \lambda x . x
-\end{align}
+\end{align*}
 
-The monomorphic instance of \texttt{id} is created as a result of a parametric type being called with an integer.
+The monomorphic instance of \texttt{id} is created as a result of a polymorphic type being called with an integer.
+Thereby instantiating an integer version of id in the context of the application.
 
-\textbf{Polymorphic types also give rise to the quantification of polymorphic types.}
+% \textbf{Polymorphic types also give rise to the quantification of polymorphic types.}
 
-For example, \texttt{cons : forall a . a -> List a -> List a}
+% For example, \texttt{cons : forall a . a -> List a -> List a}
 
-a is quantified in such a way that irrespective of what a is, cons only cares that both the first parameter (a) and the second (List a) have the \emph{same} a.
+% a is quantified in such a way that irrespective of what a is, cons only cares that both the first parameter (a) and the second (List a) have the \emph{same} a.
 
-Now in lambda calculus computation is represented by substitution.
-You sub-in values incrementally to compute expressions, and in the case of type-inference this means that as subsitutions occur their polymorphic types get constrainted repeatedly until they are monomorphic (or in some cases they remain polymorphic if the constraints never reach the point of monomorphic).
+% Now in lambda calculus computation is represented by substitution.
+% You sub-in values incrementally to compute expressions, and in the case of type-inference this means that as subsitutions occur their polymorphic types get constrainted repeatedly until they are monomorphic (or in some cases they remain polymorphic if the constraints never reach the point of monomorphic).
 
-For example, a monomorphic instance of id: \texttt{id' : String -> String} as id has been supplied a string argument, the function is a monomorphic function of string to string.
+% For example, a monomorphic instance of id: \texttt{id' : String -> String} as id has been supplied a string argument, the function is a monomorphic function of string to string.
 
-Most programming languages approach type systems from the monomorphic perspective, where atmoic types are outlined, and evermore complex constructions out of them build a type system.
-% (In some languages this is more explicit like C, where making structs is in effect building new monomorphic types as composites of other atomic types.)
-% \footnote{As an interesting side note, union type structs in C are not disimilar to polymorphic types in this analogy, though they are only as polymorphic as they are explicitly made.}
+% Most programming languages approach type systems from the monomorphic perspective, where atmoic types are outlined, and evermore complex constructions out of them build a type system.
+% % (In some languages this is more explicit like C, where making structs is in effect building new monomorphic types as composites of other atomic types.)
+% % \footnote{As an interesting side note, union type structs in C are not disimilar to polymorphic types in this analogy, though they are only as polymorphic as they are explicitly made.}
 
-% HM is designed from the opposite direction where parametric polymorphism is emphasised.
-% A key thing to know before hand is that whilst HM is polymorphic, it does have a fundamental restriction.
+% % HM is designed from the opposite direction where parametric polymorphism is emphasised.
+% % A key thing to know before hand is that whilst HM is polymorphic, it does have a fundamental restriction.
 
-Now, typed-lambda calculus is all well and good, but there is a fundamental problem. Type inference in polymorphic lambda calculus is not decideable. (In logic, in a true/false decision problem is only decideable if there exists an effective method for derviving the correct answer.)
+% Now, typed-lambda calculus is all well and good, but there is a fundamental problem. Type inference in polymorphic lambda calculus is not decideable. (In logic, in a true/false decision problem is only decideable if there exists an effective method for derviving the correct answer.)
 
-\texttt{($\lambda$ id . ... (id 3) ... (id "text") ...) ($\lambda$ x . x)}
+% \texttt{($\lambda$ id . ... (id 3) ... (id "text") ...) ($\lambda$ x . x)}
 
-So, HM does the next best thing: let-polymorphism.
+% So, HM does the next best thing: let-polymorphism.
 
-\texttt{let id = $\lambda$ x . x in ... (id 3) ... (id "text") ...}
+% \texttt{let id = $\lambda$ x . x in ... (id 3) ... (id "text") ...}
 
-Let-polymorphism restricts the binding mechanism in an extension of the expression syntax. Only values bound in a let construct are subject to instantiation, i.e., are polymorphic, while parameters in lambda-abstractions are treated as monomorphic.
+% Let-polymorphism restricts the binding mechanism in an extension of the expression syntax. Only values bound in a let construct are subject to instantiation, i.e., are polymorphic, while parameters in lambda-abstractions are treated as monomorphic.
 
 \subsection{Type System Formalims and Definitions}
 
@@ -1182,28 +1199,28 @@ In the context of this project, all type variables are implicitly "all-quantifie
 \subsection{Hindley-Milner}
 
 \begin{itemize}
-    % \item Monotypes
+    \item Monotypes [Already explained, either remove this or incorporate it elsewhere.]
     
-    % Monotypes are base types.
-    % They always designate a specific type.
-    % They are represented by $\tau$.
-    % There are broadly two categories of monotypes, type constants like \texttt{int, string, bool}, and type functions like \texttt{int $rightarrow$ string}.
-    % Monotypes are not to be confused with \emph{monomorphic} types.
-    % Monotypes include things like variables which are not monomorphic.
+    Monotypes are base types.
+    They always designate a specific type.
+    They are represented by $\tau$.
+    There are broadly two categories of monotypes, type constants like \texttt{int, string, bool}, and type functions like \texttt{int $rightarrow$ string}.
+    Monotypes are not to be confused with \emph{monomorphic} types.
+    Monotypes include things like variables which are not monomorphic.
 
-    % \item Polytypes
+    \item Polytypes [Already discussed, and this is not very useful.]
     
-    % Polytypes or type schemes are types containing variables bound by zero or more for-all ($\forall$) quantifiers, eg. $\forall \alpha . \alpha \rightarrow \alpha$.
-    % A function with polytype $\forall \alpha . \alpha \rightarrow \alpha$ can map any value of the same type to itself, which is by definiton the identity function.
-    % The way to check equality of polytypes is up to reordering the quantification and $\alpha$-conversion.
-    % Further, quantified variables not occuring in the monotpye can be dropped.
-    % \item Context and typing
+    Polytypes or type schemes are types containing variables bound by zero or more for-all ($\forall$) quantifiers, eg. $\forall \alpha . \alpha \rightarrow \alpha$.
+    A function with polytype $\forall \alpha . \alpha \rightarrow \alpha$ can map any value of the same type to itself, which is by definiton the identity function.
+    The way to check equality of polytypes is up to reordering the quantification and $\alpha$-conversion.
+    Further, quantified variables not occuring in the monotype can be dropped.
+    \item Context and typing [Pretty useful, keep around, maybe move it]
     
-    % To join together syntax expressions and types a third piece of the puzzle is desperately needed: context.
-    % Syntactically, a context is a list of pairs $(x : \sigma)$, called bindings.
-    % The example binding states that $x$ has type $\sigma$.
-    % A typing judgement has the form $\Gamma \vdash e : \sigma$, stating that under the assumptions $\Gamma$, the expression $e$ has type $\sigma$.
-    % \item Free type variables
+    To join together syntax expressions and types a third piece of the puzzle is desperately needed: context.
+    Syntactically, a context is a list of pairs $(x : \sigma)$, called bindings.
+    The example binding states that $x$ has type $\sigma$.
+    A typing judgement has the form $\Gamma \vdash e : \sigma$, stating that under the assumptions $\Gamma$, the expression $e$ has type $\sigma$.
+    % \item Free type variables []
     
     % In a type $\forall a_1 \dots \forall a_n \cdot \tau$, the $\forall$ is the quanitifer binding the type variables $a_i$ in the monotype $\tau$.
     % The variables $a_i$ are called quantified and any occurance of a quantified type variable in $\tau$ is called \emph{bound}.
@@ -1218,7 +1235,6 @@ In the context of this project, all type variables are implicitly "all-quantifie
     $\lambda x . x$ can have $\forall a . a \rightarrow a$ as its type as well as \texttt{string $\rightarrow$ string} or \texttt{int $\rightarrow$ int} and more.
     It cannot however have the type \texttt{int $\rightarrow$ string}.
     The most general type for this function is $\forall a . a \rightarrow a$, while the others are more specific and can be derived from the most general type via substituting a type for the type parameter ($a$).
-    The counter example fails because it is not consistent with the most general type.
 
     Formally, in HM, a type $\sigma ' $ is more general than $\sigma$, if some quantified variable in $\sigma'$ is consistently subsittuted such that one gains $\sigma$.
     Formally the statement, $\sigma ' $ is more general than $\sigma$, can be written as $\sigma' \sqsubseteq \sigma$.
@@ -1231,7 +1247,7 @@ In the context of this project, all type variables are implicitly "all-quantifie
     \item Substitution in typings
     
     Type subsitutions that arise from the above specified type-order are consistent in their replacement.
-    \item Natural Deduction
+    % \item Natural Deduction
     \item Typing rules
     \item Let Polymorphism
     \item Generalisation
@@ -1242,30 +1258,61 @@ In the context of this project, all type variables are implicitly "all-quantifie
 \end{itemize}
 
 
-\begin{equation} \label{eq:HM-Var}
-    \frac{x : \sigma \in \Gamma}{\Gamma \vdash_D x : \sigma}\texttt{[Var]}
+% \begin{equation} \label{eq:HM-Var}
+%     \frac{x : \sigma \in \Gamma}{\Gamma \vdash_D x : \sigma}\texttt{[Var]}
+% \end{equation}
+
+% \begin{equation} \label{eq:HM-App}
+%     \frac{\Gamma \vdash_D e_0 : \tau \rightarrow \tau' \;\;\; \Gamma \vdash_D e_1 : \tau}{\Gamma \vdash_D e_0 e_1 : \tau'}\text{[Application]}
+% \end{equation}
+
+% \begin{equation} \label{eq:HM-Abs}
+%    \frac{\Gamma, x : \tau \vdash_D e:\tau'}{\Gamma \vdash_D \lambda x.e:\tau \rightarrow \tau'}\text{[Absrtaction]}
+% \end{equation}
+
+% \begin{equation} \label{eq:HM-Let}
+%     \frac{\Gamma\vdash_D e_0:\sigma \;\;\; \Gamma ,x:\sigma \vdash_D e_1 :\tau}{\Gamma \vdash_D \text{let }x = e_0\text{ in } e_1 : \tau}\text{[Let]}
+% \end{equation}
+
+% \begin{equation} \label{eq:HM-Inst}
+%    \frac{\Gamma \vdash_D e:\sigma ' \;\;\; \sigma ' \sqsubseteq \sigma}{\Gamma \vdash_D e:\sigma}\text{[Instantiation]}
+% \end{equation}
+
+% \begin{equation} \label{eq:HM-Gen}
+%    \frac{\Gamma \vdash_D e:\sigma \;\;\; \alpha \notin \text{free}(\Gamma)}{\Gamma \vdash_D e: \forall \alpha . \sigma}\text{[Generalisation]}
+% \end{equation}
+
+\begin{equation}
+    \frac
+    {x : \sigma \in \Gamma \;\;\; \tau = inst(\sigma)}
+    {\Gamma \vdash x : \tau}
+    \texttt{[Variable]}
 \end{equation}
 
-\begin{equation} \label{eq:HM-App}
-    \frac{\Gamma \vdash_D e_0 : \tau \rightarrow \tau' \;\;\; \Gamma \vdash_D e_1 : \tau}{\Gamma \vdash_D e_0 e_1 : \tau'}\text{[Application]}
+\begin{equation}
+    \frac
+    {\Gamma \vdash e_0 : \tau_0 \;\;\; \Gamma \vdash e_1 : \tau_1 \;\;\; \tau' = newvar \;\;\; unify(\tau_0, \tau_1 \rightarrow \tau')}
+    {\Gamma \vdash e_0 e_1 : \tau'}
+    \texttt{[Application]}
 \end{equation}
 
-\begin{equation} \label{eq:HM-Abs}
-   \frac{\Gamma, x : \tau \vdash_D e:\tau'}{\Gamma \vdash_D \lambda x.e:\tau \rightarrow \tau'}\text{[Absrtaction]}
+\begin{equation}
+    \frac
+    {\tau = newvar \;\;\; \Gamma, x : \tau \vdash e: \tau'}
+    {\Gamma \vdash \lambda x . e : \tau \rightarrow \tau'}
+    \texttt{[Abstraction]}
 \end{equation}
 
-\begin{equation} \label{eq:HM-Let}
-    \frac{\Gamma\vdash_D e_0:\sigma \;\;\; \Gamma ,x:\sigma \vdash_D e_1 :\tau}{\Gamma \vdash_D \text{let }x = e_0\text{ in } e_1 : \tau}\text{[Let]}
-\end{equation}
-
-\begin{equation} \label{eq:HM-Inst}
-   \frac{\Gamma \vdash_D e:\sigma ' \;\;\; \sigma ' \sqsubseteq \sigma}{\Gamma \vdash_D e:\sigma}\text{[Instantiation]}
-\end{equation}
-
-\begin{equation} \label{eq:HM-Gen}
-   \frac{\Gamma \vdash_D e:\sigma \;\;\; \alpha \notin \text{free}(\Gamma)}{\Gamma \vdash_D e: \forall \alpha . \sigma}\text{[Generalisation]}
+\begin{equation}
+    \frac
+    {\Gamma \vdash e_0 : \tau \;\;\; \Gamma, x : \bar \Gamma (\tau) \vdash e_1 : \tau '}
+    {\Gamma \vdash \texttt{let } x = e_0 \texttt{ in } e_1 : \tau'}
+    \texttt{[Let]}
 \end{equation}
     
+    
+\newpage
+
 \newpage
 \subsection{Unification Algorithm}
 
@@ -1314,7 +1361,7 @@ OCamllex for tokenisation.
 
 Everything else was built from scratch in the language.
 
-\section{Parsing ,Lexer and Abstract Syntax Tree}
+\section{Parsing, Lexing and the Abstract Syntax Tree}
 
 % To aid in a flexible yet easily modifiable syntax the following was done:
 % 0. An initial pass that converts white space identation into explicit scopes for later parsing.
@@ -1330,14 +1377,36 @@ This process was broken down into three steps:
     \item The PyFunc parser converts the token stream into the frontend's abstract syntax.
 \end{enumerate}
 
-\textbf{Whitespace Indentation Conversion}
+\subsection{Whitespace Indentation Conversion}
 
 Whitespace indentation is a formatting technique used in programming languages to visually structure code.
 By indenting blocks of code with consistent spaces or tabs, developers create a clear hierarchy that reflects the relationships between different parts of the code.
 In many languages this indentation has no functional impact on the code's behavior but greatly enhances readability, making it easier to understand the flow of control and identify nested blocks like loops and conditionals.
 Python enforces strict indentation rules as a means to gain these advantages and to explicitly delineate block scopes for structures like loops and conditionals.
 
-\[Python Example of whitespace indentation levels\]
+% \[Python Example of whitespace indentation levels\]
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \begin{lstlisting}[language=Python]
+            def factorial(n):
+                if n == 1:
+                    return 1
+                else:
+                    return n * factorial(n - 1)
+        \end{lstlisting}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.45\textwidth}
+        \begin{lstlisting}[language=Python]
+            def factorial(n):{
+                if n == 1:{
+                    return 1}
+                else:{
+                    return n * factorial(n - 1)}}
+        \end{lstlisting}
+    \end{subfigure}
+        
+\end{figure}
 
 PyFunc similarly enforces this rule of white space indentation for the delineation of scopes.
 
@@ -1364,8 +1433,216 @@ The implementation for this rule was relatively simple from an algorithm perspec
 
 In the actual implementation the converter looked like this:
 
-\begin{lstlisting}
-    
+\begin{lstlisting}[language=Caml, caption=The 'preprocess' function that handles all whitespace scoping in PyFunc.]
+let preprocess source =
+    let get_indent str = 
+      let rec count_space_helper idx = 
+        if idx >= String.length str || str.[idx] <> ' ' then
+          idx
+        else
+          count_space_helper (idx + 1)
+      in
+      let indent = count_space_helper 0 in
+      if (indent mod 4 = 0) then
+        indent / 4
+      else
+        raise (Parse.parse_error "Invalid indentation! 4 space indentation required.")
+    in
+    let rec loop prev_indent acc = function
+      | [] -> 
+        if prev_indent > 0 then
+          let closing_braces = String.make prev_indent '}' in
+          List.rev (closing_braces :: acc)
+        else 
+          List.rev acc
+      | line :: rest ->
+        let indent = get_indent line in
+        let diff = abs (prev_indent - indent) in
+        let amended_line =
+          if indent > prev_indent then
+            (String.make diff '{') ^ line
+          else if indent < prev_indent then
+          (String.make diff '}') ^ line
+          else
+            line
+        in
+        loop indent (amended_line :: acc) rest
+    in
+    let output = String.concat "\n" (loop 0 [] source) in
+    output
+\end{lstlisting}
+
+Whilst the implementation is rather crude, the language itself does not have any cases currently that make this algorithm fail.
+It would likely be an insufficent solution in future when the language is extended further, but this is completely functional for the language in its current state.
+
+
+\subsection{Tokenisation with OCamllex}
+
+Tokenization is the process of splitting a block of text into smaller, meaningful units called tokens.
+These tokens can represent individual words, punctuation marks, numbers, or even phrases, depending on the context and requirements of the task.
+For example, in the sentence "The cat is sleeping", tokenisation could break it down into three tokens: "The", "cat", and "is sleeping".
+It could also break it down into four: "The", "cat", "is", and "sleeping".
+Tokenisation can break down text arbitrarily, meaning that to get meaningful output there needs to exist a specification for the process of tokenisation.
+
+The component that does this tokenisation is the lexical analyser (lexer).
+The lexer reads the characters of the source code input and groups them into tokens based on predefined rules called lexical rules or tokenization rules.
+These rules define how to recognize and classify different parts of the source code.
+
+For the sake of development ease and flexibility in altering lexer rules, OCamllex, a lexer generator, was utilized, although this component can be manually created.
+
+OCamllex takes a given specification of lexer rules and produces the lexer which implements them.
+
+PyFunc's lexer has the following specification:
+
+\begin{lstlisting}[language=C, caption=PyFunc's lexer specification for OCamllex., keepspaces=true]
+rule token = parse
+    (* Source Cleaners *)
+    | [' ' '\t' '\r' '\n']* { token lexbuf }
+    | '#'[^'\n']*           { token lexbuf }  (* Single line comments. *)
+    | "def"     {DEFINE}
+    | "True"    {TRUE}
+    | "False"   {FALSE}
+    | "if"      {IF}
+    | "elif"    {ELIF}
+    | "else"    {ELSE}
+    | "None"    {UNITVAL}
+    | '('       {LPAREN}
+    | ')'       {RPAREN}
+    | '{'       {LBRACE}
+    | '}'       {RBRACE}
+    | '['       {LBRACK}
+    | ']'       {RBRACK}
+    | '='       {EQ}
+    | "and"     {AND}
+    | "or"      {OR}
+    | "not"     {NOT}
+    | '<'       {LT}
+    | '>'       {GT}
+    | ">="      {GEQ}
+    | "<="      {LEQ}
+    | "=="      {EQQ}
+    | "!="      {NEQ}
+    | '+'       {PLUS}
+    | '-'       {MINUS}
+    | '*'       {STAR}
+    | '/'       {DIVIDE}
+    | "::"      {CONS}
+    | '%'       {MOD}
+    | ','       {COMMA}
+    | ':'       {COLON}
+    | eof       {EOF}
+    | ['A'-'Z' 'a'-'z' '_']['A'-'Z' 'a'-'z' '_' '0'-'9' '\'']*  {ID (lexeme lexbuf)}
+    | '"'       {read_string (Buffer.create 17) lexbuf}
+    | ['0'-'9']+ as num_string {INTVAL (int_of_string num_string)}
+    | _         { raise (lexical_error ("Illegal character: " ^ lexeme lexbuf))}
+    and read_string buffer = parse
+        | '"'           {STRINGVAL (Buffer.contents buffer)}
+        | '\\' '/'      {Buffer.add_char buffer '/'; read_string buffer lexbuf}
+        | '\\' '\\'     {Buffer.add_char buffer '\\'; read_string buffer lexbuf}
+        | '\\' 'b'      {Buffer.add_char buffer '\b'; read_string buffer lexbuf}
+        | '\\' 'f'      {Buffer.add_char buffer '\012'; read_string buffer lexbuf}
+        | '\\' 'n'      {Buffer.add_char buffer '\n'; read_string buffer lexbuf}
+        | '\\' 'r'      {Buffer.add_char buffer '\r'; read_string buffer lexbuf}
+        | '\\' 't'      {Buffer.add_char buffer '\t'; read_string buffer lexbuf}
+        | [^ '"' '\\']+ {Buffer.add_string buffer (Lexing.lexeme lexbuf);read_string buffer lexbuf}
+        | _             {raise (Lexical_error ("Illegal string character: " ^ Lexing.lexeme lexbuf))}
+        | eof           {raise (Lexical_error ("String is not terminated"))}
+\end{lstlisting}
+
+What appears in quotes is the token that is recognised in the source text.
+The capitalised values in the curly braces are the tokens that are being output by the lexer.
+At the bottom of the ruleset the series of buffer actions are simply the parsing of string literals into single contiguous tokens refering to the literal value of the string.
+
+\subsection{Parsing with Menhir}
+
+Parsing is the process of analyzing a sequence of tokens according to the rules of a formal grammar to determine its structure and meaning.
+In simpler terms, parsing is like understanding the syntax of a sentence in a language.
+Just as we follow grammar rules to understand the structure of sentences in human languages, parsers in computer science follow the rules of a formal grammar to understand the structure of code written in programming languages.
+The parser checks whether the sequence of tokens conforms to the syntax rules defined by the grammar of the language.
+If the sequence of tokens forms a valid structure according to the grammar, it is considered syntactically correct.
+And in this case the parser will generate the frontend language's AST from its formal grammar.
+
+For convenience the parser generator tool Menhir was used.
+Menhir facilitates the creation of parsers by automatically generating efficent parsing code based on the provided grammar rules, much like OCamllex, though somewhat more indepth.
+
+In PyFunc the formal grammar for the fronend language is relatively simple, with only a few constructs included in its current state.
+
+\textbf{BREAK THIS DOWN IN TO SMALLER PIECES AND DISCUSS EACH INDIVIDUALLY (SUMMARISING ANYTHING REPETATIVE)}
+
+\begin{lstlisting}[caption=PyFunc's full frontend grammar rules for Menhir., keepspaces=true]
+    start:
+    | binding+ EOF {makeProgram $1}
+
+binding:
+    | DEFINE ID LPAREN param_list RPAREN COLON scope {makeBinding $2 (makeFunc $2 $4 $7)}
+    | ID EQ expr {makeBinding $1 $3}
+
+scope: LBRACE expr RBRACE   {$2}
+
+expr:
+    | base_expr                                 {$1}
+    | if_expr                                   {$1}
+
+base_expr:
+    | expr OR expr      {makeOpBinary OpBinary.And $1 $3}
+    | expr AND expr     {makeOpBinary OpBinary.Or $1 $3}
+    | expr NEQ expr     {makeOpBinary OpBinary.NotEqual $1 $3}
+    | expr EQQ expr     {makeOpBinary OpBinary.Equal $1 $3}
+    | expr LT expr      {makeOpBinary OpBinary.Less $1 $3}
+    | expr LEQ expr     {makeOpBinary OpBinary.LessEqual $1 $3}
+    | expr GT expr      {makeOpBinary OpBinary.Greater $1 $3}
+    | expr GEQ expr     {makeOpBinary OpBinary.GreaterEqual $1 $3}
+    | expr MINUS expr   {makeOpBinary OpBinary.Subtract $1 $3}
+    | expr PLUS expr    {makeOpBinary OpBinary.Add $1 $3}
+    | expr DIVIDE expr  {makeOpBinary OpBinary.Divide $1 $3}
+    | expr STAR expr    {makeOpBinary OpBinary.Multiply $1 $3}
+    | expr MOD expr     {makeOpBinary OpBinary.Mod $1 $3}
+    | unary             {$1}
+
+// Control Flow
+
+if_expr:
+    | IF expr COLON scope elif_expr   {makeIf $2 $4 $5}
+    | IF expr COLON scope else_expr   {makeIf $2 $4 $5}
+
+elif_expr:
+    | ELIF expr COLON scope elif_expr {makeIf $2 $4 $5}
+    | ELIF expr COLON scope else_expr {makeIf $2 $4 $5}
+
+else_expr:
+    | ELSE COLON scope {$3}
+
+unary:
+    | NOT unary   {makeOpUnary OpUnary.Not $2}
+    | MINUS unary {makeOpUnary OpUnary.Negative $2}
+    | PLUS unary  {makeOpUnary OpUnary.Positive $2}
+    | list_op     {$1}
+
+list_op:
+    | unary CONS unary {makeOpBinary OpBinary.Cons $1 $3}
+    | call {$1}
+
+call:
+    | ID LPAREN expr_list RPAREN {makeCall $1 $3}    // Call with params.
+    | primary {$1}
+
+primary:
+    | LPAREN expr RPAREN {$2}
+    | LBRACK expr_list RBRACK {makeList $2}
+    | ID                 {try find var_table $1 with Not_found -> makeVar ($1)}
+    | STRINGVAL          {makeConst (ConstString $1)}
+    | INTVAL             {makeConst (ConstInt $1)}
+    | TRUE               {makeConst (ConstBool true)}
+    | FALSE              {makeConst (ConstBool false)}
+    | UNITVAL            {makeConst ConstUnit}
+
+// List literals.
+
+param_list:
+    | xs = separated_list(COMMA, ID) { xs }
+
+expr_list:
+    | xs = separated_list(COMMA, expr) { xs }
 \end{lstlisting}
 
 \section{IR Converter}
@@ -1406,16 +1683,28 @@ It required several structures and the implementation of significant pieces of t
 
 \subsection{Type Variables}
 
-A naive description of a type variable could be something like: "A pair made of a quantifier and 
+A naive description of a type variable could be something like: "A place holder that represents an unknown type".
+This is true, but from an implementation standpoint is a minor issue.
+Fundamentally, types can be monotypes or polytypes as previously outlined.
+The distinction of polytypes and free type variables needs to be explicit:
 
-Before type variables can be implemented, the concept of quantifiers needs to be described.
+\[\text{Polytypes are resolved types whereas free type variables are unresolved types.}\]
+
+% Internally handling a monotype that has a singlular concrete type and a polytype that has a quantifier and an a possibly indeterminate type is an added layer of complication.
+\dots
+
+BLARG
+
+
+
+Before type variables can be implemented, polytypes and the concept of quantifiers needs to be described.
 The very simple Quantifier module does just that.
 
 \begin{lstlisting}[language=Caml]
   module Quantifier = struct
     type t = string
     let make x = x
-    let of_typeVar (tv, _) = tv
+    let of_typeVar (tv, _) = tv (*Ignore this for now.*)
     let compare = String.compare
   end
 \end{lstlisting}
@@ -1437,6 +1726,13 @@ The first step in the implementation of type variables, is itself describing the
   and polyType = quantifier list * monoType
   and t = monoType
 \end{lstlisting}
+
+This includes some definintions that need a little clarifying:
+\begin{itemize}
+    \item The type \texttt{resolution\_state} is a simple way of tracking if type variables are resolved or not.
+    If it is unresolved then it carries no variable, whereas if it is resolved, it carries the monotype it has been resolved to.
+    \item The type \texttt{typevar} is a simple pair of an identifier, which
+\end{itemize}
 
 \begin{lstlisting}[language=Caml, caption=The TypeVar module. The module specifies the utility functions for the management of type variables.]
   module TypeVar = struct
@@ -1515,187 +1811,187 @@ Here are excepts indicating the implementations of the following rules:
 
 
 
-% \section{General points}
+% % \section{General points}
 
-These points apply to the whole dissertation, not just this chapter.
-
-
-
-% \subsection{Figures}
-\emph{Always} refer to figures included, like Figure \ref{fig:relu}, in the body of the text. Include full, explanatory captions and make sure the figures look good on the page.
-You may include multiple figures in one float, as in Figure \ref{fig:synthetic}, using \texttt{subcaption}, which is enabled in the template.
+% These points apply to the whole dissertation, not just this chapter.
 
 
 
-% Figures are important. Use them well.
-\begin{figure}
-    \centering
-    \includegraphics[width=0.5\linewidth]{images/relu.pdf}    
-
-    \caption{In figure captions, explain what the reader is looking at: ``A schematic of the rectifying linear unit, where $a$ is the output amplitude,
-    $d$ is a configurable dead-zone, and $Z_j$ is the input signal'', as well as why the reader is looking at this: 
-    ``It is notable that there is no activation \emph{at all} below 0, which explains our initial results.'' 
-    \textbf{Use vector image formats (.pdf) where possible}. Size figures appropriately, and do not make them over-large or too small to read.
-    }
-
-    % use the notation fig:name to cross reference a figure
-    \label{fig:relu} 
-\end{figure}
+% % \subsection{Figures}
+% \emph{Always} refer to figures included, like Figure \ref{fig:relu}, in the body of the text. Include full, explanatory captions and make sure the figures look good on the page.
+% You may include multiple figures in one float, as in Figure \ref{fig:synthetic}, using \texttt{subcaption}, which is enabled in the template.
 
 
-\begin{figure}
-    \centering
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{images/synthetic.png}
-        \caption{Synthetic image, black on white.}
-        \label{fig:syn1}
-    \end{subfigure}
-    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
-      %(or a blank line to force the subfigure onto a new line)
-    \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=\textwidth]{images/synthetic_2.png}
-        \caption{Synthetic image, white on black.}
-        \label{fig:syn2}
-    \end{subfigure}
-    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
-    %(or a blank line to force the subfigure onto a new line)    
-    \caption{Synthetic test images for edge detection algorithms. \subref{fig:syn1} shows various gray levels that require an adaptive algorithm. \subref{fig:syn2}
-    shows more challenging edge detection tests that have crossing lines. Fusing these into full segments typically requires algorithms like the Hough transform.
-    This is an example of using subfigures, with \texttt{subref}s in the caption.
-    }\label{fig:synthetic}
-\end{figure}
 
-\clearpage
+% % Figures are important. Use them well.
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=0.5\linewidth]{images/relu.pdf}    
 
-% \subsection{Equations}
+%     \caption{In figure captions, explain what the reader is looking at: ``A schematic of the rectifying linear unit, where $a$ is the output amplitude,
+%     $d$ is a configurable dead-zone, and $Z_j$ is the input signal'', as well as why the reader is looking at this: 
+%     ``It is notable that there is no activation \emph{at all} below 0, which explains our initial results.'' 
+%     \textbf{Use vector image formats (.pdf) where possible}. Size figures appropriately, and do not make them over-large or too small to read.
+%     }
 
-Equations should be typeset correctly and precisely. Make sure you get parenthesis sizing correct, and punctuate equations correctly 
-(the comma is important and goes \textit{inside} the equation block). Explain any symbols used clearly if not defined earlier. 
+%     % use the notation fig:name to cross reference a figure
+%     \label{fig:relu} 
+% \end{figure}
 
-For example, we might define:
-\begin{equation}
-    \hat{f}(\xi) = \frac{1}{2}\left[ \int_{-\infty}^{\infty} f(x) e^{2\pi i x \xi} \right],
-\end{equation}    
-where $\hat{f}(\xi)$ is the Fourier transform of the time domain signal $f(x)$.
 
-% \subsection{Algorithms}
-Algorithms can be set using \texttt{algorithm2e}, as in Algorithm \ref{alg:metropolis}.
+% \begin{figure}
+%     \centering
+%     \begin{subfigure}[b]{0.45\textwidth}
+%         \includegraphics[width=\textwidth]{images/synthetic.png}
+%         \caption{Synthetic image, black on white.}
+%         \label{fig:syn1}
+%     \end{subfigure}
+%     ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+%       %(or a blank line to force the subfigure onto a new line)
+%     \begin{subfigure}[b]{0.45\textwidth}
+%         \includegraphics[width=\textwidth]{images/synthetic_2.png}
+%         \caption{Synthetic image, white on black.}
+%         \label{fig:syn2}
+%     \end{subfigure}
+%     ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+%     %(or a blank line to force the subfigure onto a new line)    
+%     \caption{Synthetic test images for edge detection algorithms. \subref{fig:syn1} shows various gray levels that require an adaptive algorithm. \subref{fig:syn2}
+%     shows more challenging edge detection tests that have crossing lines. Fusing these into full segments typically requires algorithms like the Hough transform.
+%     This is an example of using subfigures, with \texttt{subref}s in the caption.
+%     }\label{fig:synthetic}
+% \end{figure}
 
-% NOTE: line ends are denoted by \; in algorithm2e
-\begin{algorithm}
-    \DontPrintSemicolon
-    \KwData{$f_X(x)$, a probability density function returing the density at $x$.\; $\sigma$ a standard deviation specifying the spread of the proposal distribution.\;
-    $x_0$, an initial starting condition.}
-    \KwResult{$s=[x_1, x_2, \dots, x_n]$, $n$ samples approximately drawn from a distribution with PDF $f_X(x)$.}
-    \Begin{
-        $s \longleftarrow []$\;
-        $p \longleftarrow f_X(x)$\;
-        $i \longleftarrow 0$\;
-        \While{$i < n$}
-        {
-            $x^\prime \longleftarrow \mathcal{N}(x, \sigma^2)$\;
-            $p^\prime \longleftarrow f_X(x^\prime)$\;
-            $a \longleftarrow \frac{p^\prime}{p}$\;
-            $r \longleftarrow U(0,1)$\;
-            \If{$r<a$}
-            {
-                $x \longleftarrow x^\prime$\;
-                $p \longleftarrow f_X(x)$\;
-                $i \longleftarrow i+1$\;
-                append $x$ to $s$\;
-            }
-        }
-    }
+% \clearpage
+
+% % \subsection{Equations}
+
+% Equations should be typeset correctly and precisely. Make sure you get parenthesis sizing correct, and punctuate equations correctly 
+% (the comma is important and goes \textit{inside} the equation block). Explain any symbols used clearly if not defined earlier. 
+
+% For example, we might define:
+% \begin{equation}
+%     \hat{f}(\xi) = \frac{1}{2}\left[ \int_{-\infty}^{\infty} f(x) e^{2\pi i x \xi} \right],
+% \end{equation}    
+% where $\hat{f}(\xi)$ is the Fourier transform of the time domain signal $f(x)$.
+
+% % \subsection{Algorithms}
+% Algorithms can be set using \texttt{algorithm2e}, as in Algorithm \ref{alg:metropolis}.
+
+% % NOTE: line ends are denoted by \; in algorithm2e
+% \begin{algorithm}
+%     \DontPrintSemicolon
+%     \KwData{$f_X(x)$, a probability density function returing the density at $x$.\; $\sigma$ a standard deviation specifying the spread of the proposal distribution.\;
+%     $x_0$, an initial starting condition.}
+%     \KwResult{$s=[x_1, x_2, \dots, x_n]$, $n$ samples approximately drawn from a distribution with PDF $f_X(x)$.}
+%     \Begin{
+%         $s \longleftarrow []$\;
+%         $p \longleftarrow f_X(x)$\;
+%         $i \longleftarrow 0$\;
+%         \While{$i < n$}
+%         {
+%             $x^\prime \longleftarrow \mathcal{N}(x, \sigma^2)$\;
+%             $p^\prime \longleftarrow f_X(x^\prime)$\;
+%             $a \longleftarrow \frac{p^\prime}{p}$\;
+%             $r \longleftarrow U(0,1)$\;
+%             \If{$r<a$}
+%             {
+%                 $x \longleftarrow x^\prime$\;
+%                 $p \longleftarrow f_X(x)$\;
+%                 $i \longleftarrow i+1$\;
+%                 append $x$ to $s$\;
+%             }
+%         }
+%     }
     
-\caption{The Metropolis-Hastings MCMC algorithm for drawing samples from arbitrary probability distributions, 
-specialised for normal proposal distributions $q(x^\prime|x) = \mathcal{N}(x, \sigma^2)$. The symmetry of the normal distribution means the acceptance rule takes the simplified form.}\label{alg:metropolis}
-\end{algorithm}
+% \caption{The Metropolis-Hastings MCMC algorithm for drawing samples from arbitrary probability distributions, 
+% specialised for normal proposal distributions $q(x^\prime|x) = \mathcal{N}(x, \sigma^2)$. The symmetry of the normal distribution means the acceptance rule takes the simplified form.}\label{alg:metropolis}
+% \end{algorithm}
 
-% \subsection{Tables}
+% % \subsection{Tables}
 
-If you need to include tables, like Table \ref{tab:operators}, use a tool like https://www.tablesgenerator.com/ to generate the table as it is
-extremely tedious otherwise. 
+% If you need to include tables, like Table \ref{tab:operators}, use a tool like https://www.tablesgenerator.com/ to generate the table as it is
+% extremely tedious otherwise. 
 
-\begin{table}[]
-    \caption{The standard table of operators in Python, along with their functional equivalents from the \texttt{operator} package. Note that table
-    captions go above the table, not below. Do not add additional rules/lines to tables. }\label{tab:operators}
-    %\tt 
-    \rowcolors{2}{}{gray!3}
-    \begin{tabular}{@{}lll@{}}
-    %\toprule
-    \textbf{Operation}    & \textbf{Syntax}                & \textbf{Function}                            \\ %\midrule % optional rule for header
-    Addition              & \texttt{a + b}                          & \texttt{add(a, b)}                                    \\
-    Concatenation         & \texttt{seq1 + seq2}                    & \texttt{concat(seq1, seq2)}                           \\
-    Containment Test      & \texttt{obj in seq}                     & \texttt{contains(seq, obj)}                           \\
-    Division              & \texttt{a / b}                          & \texttt{div(a, b) }  \\
-    Division              & \texttt{a / b}                          & \texttt{truediv(a, b) } \\
-    Division              & \texttt{a // b}                         & \texttt{floordiv(a, b)}                               \\
-    Bitwise And           & \texttt{a \& b}                         & \texttt{and\_(a, b)}                                  \\
-    Bitwise Exclusive Or  & \texttt{a \textasciicircum b}           & \texttt{xor(a, b)}                                    \\
-    Bitwise Inversion     & \texttt{$\sim$a}                        & \texttt{invert(a)}                                    \\
-    Bitwise Or            & \texttt{a | b}                          & \texttt{or\_(a, b)}                                   \\
-    Exponentiation        & \texttt{a ** b}                         & \texttt{pow(a, b)}                                    \\
-    Identity              & \texttt{a is b}                         & \texttt{is\_(a, b)}                                   \\
-    Identity              & \texttt{a is not b}                     & \texttt{is\_not(a, b)}                                \\
-    Indexed Assignment    & \texttt{obj{[}k{]} = v}                 & \texttt{setitem(obj, k, v)}                           \\
-    Indexed Deletion      & \texttt{del obj{[}k{]}}                 & \texttt{delitem(obj, k)}                              \\
-    Indexing              & \texttt{obj{[}k{]}}                     & \texttt{getitem(obj, k)}                              \\
-    Left Shift            & \texttt{a \textless{}\textless b}       & \texttt{lshift(a, b)}                                 \\
-    Modulo                & \texttt{a \% b}                         & \texttt{mod(a, b)}                                    \\
-    Multiplication        & \texttt{a * b}                          & \texttt{mul(a, b)}                                    \\
-    Negation (Arithmetic) & \texttt{- a}                            & \texttt{neg(a)}                                       \\
-    Negation (Logical)    & \texttt{not a}                          & \texttt{not\_(a)}                                     \\
-    Positive              & \texttt{+ a}                            & \texttt{pos(a)}                                       \\
-    Right Shift           & \texttt{a \textgreater{}\textgreater b} & \texttt{rshift(a, b)}                                 \\
-    Sequence Repetition   & \texttt{seq * i}                        & \texttt{repeat(seq, i)}                               \\
-    Slice Assignment      & \texttt{seq{[}i:j{]} = values}          & \texttt{setitem(seq, slice(i, j), values)}            \\
-    Slice Deletion        & \texttt{del seq{[}i:j{]}}               & \texttt{delitem(seq, slice(i, j))}                    \\
-    Slicing               & \texttt{seq{[}i:j{]}}                   & \texttt{getitem(seq, slice(i, j))}                    \\
-    String Formatting     & \texttt{s \% obj}                       & \texttt{mod(s, obj)}                                  \\
-    Subtraction           & \texttt{a - b}                          & \texttt{sub(a, b)}                                    \\
-    Truth Test            & \texttt{obj}                            & \texttt{truth(obj)}                                   \\
-    Ordering              & \texttt{a \textless b}                  & \texttt{lt(a, b)}                                     \\
-    Ordering              & \texttt{a \textless{}= b}               & \texttt{le(a, b)}                                     \\
-    % \bottomrule
-    \end{tabular}
-    \end{table}
-% \subsection{Code}
+% \begin{table}[]
+%     \caption{The standard table of operators in Python, along with their functional equivalents from the \texttt{operator} package. Note that table
+%     captions go above the table, not below. Do not add additional rules/lines to tables. }\label{tab:operators}
+%     %\tt 
+%     \rowcolors{2}{}{gray!3}
+%     \begin{tabular}{@{}lll@{}}
+%     %\toprule
+%     \textbf{Operation}    & \textbf{Syntax}                & \textbf{Function}                            \\ %\midrule % optional rule for header
+%     Addition              & \texttt{a + b}                          & \texttt{add(a, b)}                                    \\
+%     Concatenation         & \texttt{seq1 + seq2}                    & \texttt{concat(seq1, seq2)}                           \\
+%     Containment Test      & \texttt{obj in seq}                     & \texttt{contains(seq, obj)}                           \\
+%     Division              & \texttt{a / b}                          & \texttt{div(a, b) }  \\
+%     Division              & \texttt{a / b}                          & \texttt{truediv(a, b) } \\
+%     Division              & \texttt{a // b}                         & \texttt{floordiv(a, b)}                               \\
+%     Bitwise And           & \texttt{a \& b}                         & \texttt{and\_(a, b)}                                  \\
+%     Bitwise Exclusive Or  & \texttt{a \textasciicircum b}           & \texttt{xor(a, b)}                                    \\
+%     Bitwise Inversion     & \texttt{$\sim$a}                        & \texttt{invert(a)}                                    \\
+%     Bitwise Or            & \texttt{a | b}                          & \texttt{or\_(a, b)}                                   \\
+%     Exponentiation        & \texttt{a ** b}                         & \texttt{pow(a, b)}                                    \\
+%     Identity              & \texttt{a is b}                         & \texttt{is\_(a, b)}                                   \\
+%     Identity              & \texttt{a is not b}                     & \texttt{is\_not(a, b)}                                \\
+%     Indexed Assignment    & \texttt{obj{[}k{]} = v}                 & \texttt{setitem(obj, k, v)}                           \\
+%     Indexed Deletion      & \texttt{del obj{[}k{]}}                 & \texttt{delitem(obj, k)}                              \\
+%     Indexing              & \texttt{obj{[}k{]}}                     & \texttt{getitem(obj, k)}                              \\
+%     Left Shift            & \texttt{a \textless{}\textless b}       & \texttt{lshift(a, b)}                                 \\
+%     Modulo                & \texttt{a \% b}                         & \texttt{mod(a, b)}                                    \\
+%     Multiplication        & \texttt{a * b}                          & \texttt{mul(a, b)}                                    \\
+%     Negation (Arithmetic) & \texttt{- a}                            & \texttt{neg(a)}                                       \\
+%     Negation (Logical)    & \texttt{not a}                          & \texttt{not\_(a)}                                     \\
+%     Positive              & \texttt{+ a}                            & \texttt{pos(a)}                                       \\
+%     Right Shift           & \texttt{a \textgreater{}\textgreater b} & \texttt{rshift(a, b)}                                 \\
+%     Sequence Repetition   & \texttt{seq * i}                        & \texttt{repeat(seq, i)}                               \\
+%     Slice Assignment      & \texttt{seq{[}i:j{]} = values}          & \texttt{setitem(seq, slice(i, j), values)}            \\
+%     Slice Deletion        & \texttt{del seq{[}i:j{]}}               & \texttt{delitem(seq, slice(i, j))}                    \\
+%     Slicing               & \texttt{seq{[}i:j{]}}                   & \texttt{getitem(seq, slice(i, j))}                    \\
+%     String Formatting     & \texttt{s \% obj}                       & \texttt{mod(s, obj)}                                  \\
+%     Subtraction           & \texttt{a - b}                          & \texttt{sub(a, b)}                                    \\
+%     Truth Test            & \texttt{obj}                            & \texttt{truth(obj)}                                   \\
+%     Ordering              & \texttt{a \textless b}                  & \texttt{lt(a, b)}                                     \\
+%     Ordering              & \texttt{a \textless{}= b}               & \texttt{le(a, b)}                                     \\
+%     % \bottomrule
+%     \end{tabular}
+%     \end{table}
+% % \subsection{Code}
 
-Avoid putting large blocks of code in the report (more than a page in one block, for example). Use syntax highlighting if possible, as in Listing \ref{lst:callahan}.
+% Avoid putting large blocks of code in the report (more than a page in one block, for example). Use syntax highlighting if possible, as in Listing \ref{lst:callahan}.
 
-\begin{lstlisting}[language=python, float, caption={The algorithm for packing the $3\times 3$ outer-totalistic binary CA successor rule into a 
-    $16\times 16\times 16\times 16$ 4 bit lookup table, running an equivalent, notionally 16-state $2\times 2$ CA.}, label=lst:callahan]
-    def create_callahan_table(rule="b3s23"):
-        """Generate the lookup table for the cells."""        
-        s_table = np.zeros((16, 16, 16, 16), dtype=np.uint8)
-        birth, survive = parse_rule(rule)
+% \begin{lstlisting}[language=python, float, caption={The algorithm for packing the $3\times 3$ outer-totalistic binary CA successor rule into a 
+%     $16\times 16\times 16\times 16$ 4 bit lookup table, running an equivalent, notionally 16-state $2\times 2$ CA.}, label=lst:callahan]
+%     def create_callahan_table(rule="b3s23"):
+%         """Generate the lookup table for the cells."""        
+%         s_table = np.zeros((16, 16, 16, 16), dtype=np.uint8)
+%         birth, survive = parse_rule(rule)
 
-        # generate all 16 bit strings
-        for iv in range(65536):
-            bv = [(iv >> z) & 1 for z in range(16)]
-            a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p = bv
+%         # generate all 16 bit strings
+%         for iv in range(65536):
+%             bv = [(iv >> z) & 1 for z in range(16)]
+%             a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p = bv
 
-            # compute next state of the inner 2x2
-            nw = apply_rule(f, a, b, c, e, g, i, j, k)
-            ne = apply_rule(g, b, c, d, f, h, j, k, l)
-            sw = apply_rule(j, e, f, g, i, k, m, n, o)
-            se = apply_rule(k, f, g, h, j, l, n, o, p)
+%             # compute next state of the inner 2x2
+%             nw = apply_rule(f, a, b, c, e, g, i, j, k)
+%             ne = apply_rule(g, b, c, d, f, h, j, k, l)
+%             sw = apply_rule(j, e, f, g, i, k, m, n, o)
+%             se = apply_rule(k, f, g, h, j, l, n, o, p)
 
-            # compute the index of this 4x4
-            nw_code = a | (b << 1) | (e << 2) | (f << 3)
-            ne_code = c | (d << 1) | (g << 2) | (h << 3)
-            sw_code = i | (j << 1) | (m << 2) | (n << 3)
-            se_code = k | (l << 1) | (o << 2) | (p << 3)
+%             # compute the index of this 4x4
+%             nw_code = a | (b << 1) | (e << 2) | (f << 3)
+%             ne_code = c | (d << 1) | (g << 2) | (h << 3)
+%             sw_code = i | (j << 1) | (m << 2) | (n << 3)
+%             se_code = k | (l << 1) | (o << 2) | (p << 3)
 
-            # compute the state for the 2x2
-            next_code = nw | (ne << 1) | (sw << 2) | (se << 3)
+%             # compute the state for the 2x2
+%             next_code = nw | (ne << 1) | (sw << 2) | (se << 3)
 
-            # get the 4x4 index, and write into the table
-            s_table[nw_code, ne_code, sw_code, se_code] = next_code
+%             # get the 4x4 index, and write into the table
+%             s_table[nw_code, ne_code, sw_code, se_code] = next_code
 
-        return s_table
+%         return s_table
 
-\end{lstlisting}
+% \end{lstlisting}
 
 %==================================================================================================================================
 \chapter{Evaluation} 

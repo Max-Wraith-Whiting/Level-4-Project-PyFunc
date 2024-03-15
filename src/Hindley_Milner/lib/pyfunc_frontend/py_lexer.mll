@@ -10,7 +10,6 @@ rule token = parse
     (* Source Cleaners *)
     | [' ' '\t' '\r' '\n']* { token lexbuf }
     | '#'[^'\n']*           { token lexbuf }  (* Single line comments. *)
-    (* | '\n'      {NL} Newline *)
     | "def"     {DEFINE}
     | "True"    {TRUE}
     | "False"   {FALSE}
@@ -25,11 +24,10 @@ rule token = parse
     | '}'       {RBRACE}
     | '['       {LBRACK}
     | ']'       {RBRACK}
-    (* | '='       {EQ} *)
-    (* | '.'       {DOT} *)
+    | '='       {EQ}
     | "and"     {AND}
     | "or"      {OR}
-    (* | "not"     {NOT} *)
+    | "not"     {NOT}
     | '<'       {LT}
     | '>'       {GT}
     | ">="      {GEQ}

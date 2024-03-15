@@ -80,7 +80,8 @@ let run_file name =
     loop []
   in
   let lines = read_lines name in
-  Main.execute_code lines
+  try Main.execute_code lines with
+    | exn -> print_endline ("Error: " ^ (Printexc.to_string exn))
 
 
 let usage_msg = "pyfunc [-verbose] [<file>]"

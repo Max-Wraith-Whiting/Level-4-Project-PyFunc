@@ -46,42 +46,41 @@ module Frontend = struct
     loop 0 source *)
 
   let preprocess source =
-  let get_indent str = 
-    let rec count_space_helper idx = 
-      if idx >= String.length str || str.[idx] <> ' ' then
-        idx
-      else
-        count_space_helper (idx + 1)
-    in
-    let indent = count_space_helper 0 in
-    if (indent mod 4 = 0) then
-      indent / 4
-    else
-      raise (Parse.parse_error "Invalid indentation! 4 space indentation required.")
-  in
-  let rec loop prev_indent acc = function
-    | [] -> 
-      if prev_indent > 0 then
-        let closing_braces = String.make prev_indent '}' in
-        List.rev (closing_braces :: acc)
-      else 
-        List.rev acc
-    | line :: rest ->
-      let indent = get_indent line in
-      let diff = abs (prev_indent - indent) in
-      let amended_line =
-        if indent > prev_indent then
-          (String.make diff '{') ^ line
-        else if indent < prev_indent then
-         (String.make diff '}') ^ line
+    let get_indent str = 
+      let rec count_space_helper idx = 
+        if idx >= String.length str || str.[idx] <> ' ' then
+          idx
         else
-          line
+          count_space_helper (idx + 1)
       in
-      loop indent (amended_line :: acc) rest
-  in
-  let output = String.concat "\n" (loop 0 [] source) in
-  print_endline output;
-  output
+      let indent = count_space_helper 0 in
+      if (indent mod 4 = 0) then
+        indent / 4
+      else
+        raise (Parse.parse_error "Invalid indentation! 4 space indentation required.")
+    in
+    let rec loop prev_indent acc = function
+      | [] -> 
+        if prev_indent > 0 then
+          let closing_braces = String.make prev_indent '}' in
+          List.rev (closing_braces :: acc)
+        else 
+          List.rev acc
+      | line :: rest ->
+        let indent = get_indent line in
+        let diff = abs (prev_indent - indent) in
+        let amended_line =
+          if indent > prev_indent then
+            (String.make diff '{') ^ line
+          else if indent < prev_indent then
+          (String.make diff '}') ^ line
+          else
+            line
+        in
+        loop indent (amended_line :: acc) rest
+    in
+    let output = String.concat "\n" (loop 0 [] source) in
+    output
     
   let generate_ast source = 
     let open Parse in

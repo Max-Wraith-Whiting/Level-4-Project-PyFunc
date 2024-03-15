@@ -10,7 +10,6 @@ module Type = struct
     let pp = Format.pp_print_string
     let compare = String.compare
   end
-
   type quantifier = Quantifier.t
   type resolution_state = Unresolved | Resolved of t
   and typevar = string * (resolution_state UnionFind.elem)
