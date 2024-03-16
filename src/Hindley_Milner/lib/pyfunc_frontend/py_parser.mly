@@ -40,6 +40,7 @@
 %token <string> ID
 %token <string> STRINGVAL
 %token <int> INTVAL
+%token <float> FLOATVAL
 // %token LIST // On a probationary status.
 
 // Precedence
@@ -147,6 +148,7 @@ primary:
     | ID                 {try find var_table $1 with Not_found -> makeVar ($1)}
     | STRINGVAL          {makeConst (ConstString $1)}
     | INTVAL             {makeConst (ConstInt $1)}
+    | FLOATVAL           {makeConst (ConstFloat $1)}
     | TRUE               {makeConst (ConstBool true)}
     | FALSE              {makeConst (ConstBool false)}
     | UNITVAL            {makeConst ConstUnit}

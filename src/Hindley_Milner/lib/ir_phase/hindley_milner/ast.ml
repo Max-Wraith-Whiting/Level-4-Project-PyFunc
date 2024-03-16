@@ -15,6 +15,7 @@ module Type = struct
   and typevar = string * (resolution_state UnionFind.elem)
   and monoType = 
     | TypeInt
+    | TypeFloat
     | TypeBool
     | TypeString
     | TypeFunc of (t * t) (* A recursive definition refering to t. *)
@@ -45,6 +46,7 @@ module Type = struct
 
   let rec pp_monotype ppf = function
     | TypeInt -> Format.pp_print_string ppf "Int"
+    | TypeFloat -> Format.pp_print_string ppf "Float"
     | TypeBool -> Format.pp_print_string ppf "Bool"
     | TypeString -> Format.pp_print_string ppf "String"
     | TypeUnit -> Format.pp_print_string ppf "Unit"
@@ -67,6 +69,7 @@ module Type = struct
 
   let rec typ_to_string = function
     | TypeInt -> "Int"
+    | TypeFloat -> "Float"
     | TypeBool -> "Bool"
     | TypeString -> "String"
     | TypeUnit -> "Unit"
@@ -130,12 +133,14 @@ module Constant = struct
     | ConstString of string
     | ConstBool of bool
     | ConstInt of int
+    | ConstFloat of float
     | ConstUnit
 
   let pp = function
     | ConstString s -> s
     | ConstBool b -> string_of_bool b
     | ConstInt i -> string_of_int i
+    | ConstFloat f -> string_of_float f
     | ConstUnit -> "()"
 end
 

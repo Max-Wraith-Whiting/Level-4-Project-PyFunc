@@ -46,6 +46,7 @@ rule token = parse
     | ['A'-'Z' 'a'-'z' '_']['A'-'Z' 'a'-'z' '_' '0'-'9' '\'']*  {ID (lexeme lexbuf)}
     | '"'       {read_string (Buffer.create 17) lexbuf}
     | ['0'-'9']+ as num_string {INTVAL (int_of_string num_string)}
+    | ['0'-'9']*'.'['0'-'9']* as float_string {FLOATVAL (Float.of_string float_string)}
     | _         { raise (lexical_error ("Illegal character: " ^ lexeme lexbuf))}
     and read_string buffer = parse
         | '"'           {STRINGVAL (Buffer.contents buffer)}

@@ -17,6 +17,7 @@ module Env = struct
   type t = (string * value) list
   and value = 
   | Vint of int 
+  | Vfloat of float
   | Vbool of bool 
   | Vstring of string 
   | Vunit of unit 
@@ -29,6 +30,7 @@ module Env = struct
 
 let rec pp_value = function
   | Vint i -> string_of_int i
+  | Vfloat f -> string_of_float f
   | Vbool b -> string_of_bool b
   | Vstring s -> "\"" ^ s ^ "\""
   | Vunit _ -> "()"
@@ -78,6 +80,7 @@ module Interpreter = struct
 
   let eval_const = function
     | ConstInt i -> Vint i
+    | ConstFloat f -> Vfloat f
     | ConstBool b -> Vbool b
     | ConstString s -> Vstring s
     | ConstUnit -> Vunit ()
@@ -128,6 +131,11 @@ module Interpreter = struct
       | (Vint a), Multiply, (Vint b) ->  Vint (a * b)
       | (Vint a), Divide,   (Vint b) ->  Vint (a / b)
       | (Vint a), Mod,      (Vint b) ->  Vint (modulo a b)
+    (* Float operations *)
+      | (Vfloat a), Add,      (Vfloat b) ->  Vfloat (a +. b)
+      | (Vfloat a), Subtract, (Vfloat b) ->  Vfloat (a -. b)
+      | (Vfloat a), Multiply, (Vfloat b) ->  Vfloat (a *. b)
+      | (Vfloat a), Divide,   (Vfloat b) ->  Vfloat (a /. b)
     (* Comparitive Int operations *)
       | (Vint a), Less,         (Vint b) -> Vbool (a < b)
       | (Vint a), Greater,      (Vint b) -> Vbool (a > b)
@@ -135,6 +143,13 @@ module Interpreter = struct
       | (Vint a), GreaterEqual, (Vint b) -> Vbool (a >= b)
       | (Vint a), Equal,        (Vint b) -> Vbool (a = b)
       | (Vint a), NotEqual,     (Vint b) -> Vbool (a <> b)
+    (* Comparative Float Operations *)
+      | (Vfloat a), Less,         (Vfloat b) -> Vbool (a < b)
+      | (Vfloat a), Greater,      (Vfloat b) -> Vbool (a > b)
+      | (Vfloat a), LessEqual,    (Vfloat b) -> Vbool (a <= b)
+      | (Vfloat a), GreaterEqual, (Vfloat b) -> Vbool (a >= b)
+      | (Vfloat a), Equal,        (Vfloat b) -> Vbool (a = b)
+      | (Vfloat a), NotEqual,     (Vfloat b) -> Vbool (a <> b)
     (* Comparitive Boolean Operations *)
       | (Vbool a), Equal,    (Vbool b) -> Vbool (a = b)
       | (Vbool a), NotEqual, (Vbool b) -> Vbool (a <> b)

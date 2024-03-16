@@ -136,6 +136,7 @@ module Typecheck = struct
   | Constant.ConstString _ -> TypeString
   | Constant.ConstBool _ -> TypeBool
   | Constant.ConstInt _ -> TypeInt
+  | Constant.ConstFloat _ -> TypeFloat
   | Constant.ConstUnit -> TypeUnit
   
   (* Typecheck with a given context / environment. *)
@@ -243,11 +244,28 @@ module Typecheck = struct
           TypeBool
         
         | Less | Greater| LessEqual | GreaterEqual ->
-          unify a_type TypeInt;
-          unify b_type TypeInt;
-          TypeBool
+          if a_type = TypeFloat then (
+            unify a_type TypeFloat;
+            unify b_type TypeFloat;
+            TypeBool
+            ) else (
+            unify a_type TypeInt;
+            unify b_type TypeInt;
+            TypeBool
+          )
           
-        | Add | Multiply | Subtract | Divide | Mod ->
+        | Add | Multiply | Subtract | Divide ->
+          if a_type = TypeFloat then (
+            unify a_type TypeFloat;
+            unify b_type TypeFloat;
+            TypeFloat
+          ) else (
+            unify a_type TypeInt;
+            unify b_type TypeInt;
+            TypeInt
+          )
+
+        | Mod ->
           unify a_type TypeInt;
           unify b_type TypeInt;
           TypeInt
@@ -281,11 +299,16 @@ module Typecheck = struct
       let typ = _typecheck env expr in
       match op with
         | Positive | Negative ->
-          unify typ TypeInt;
-          TypeInt;
+          if typ = TypeFloat then (
+            unify typ TypeInt;
+            TypeInt
+          ) else (
+            unify typ TypeFloat;
+            TypeFloat
+          )
         | Not ->
           unify typ TypeBool;
-          TypeBool;
+          TypeBool
     in 
 
     
