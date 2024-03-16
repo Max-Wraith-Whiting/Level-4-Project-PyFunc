@@ -47,7 +47,7 @@ module Main = struct
       let () = 
         try 
           let output = Interpreter.Interpreter.interpret converted_ast in
-          print_endline ("Output: " ^ (Interpreter.pp_value output))
+          print_endline ("Output: " ^ (Interpreter.Env.pp_value output))
         with
           | Interpreter.Errors.Runtime_Error msg -> print_endline msg
           | Interpreter.Errors.Lookup_Error msg -> print_endline msg

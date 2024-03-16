@@ -11,40 +11,6 @@ module Frontend = struct
 
   let pp_ast ast = Py_ast.Expr.print_tree ast
 
-  (* let preprocess source =
-    let get_indent str = 
-      let rec count_space_helper idx = 
-        if idx >= String.length str || str.[idx] <> ' ' then
-          idx
-        else
-          count_space_helper (idx + 1)
-      in
-      let indent = count_space_helper 0 in
-      if (indent mod 4 = 0) then
-          indent / 4
-      else
-        raise (Parse.parse_error "Invalid indentation! 4 space indentation required.")
-    in
-    let rec loop prev_indent = function
-      | [] -> 
-        if prev_indent > 0 then
-          print_string (String.make prev_indent '}')
-        else 
-          ()
-      | line :: rest ->
-        let indent = get_indent line in
-        let diff = abs (prev_indent - indent) in
-        if indent > prev_indent then
-          print_string (String.make diff '{' ^ line)
-        else if indent < prev_indent then
-          print_string (line ^ String.make diff '}')
-        else
-          print_string line;
-        print_endline "";
-        loop indent rest
-    in
-    loop 0 source *)
-
   let preprocess source =
     let get_indent str = 
       let rec count_space_helper idx = 
@@ -185,38 +151,25 @@ module Frontend = struct
       List.filter (fun x -> fst(unwrap_binding x) <> "main") blist
     in
 
-    let convert_binding (*binding : string*) (expr : tree) (scope : IR.tree) = 
-
-      let convert_func func_binder func_param_list func_body scope =
-        let p_list = List.rev func_param_list in
-  
-        let rec func_to_lambdas p_list (body : IR.tree) =
-          if List.is_empty p_list then
-            body
-          else
-            let lambda_body = IR.ExprFunc (List.hd p_list, body) in
-            func_to_lambdas (List.tl p_list) lambda_body
-        in
-        let lambdas = func_to_lambdas p_list (convert func_body) in
-          IR.ExprLetRec (func_binder, lambdas, scope)
-      in
-      match expr with
-        | Func (binder, param_list, tree) -> convert_func binder param_list tree scope
-        | _ -> raise (Unimplemented "Currently only functions are supported as bindings.")
+    let rec func_to_lambdas p_list (body : IR.tree) =
+      if List.is_empty p_list then
+        body
+      else
+        let lambda_body = IR.ExprFunc (List.hd p_list, body) in
+        func_to_lambdas (List.tl p_list) lambda_body
     in
 
     let convert_func func_binder func_param_list func_body scope =
       let p_list = List.rev func_param_list in
 
-      let rec func_to_lambdas p_list (body : IR.tree) =
-        if List.is_empty p_list then
-          body
-        else
-          let lambda_body = IR.ExprFunc (List.hd p_list, body) in
-          func_to_lambdas (List.tl p_list) lambda_body
-      in
       let lambdas = func_to_lambdas p_list (convert func_body) in
         IR.ExprLetRec (func_binder, lambdas, scope)
+    in
+
+    let convert_binding (*binding : string*) (expr : tree) (scope : IR.tree) = 
+      match expr with
+        | Func (binder, param_list, tree) -> convert_func binder param_list tree scope
+        | _ -> raise (Unimplemented "Currently only functions are supported as bindings.")
     in
 
     let rec convert_bindings (blist : tree list) (main_expr : IR.tree)  = 
