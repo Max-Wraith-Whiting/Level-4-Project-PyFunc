@@ -28,7 +28,8 @@
 %token AND OR
 %token LT GT GEQ LEQ EQQ NEQ
 %token PLUS MINUS
-%token STAR DIVIDE
+%token STAR DIVIDE INTDIVIDE
+%token EXPONENT
 %token NOT
 %token CONS
 %token MOD
@@ -44,12 +45,13 @@
 // %token LIST // On a probationary status.
 
 // Precedence
-// %right CONS NOT
-// %right UPLUS UMINUS
-// %left LT GT GEQ LEQ EQQ NEQ
-// %left PLUS MINUS
-// %left STAR DIVIDE
-// %left AND OR
+%right CONS NOT
+%right UPLUS UMINUS
+%left LT GT GEQ LEQ EQQ NEQ
+%left PLUS MINUS
+%left STAR DIVIDE INTDIVIDE
+%right EXPONENT
+%left AND OR
 
 %%
 start:
@@ -69,19 +71,21 @@ expr:
     // | ID EQ value {makeAssign $1 $3 } // Requires a heap scope.
 
 base_expr:
-    | expr OR expr      {makeOpBinary OpBinary.And $1 $3}
-    | expr AND expr     {makeOpBinary OpBinary.Or $1 $3}
-    | expr NEQ expr     {makeOpBinary OpBinary.NotEqual $1 $3}
-    | expr EQQ expr     {makeOpBinary OpBinary.Equal $1 $3}
-    | expr LT expr      {makeOpBinary OpBinary.Less $1 $3}
-    | expr LEQ expr     {makeOpBinary OpBinary.LessEqual $1 $3}
-    | expr GT expr      {makeOpBinary OpBinary.Greater $1 $3}
-    | expr GEQ expr     {makeOpBinary OpBinary.GreaterEqual $1 $3}
-    | expr MINUS expr   {makeOpBinary OpBinary.Subtract $1 $3}
-    | expr PLUS expr    {makeOpBinary OpBinary.Add $1 $3}
-    | expr DIVIDE expr  {makeOpBinary OpBinary.Divide $1 $3}
-    | expr STAR expr    {makeOpBinary OpBinary.Multiply $1 $3}
-    | expr MOD expr     {makeOpBinary OpBinary.Mod $1 $3}
+    | expr OR expr        {makeOpBinary OpBinary.And $1 $3}
+    | expr AND expr       {makeOpBinary OpBinary.Or $1 $3}
+    | expr NEQ expr       {makeOpBinary OpBinary.NotEqual $1 $3}
+    | expr EQQ expr       {makeOpBinary OpBinary.Equal $1 $3}
+    | expr LT expr        {makeOpBinary OpBinary.Less $1 $3}
+    | expr LEQ expr       {makeOpBinary OpBinary.LessEqual $1 $3}
+    | expr GT expr        {makeOpBinary OpBinary.Greater $1 $3}
+    | expr GEQ expr       {makeOpBinary OpBinary.GreaterEqual $1 $3}
+    | expr MINUS expr     {makeOpBinary OpBinary.Subtract $1 $3}
+    | expr PLUS expr      {makeOpBinary OpBinary.Add $1 $3}
+    | expr DIVIDE expr    {makeOpBinary OpBinary.Divide $1 $3}
+    | expr STAR expr      {makeOpBinary OpBinary.Multiply $1 $3}
+    | expr MOD expr       {makeOpBinary OpBinary.Mod $1 $3}
+    | expr INTDIVIDE expr {makeOpBinary OpBinary.IntDivide $1 $3}
+    | expr EXPONENT expr  {makeOpBinary OpBinary.Exponent $1 $3}
     | unary             {$1}
 // Control Flow
 
@@ -130,8 +134,8 @@ else_expr:
 
 unary:
     | NOT unary   {makeOpUnary OpUnary.Not $2}
-    | MINUS unary {makeOpUnary OpUnary.Negative $2}
-    | PLUS unary  {makeOpUnary OpUnary.Positive $2}
+    | MINUS unary %prec UMINUS {makeOpUnary OpUnary.Negative $2}
+    | PLUS unary  %prec UPLUS  {makeOpUnary OpUnary.Positive $2}
     | list_op     {$1}
 
 list_op:

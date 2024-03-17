@@ -265,7 +265,23 @@ module Typecheck = struct
             TypeInt
           )
 
+        | Exponent ->
+          if a_type = TypeFloat then (
+            unify a_type TypeFloat;
+            unify b_type TypeFloat;
+            TypeFloat
+          ) else (
+            unify a_type TypeInt;
+            unify b_type TypeInt;
+            TypeInt
+          )
+
         | Mod ->
+          unify a_type TypeInt;
+          unify b_type TypeInt;
+          TypeInt
+
+        | IntDivide ->
           unify a_type TypeInt;
           unify b_type TypeInt;
           TypeInt
@@ -300,11 +316,11 @@ module Typecheck = struct
       match op with
         | Positive | Negative ->
           if typ = TypeFloat then (
-            unify typ TypeInt;
-            TypeInt
-          ) else (
             unify typ TypeFloat;
             TypeFloat
+          ) else (
+            unify typ TypeInt;
+            TypeInt
           )
         | Not ->
           unify typ TypeBool;

@@ -38,6 +38,8 @@ rule token = parse
     | '-'       {MINUS}
     | '*'       {STAR}
     | '/'       {DIVIDE}
+    | "//"      {INTDIVIDE}
+    | "**"      {EXPONENT}
     | "::"      {CONS}
     | '%'       {MOD}
     | ','       {COMMA}

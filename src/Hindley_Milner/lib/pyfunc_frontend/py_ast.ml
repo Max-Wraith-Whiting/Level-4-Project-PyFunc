@@ -27,6 +27,8 @@ module OpBinary = struct
     | Or
     | Cons
     | Mod
+    | IntDivide
+    | Exponent
 
   let pp = function
     | Add -> "+"
@@ -43,6 +45,8 @@ module OpBinary = struct
     | Or -> "Or"
     | Cons -> "::"
     | Mod -> "%"
+    | IntDivide -> "//"
+    | Exponent -> "**"
 end
 
 module Expr = struct
@@ -71,6 +75,7 @@ module Expr = struct
     | Const c -> HM.Ast.Constant.pp c
     | Var v -> v
     | OpBinary (op, _, _) -> OpBinary.pp op
+    | OpUnary (op, _) -> OpUnary.op_unary_pp op
     | Func (binder, params, _) -> "Func: " ^ binder ^ " Params: " ^ (String.concat ", " params)
     (* | Args _ -> "args" *)
     | Binding (v, _) -> "Binder: " ^ v
@@ -86,7 +91,7 @@ module Expr = struct
         | x::xs -> x ^ seperator ^ (join seperator xs)
       in
       "[" ^ (join ", " (List.map get_name l)) ^ "]"
-    | _ -> ""
+    (* | _ -> "" *)
     
   let get_children = function
     | Program a -> a
@@ -94,6 +99,7 @@ module Expr = struct
     | Const _ -> []
     | Var _ -> []
     | OpBinary (_, a, b) -> [a; b]
+    | OpUnary (_, a) -> [a]
     | Func (_, _, a) -> [a]
     (* | Args a -> a *)
     | Param _ -> []
@@ -101,7 +107,7 @@ module Expr = struct
     | If (c, a, b) -> [c; a; b]
     | Assignment (_, a, b) -> [a; b]
     | List l -> l
-    | _ -> []
+    (* | _ -> [] *)
     
     let print_tree tree =
 

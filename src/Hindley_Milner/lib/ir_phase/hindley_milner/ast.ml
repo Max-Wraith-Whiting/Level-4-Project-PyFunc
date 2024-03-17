@@ -97,6 +97,8 @@ module OpBinary = struct
     | Or
     | Cons
     | Mod
+    | IntDivide
+    | Exponent
 
   let op_binary_pp = function
     | Add -> "+"
@@ -113,6 +115,8 @@ module OpBinary = struct
     | Or -> "Or"
     | Cons -> "::"
     | Mod -> "%"
+    | IntDivide -> "//"
+    | Exponent -> "**"
 end
 
 module OpUnary = struct

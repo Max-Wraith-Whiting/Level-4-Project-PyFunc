@@ -1,6 +1,4 @@
 open Py_ast.Expr
-open Py_ast.OpBinary
-open Py_ast.OpUnary
 
 module Frontend = struct
   module Lexer = Py_lexer
@@ -73,9 +71,6 @@ module Frontend = struct
     (* | Func (binder, param_list, body) -> convert_func binder param_list body *)
     | x -> raise_unimpl ("[" ^ get_name x ^ "] Not implemented currently!")
 
-  (* and convert_call binder arg_list = *)
-    (* 1. Assume the function is already defined. *)
-    (* 2. Generate  *)
 
   and convert_binary_op op expr_a expr_b =
     let left = convert expr_a in
@@ -95,6 +90,8 @@ module Frontend = struct
       | Or            -> ExprOpBinary (BinOp.Or, left, right)
       | Cons          -> ExprOpBinary (BinOp.Cons, left, right)
       | Mod           -> ExprOpBinary (BinOp.Mod, left, right)
+      | IntDivide     -> ExprOpBinary (BinOp.IntDivide, left, right)
+      | Exponent      -> ExprOpBinary (BinOp.Exponent, left, right)
   
   and convert_unary_op op expr = 
     let right = convert expr in
