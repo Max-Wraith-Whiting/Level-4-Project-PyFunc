@@ -45,7 +45,7 @@
     Python is one of the most popular first languages among new learners standing as a highly readable, simple, versatile introduction to programming.
     However, despite its popularity Python suffers from its imperative nature and poses challenges for developers embracing the increasingly popular functional paradigm.
     This paper introduces a novel functional programming language inspired by Python’s syntax but with additional catering to functional programming.
-    The language aims to bridge the gap between the accessibility of Python and the robustness of languages like Haskell and Ocaml.
+    The language aims to bridge the gap between the accessibility of Python and the robustness of languages like Haskell and OCaml.
 
 \end{abstract}
 
@@ -109,24 +109,27 @@
 \end{center}
 
 
-\textbf{This is drivel. What is the idea? Why should anyone care? Does it have any value?}
+% \textbf{This is drivel. What is the idea? Why should anyone care? Does it have any value?}
 
-[\emph{The C-like syntax of imperative languages stands as the predominant and extensively utilized programming syntax, prized for its readability and capacity to succinctly express sequences of instructions.
-Conversely, functional programming languages represent a departure from this "conventional" syntax, tracing their lineage back to predecessors like Lisp and ML rather than their widely adopted descendant.
-The functional paradigm, though lauded for its robustness and expressiveness, often presents a formidable barrier to entry for novice programmers, lacking the intuitive accessibility characteristic of more familiar programming styles.
-In contrast, Python emerges as an approachability in the programming realm, frequently heralded as an ideal introductory language owing to its user-friendly syntax, clear structure, and potent features.
-It is against this backdrop that the present project idea arises—a simple inquiry into the feasibility of bridging the gap between the safety and potency inherent in functional programming and the familiar terrain of Python-like syntax.
-Can the principles of the functional paradigm be rendered more accessible to programmers accustomed to Python's simplicity, and conversely, do Python-like languages stand to gain from incorporating these features?}]
+% [\emph{The C-like syntax of imperative languages stands as the predominant and extensively utilized programming syntax, prized for its readability and capacity to succinctly express sequences of instructions.
+% Conversely, functional programming languages represent a departure from this "conventional" syntax, tracing their lineage back to predecessors like Lisp and ML rather than their widely adopted descendant.
+% The functional paradigm, though lauded for its robustness and expressiveness, often presents a formidable barrier to entry for novice programmers, lacking the intuitive accessibility characteristic of more familiar programming styles.
+% In contrast, Python emerges as an approachability in the programming realm, frequently heralded as an ideal introductory language owing to its user-friendly syntax, clear structure, and potent features.
+% It is against this backdrop that the present project idea arises—a simple inquiry into the feasibility of bridging the gap between the safety and potency inherent in functional programming and the familiar terrain of Python-like syntax.
+% Can the principles of the functional paradigm be rendered more accessible to programmers accustomed to Python's simplicity, and conversely, do Python-like languages stand to gain from incorporating these features?}]
 
 This project aims to address the inherent limitations of Python for functional programming while leveraging its renowned readability and simplicity.
-Python, although popular, lacks native support for functional constructs and a robust type system, making it challenging for developers to embrace the functional paradigm fully.
+Python is popular, and commonly a new programmer's first programming language.
+
+% Python, although popular, \textbf{lacks native support for functional constructs} and a robust type system, making it challenging for developers to embrace the functional paradigm fully.
 In response, this paper proposes a novel functional programming language (PyFunc) inspired by Python's syntax but enhanced with features tailored for functional programming, such as being expression-based, including first-class functions, and having a Hindley-Milner type system.
 By melding Python's approachability with the advantages of a robust type system, such as enhanced code reliability and ease of maintenance, the language seeks to lower the barrier to entry for newcomers to functional style programming while providing a prototype of a powerful tool for building large-scale, maintainable applications.
-The project's core contributions lie in the development and implementation of features like a friendly Python-like syntax, a Hindley-Milner type system, and simple functional constructs.
-Through research, language design, and an implementation in Ocaml, the project aims to deliver a language that offers the best of both worlds, thereby facilitating smoother transitions to functional programming paradigms and improving the overall quality and maintainability of software systems.
 
-This project does not aim to introduce groundbreaking ideas or sophisticated algorithms. 
-Instead, it's about combining existing an exisiting functional programming base with Python's user-friendly and efficient nature.
+
+% This project does not aim to introduce groundbreaking ideas or sophisticated algorithms. 
+% Instead, it's about combining existing an exisiting functional programming base with Python's user-friendly and efficient nature.
+
+Python is a dynamically typed language, which generally means that the type of a variable is determined at runtime.
 
 For example, here is a simple python program:
 \begin{lstlisting}[language=Python, caption=A simple python program to find the factorial of a given number (n).]
@@ -139,14 +142,27 @@ For example, here is a simple python program:
     print(factorial(5)) # 120
 \end{lstlisting}
 
-Now whilst it is very easy to read and follow the logic of the function, Python can provide no guarantees on the type accuracy of this relatively simple code.
-However, in a Hindley-Milner type system, such code could easily have its type infered.
+This is a valid Python program that would run without type errors.
+Typer errors themseleves are, in trivial cases, relatively easy to spot, i.e., \texttt{"hello" + 15}.
+There is no definitive way to compute the result of an addition between a string and an integer, therefore in most languages this raises a type error. 
+Though Python recognises these errors at runtime, it does not give any guarantees \emph{before} running the program that there are no type errors, even trivial ones.
+
+Now in contrast to dynamic type systems, there are static type systems.
+The value of a static typing system is that they \emph{do} guarantee a lack of type errors \emph{before} executing the code.
+Now, the introduction of a more sophiticated type system to Python would be all well and good, but most static type systems require some level of type annotations.
+An easy example of this would be the Java programming language, where every variable, function, and other construct need explicit and repetative annotations of their types.
+Such annotations would be destructive to the effectiveness of the syntax and create a new set of problems for readability.
+
+There is, however, a production-proven type system that can take code similar to the existing python code and \emph{infer} the types of the variables by how they are used.
+That type system is the Hindley-Milner type system.
 There is no major reason why this syntax, or at least a close expression-based equivalent, cannot have a relatively sophisticated type system.
-The inclusion of a type system onto this fundamental structure would prove only to be beneficial
+% The inclusion of a type system onto this fundamental structure would prove only to be beneficial
+The only real major caveat to the use of Hindley-Milner on Python would be the soft-requirement that the language be expression based as opposed to Python's current statement based design.
+Arguably, this would be an additional benefit to the resulting programming language as the inclusion of statements into programming languages generally introduces mutability and or side-effects: two things the functional paradigm avoids.
 
-The proposed additions to the familiar language would only marginally modify the syntax:
+The proposed modification to the familiar language would only marginally change the syntax:
 
-\begin{lstlisting}[language=Python, caption=A proposed PyFunc program to find the factorial of a given numbe (n).]
+\begin{lstlisting}[language=Python, caption=A proposed PyFunc program to find the factorial of a given number (n).]
     def factorial(n):
         if n == 1:
             1
@@ -162,11 +178,23 @@ The proposed additions to the familiar language would only marginally modify the
 
 \textbf{Contributions}
 
+The project's core contributions lie in the development and implementation of features like a friendly Python-like syntax, a Hindley-Milner type system, and simple functional constructs.
+Through research, language design, and an implementation in OCaml, the project aims to deliver a language that offers the best of both worlds, thereby facilitating smoother transitions to functional programming paradigms and improving the overall quality and maintainability of software systems.
+
 The core contributions of this project lie in the development and implementation of the language’s features:
 
 \begin{itemize}
-    \item Friendly Python-like Syntax.
+    \item The simple Pythonic language frontend.
+    \begin{enumerate}
+        \item Design of the syntax: \ref{sec:frontend-syntax-design}
+        \item Implementation of the language frontend: \ref{sec:parsing-lexing-and-the-ast}
+    \end{enumerate}
     \item Hindley-Milner Type System.
+    \begin{enumerate}
+        \item A brief introduction introduction to natural deduction: \ref{subsec:typing-systems-and-notation}
+        \item A discussion of type-inference in general and specifically in the case of Hindley-Milner: \ref{sec:type-inference-and-polymorphism}
+        \item The project's implementation of the Hindley-Milner type system as a type checker: \ref{sec:hindley-milner-typechecker}
+    \end{enumerate}
     \item Support for simple functional programming.
 \end{itemize}
 
@@ -319,7 +347,7 @@ This section aims to offer a cohesive overview of these distinct areas, providin
 % In essence, Python's strengths lie in its syntax and semantics rather than its performance, emphasizing its value in producing easily comprehensible code.
 
 
-Python's popularity is undeniable, evident from its consistent top rankings on indices like the TIOBE Index (February 2024) and the PYPL Index (March 2024).
+Python's popularity is undeniable, evident from its consistent top rankings on indices like the Tiobe Index (February 2024) and the PYPL Index (March 2024) .
 But what makes Python so widely favored? One of its key strengths lies in its unparalleled agility, enabling rapid iteration and fostering a development environment conducive to experimentation and quick prototyping.
 Moreover, Python's simplicity and readability contribute significantly to its appeal, making it accessible to both novice and experienced programmers alike.
 The language's syntax, often resembling plain English, further enhances its beginner-friendly nature, minimizing the learning curve for newcomers.
@@ -328,7 +356,7 @@ Some argue that its performance is subpar, although it's important to note that 
 Additionally, Python's type system, characterized by duck typing, may be considered less sophisticated, leading to potential type errors at runtime.
 Nevertheless, the essence of Python's allure lies not in its implementation, but rather in the inherent strengths of its syntax and semantics.
 
-To highlight the benefits of the syntax, the following examples will contrast the same program in both Python and Ocaml.
+To highlight the benefits of the syntax, the following examples will contrast the same program in both Python and OCaml.
 
 
 % Speed of execution is not the only bottleneck in producing systems.
@@ -376,7 +404,7 @@ Some of the key concepts include:
     \item \textbf{Referential Transparency:} The property that an expression can be replaced with its value without changing the program's behaviour. 
 \end{itemize}
 
-All of these concepts can be considered spectrums rather than hard rules, as many popular functional languages bend these concepts for usabilities sake.\footnote{Ocaml for instance is not a \emph{purely} functional programming language. It technically is a functional, imperative, and object-oritened programming language.}
+All of these concepts can be considered spectrums rather than hard rules, as many popular functional languages bend these concepts for usabilities sake.\footnote{OCaml for instance is not a \emph{purely} functional programming language. It technically is a functional, imperative, and object-oritened programming language.}
 Though these languages do make behaviour outside of the norm specified by these rules explicit and force the programmer to be deliberate with their forays outside of the paradigm.
 
 Functional programming offers several advantages and addresses certain challenges inherent in other paradigms, such as imperative and object-oritened programming. 
@@ -435,7 +463,7 @@ It also supports polymorphic functions
 $\tilde{}$ It was independantly developed by Rogder Hindley in () and later extended by Robin Milner in ().
 The most well known implementation of the system is in the programming language ML (Meta Language), though it exists in many langauges, such as Haskell, OCaml, and Clean.
 
-\subsection{Typing Systems and Notation}
+\subsection{Typing Systems and Notation} \label{subsec:typing-systems-and-notation}
 
 In type theory, a typing rule (also called an inference rule) describes how a type system assigns types.
 In a general sense, a type system is a set of typing rules which when applied to a program indicate whether the program is well-typed. (I.e., A valid program.)
@@ -457,14 +485,14 @@ The general structure of a rule is as a collection of propositions on the top, a
 \frac{Proposition\: A \;\; Proposition\: B \;\; ... \;\; Proposition\: N}{Conclusion\: A \;\; Conclusion\: B \;\; ... \;\; Conclusion\: N}
 \end{equation}
 
-Here is a simple example of a non-typing inference rule:
+Here is a simple example of a type inference rule:
 \begin{equation} \label{eq:inference-example}
-\frac{A : true \;\;\; B : true}{(A \wedge B) \; true}
+\frac{A : true \;\;\; B : true}{(A \wedge B) : true}
 \end{equation}
 
 This rule can be read as: 'If A is \texttt{true} and B is \texttt{true} we can conclude A \emph{and} B is \texttt{true}'.
 
-For a typing example, the following type rules specify the typing relations for a simple integer addition:
+For an additional typing example, the following type rules specify the typing relations for a simple integer addition:
 
 \begin{equation} \label{eq:add-type-rule}
 \frac{}{5 : int} \;\;\; \frac{}{7 : int} \;\;\; \frac{e_1 : int \;\;\; e_2 : int}{e_1 + e_2 : int}
@@ -500,15 +528,21 @@ This brief outline of the natural deduction typing notation should suffice for t
 The IR of PyFunc is an extended lambda calculus, and therefore a brief review of the lambda calculus seems appropriate before extending it.
 
 The lambda calculus is a formal system designed by Alonzo Church as a foundational way of expressing computation.
-The system is based on function abstraction and application, using variable binding and subsitution.
+The system is based on \emph{function abstraction} and \emph{application}, using variable binding and subsitution.
 
-The lambda calculus is very minimal by intention:
+What this means in short is very simple: You can define functions and you can apply said functions.
+These functions also bind variables for their inputs.
+Here is an example: 
 
 \begin{equation} \label{eq:lambda-example}
     (\lambda x . x) y
 \end{equation}
 
-The simple lambda expression in \ref{eq:lambda-example} contains all three elements the lambda calculus includes:
+The expression in \ref{eq:lambda-example} can be read simply as a function $\lambda$ applied to variable $y$.
+Inside the function when called $x$ is bound to the input value of $y$ making the expression: $(y)$.
+If for example the value of $y$ was $5$ then the lambda would be $5$.
+That is because the lambda in \ref{eq:lambda-example} is the identity function which returns whatever it recieves.
+It also contains and demonstrates all three elements the lambda calculus as explained above.
 
 \begin{table}[!h]
     \resizebox{\textwidth}{!}{%
@@ -523,7 +557,7 @@ The simple lambda expression in \ref{eq:lambda-example} contains all three eleme
     \end{tabular}}
 \end{table}
 
-
+Now here is the more explicit formulation of the lambda calculs:
 \begin{enumerate}
     \item A variable is a character of string representing a parameter. 
     \item A lambda abstraction, $(\lambda x . y)$, is a function defintion, taking as input the bound variable $x$ (between the $\lambda$ and the dot) and returning the body $y$.
@@ -591,8 +625,7 @@ Of the things that the language cannot live without, functions are at the top of
 It would be ironic if a functional style language was bereft of functions.
 However, whilst functions must be included, not all of Python's varied uses of them are necessary.
 
-\textbf{Closures}
-For example, Python includes the ability to create "closures" which can recall values in their defined scope even if they are not present anymore with the \texttt{nonlocal} keyword.
+\textbf{Closures: }For example, Python includes the ability to create "closures" which can recall values in their defined scope even if they are not present anymore with the \texttt{nonlocal} keyword.
 
 \begin{lstlisting}[language=Python, caption={An example of a closure in Python. See the use of the 'nonlocal' keyword to pull the surrounding defintion of 'current\_count' into the scope of 'inner\_function'.}, label={lst:py-closure}]
 # Create a counter.
@@ -612,14 +645,14 @@ print(counter()) # 2
 print(counter()) # 3
 \end{lstlisting}
 
-Whilst it would be possible to include such a feature, the priority of such a task would be of a much lower priority than others.
+% Whilst it would be possible to include such a feature, the priority of such a task would be of a much lower priority than others.
 
-\textbf{Higher Order Functions}
+\textbf{Higher Order Functions:}
 A language may want to include higher-order functions to support more expressive and flexible programming paradigms. 
 Higher-order functions allow functions to take other functions as arguments or return functions as results.
 This enables powerful programming techniques such as function composition, partial application, and passing functions as arguments to other functions, which can lead to more concise, modular, and reusable code.
 
-\textbf{Inner Functions}
+\textbf{Inner Functions:}
 The necessity of including inner functions into PyFunc is not apparent.
 Whilst they are of great utility for encapsulation of logic, the potential increase in complexity of bindings makes them an lesser priority than other frontend features like Higher Order Functions.
 
@@ -639,18 +672,27 @@ The Hindley-Milner Type System offers several advantages in programming:
     \item \textbf{Efficiency:} The type inference algorithm used in Hindley-Milner systems is efficent, making compilation or interpretation fast compared to more complex type systems.
 \end{itemize}
 
-As for alternatives:
+
+Despite all of these advantageous features, it would be naive to dismiss other type systems out of hand.
+For the possible type systems listed below there has been consideration given to whether they would suit such a project as this and been found inappropriate in this specific context:
 
 \begin{itemize}
     \item \textbf{Dynamic Typing:} In languages with dynamic typing, such as Python itself, there is no static typechecking at compile time.
     Instead, types are checked at runtime, which can lead to type-related errors occuring during program execution rather than compile time. 
     While dynamic typing offers flexibility and rapid development, it can also make code harder to understand and maintain, and it may result in runtime type errors that could have been caught at compile time.
-    This would be an underutilisation of the functional paradigm and would leave the language with issues that Python already suffers from, like upredictable type errors at runtime.
+    This would be an underutilisation of the expression based PyFunc and its somewhat functional paradigm.
+    Furthermore, it would leave the language with issues that Python already suffers from, like upredictable type errors at runtime.
     \item \textbf{Dependent Typing:} Dependent type systems, found in languages like Idris and Agda, allow types to depend on values.
-    This provides very strong guarantees about program correctness but can be complex to work with and may require explicit type annotations from the programmer.
-    Adding type annotations dominates the syntax of the language, which defeats the point of aiming for a 'Pythonic' syntax. \footnote{Wells, Joe B. "Typability and type checking in System F are equivalent and undecidable." Annals of Pure and Applied Logic 98.1-3 (1999): 111-156.}
+    This allows programmers to provide very strong guarantees about program correctness and behaviour but can be complex to work with and may require explicit type annotations from the programmer.
+    Adding type annotations can often dominate the syntax of the language, which defeats the point of aiming for a 'Pythonic' syntax. \footnote{Wells, Joe B. "Typability and type checking in System F are equivalent and undecidable." Annals of Pure and Applied Logic 98.1-3 (1999): 111-156.}
+    Beyond this is the further problem of complexity.
+    Dependent type systems are complicated, to the point of not being dissimilar from proof assistants, which are far beyond the aims of this project.
     \item \textbf{Gradual Typing:} Graudal typing combines elements from static and dynamic typing, allowing programmers to choose when to use type annotations and when to rely on dynamic typing.
-    This can be useful when transitioning existing codebases to a statically typed language or when working in areas where static typing is impractical or overly restricitive.
+    This can be useful when working in areas where static typing is impractical or overly restricitive. 
+    Gradual typing could also be a relatively useful approach to take with a project like this, allowing the flexibility of dynamic typing and static typing whenever the programmer determines it is appropriate.
+    But the inclusion of type annotations does go somewhat against the Pythonic style this project is aiming for.\footnote{Python \emph{does} have optional type-annotations, though it is something of a misnomer.
+    PEP 3107 introduced a way to add metadata to functions and PEP 484 enhanced this to provide standard definitions.
+    However, the authors have emphasised that Python shall remain a dynamically typed language.}
 \end{itemize}
 
 % In cases where no type system is used at all, programmers have complete freedom but lose the benefits of type checking, such as early error detection and improved code documentation.
@@ -692,7 +734,7 @@ COULD HAVE:
     However, managing the potentially complex scoping involved might require semantic analysis and more work than they are worth in a prototype language.
     \item \textbf{Closures:} Being an unusually hidden piece of syntax, closures are not as commonly used in Python though it supports them.
     Closures are undeniably very powerful, but much like inner functions, the scoping rules involved introduces additional complexity into the implementation of function scopes. 
-    \item \textbf{Sets and Dictionaries:} Whilst a commonly used feature, sets and dictionaries are not significant enough to be a primary implementation concern.
+    \item \textbf{Dictionaries and Sets:} Whilst a very commonly used feature, dictionaries and sets are somewhat beyond the core scope of this project, or at least enough so to not be a primary implementation concern.
 \end{itemize}
 
 WILL NOT HAVE:
@@ -710,13 +752,14 @@ WILL NOT HAVE:
 % How is this problem to be approached, without reference to specific implementation details? 
 
 In this dissertation, the focus lies on crafting a prototype programming language that serves as a bridge between the clarity of easily readable imperative languages and the robustness of less approachable functional programming paradigms.
-\textbf{Previous chapters, if applicable, are revisited to highlight the foundational elements they contribute to this endeavor.}
 
 Central to the development of this language is the emphasis on achieving low coupling between its internal modules.
 As a prototype, it must possess the flexibility necessary for future extensions and modifications.
 Even seemingly minor design alterations can yield substantial differences in user experience, underscoring the critical importance of maintaining low coupling from the outset of development.
 
-\section{Frontend Syntax Design}
+The following chapter will outline the frontend language of PyFunc, its intermediate representation (IR), the type checker and finally a brief overview of the interpreter.
+
+\section{Frontend Syntax Design} \label{sec:frontend-syntax-design}
 
 The frontend of the system draws inspiration from Python, aligning with the language's renowned emphasis on accessibility, particularly for novice programmers.
 At its core, the design prioritizes ease of use, catering to individuals new to programming who may find traditional languages intimidating.
@@ -734,7 +777,7 @@ The only structures in the language that are not expression based are the functi
 
 % Pyfunc Operations
 \begin{table}[h!]
-    \caption{The standard table of operations in PyFunc, along with their syntax and accepted types. It should be noted that though operations can accept multiple types, they \textbf{must} match in an expression.}\label{tab:operators}
+    \caption{The standard table of operations in PyFunc, along with their syntax and accepted types. Note that though operations can accept multiple types, the left and right arguments \textbf{must} match in an expression.}\label{tab:operators}
     %\tt 
     \rowcolors{2}{}{gray!3}
     \begin{center}
@@ -785,7 +828,7 @@ The only structures in the language that are not expression based are the functi
         \textbf{Expression}  &   \textbf{Syntax}     &   \textbf{Additional Notes}   \\
         \hline
         \hline
-        If else expressions & if <condition>: \newline \-\ <expression\_a> \newline else: \newline \-\ <expression\_b> & <condition> evaluate to a boolean. If <condition> is true, then expression\_a is evaluated, otherwise expression\_b is evaluated.\\
+        If else expressions & if <condition>: \newline \-\ <expression\_a> \newline else: \newline \-\ <expression\_b> & <condition> evaluates to a boolean. If <condition> is true, then expression\_a is evaluated, otherwise expression\_b is evaluated.\\
         \hline
         Immutable binding   & \texttt{a := b}   & For all subsequent expressions in a given scope \texttt{a} will alias \texttt{b}. Variable \texttt{a} cannot be rebound. \\
         % \hline
@@ -800,8 +843,8 @@ The only structures in the language that are not expression based are the functi
     \end{center}
 \end{table}
 
-An example program in PyFunc might look like this:
-\begin{lstlisting}[language=python, caption={The simple recursive function to calculate a given fibonacci number.}, label=lst:callahan]
+An example program in PyFunc might look like listing \ref{lst:design-frontend-example}, which shows the similarity of the synatx between Python and PyFunc.
+\begin{lstlisting}[language=python, caption={The simple recursive function to calculate a given fibonacci number.}, label=lst:design-frontend-example]
     # Calculate a given Fibonacci number.
     def fibonacci(n):
         if n <= 1:
@@ -814,6 +857,28 @@ An example program in PyFunc might look like this:
         fibonacci(7) # Returns 8
 \end{lstlisting}
 
+To have a frontend like Python, a properly described abstract syntax is necessary.
+For this frontend, a list of the included features is sufficent.
+\begin{itemize}
+    \item Program (A list of functions.)
+    \item Binding (A binding.)
+    \item Variable (String for delineating variables.)
+    \item Constant
+    \item If expression (Condition, if-expression, else-expression.)
+    \item Function (Binder, Parameters, Function body.)
+    \item Parameters (An variable that an argument is bound to.)
+    \item Call (A call for execution of a function.)
+    \item Assignment
+    \item Binary Operation
+    \item Unary Operation
+    \item Lists
+\end{itemize}
+
+Whilst these features might seem somewhat bare-bones, most programs do not extend significantly outside these features.
+Additionally, anything more specific than this will be beyond the inital scope of the project, though quite possibly nice to have.
+
+The specific lexicon of the frontend will be determined in the implementation.
+
 % \clearpage
 \section{IR Specification}
 % \subsection{To IR or not to IR}
@@ -822,32 +887,36 @@ IRs offer several significant advantages, but come with an additional step of co
 The main advantage for using an IR in PyFunc is the ease of development of the interpreter \emph{and} the type checker.
 The IR effectively abstracts the complexities of the syntax of PyFunc away, leaving a simple and far easier to process language.
 The specification of the IR however is somewhat atypical, as they are often designed with performance in mind whereas for PyFunc the focus is ease-of-development.
-
 Specifically, the ease-of-development of the Type System.
 To this end, the IR is an extended-lambda calculus.
 
 \subsection{PyFunc-IR: An Extended Lambda Calculus}
-As described in (\ref{sec:lambda-review} A Brief Overview of Lambda Calculus) the lambda calculus is extremely minimal, so for it to be a more workable IR, extensions are required.
+As described in (\ref{sec:lambda-review} \emph{— A Brief Overview of Lambda Calculus}) the lambda calculus is extremely minimal, so for it to be a more workable IR, extensions are required.
 
-The purpose of extending lambda calculus lies in enriching its expressiveness and capabilities to model more complex computations and features found in modern programming languages and computer science.
-Lambda calculus, in its basic form, consists of only variables, function abstraction (lambda abstraction), and function application.
+The purpose of extending lambda calculus lies in enriching its expressiveness and capabilities to model more complex computations and features found in modern programming languages.
+Lambda calculus, in its basic form, consists of only variables, function abstraction, and function application.
+Going forward we will refer to these ideas as simply abstraction and application.
+
 Extensions to lambda calculus introduce additional constructs and features to better capture various programming paradigms and computational concepts.
 
 % \textbf{Some common extensions (that will be present) and their purposes include:}
 \textbf{Lambda calculus extensions that will need to be included:}
 \begin{enumerate}
-    \item \textbf{Constants and primitive data types:} Introducing constants and primitive data types allows for the removal of all requisite encodings to make lambda calculus compute recognisable data structures. (E.g, church encodings are no longer required to hanldle data representation.)
-    \item \textbf{Conditionals:} Adding a if-then-else expression allows for the easy expression of branchin logic and decision making in the IR.
-    \item \textbf{Recursion:} Extending the lambda calculus to allow recursion allows for algorithms utlising self reference and iterative computations.
+    \item \textbf{Constants and primitive data types:} Introducing constants and primitive data types allows for the removal of all requisite encodings to make lambda calculus compute recognisable data structures. (E.g, Church encodings are no longer required to handle data representation.)
+    \item \textbf{Conditionals:} Adding an if-then-else expression allows for the easy expression of branching logic and decision making in the IR.
+    \item \textbf{Recursion:} Extending the lambda calculus to allow recursion allows for algorithms utilising self referencing and iterative computations.
     In other words, without recursion, looping of any kind generates comparatively immense lambda expressions which is not just unweildy but often difficult to implement.
     \item \textbf{Let bindings:} The ability to bind a variable to lambda expressions allows for more concise and readable lambda expressions.
-    Additonally, it also allows for variables to be represented in the IR, which has benefits for the later PyFunc-to-IR conversion. 
+    Additonally, it also allows for variables to be represented in the IR, which has benefits for the later PyFunc-to-IR conversion and the type checker. 
 \end{enumerate}
 
-First, let's deal outline the primitive data types that PyFunc's IR supports:
+\subsection{PyFunc-IR Types}
+
+First, let's outline the primitive data types that PyFunc's IR supports:
 
 \begin{table}[h]
 \caption{Table of PyFunc-IR's constant types.}
+\label{tab:pyfunc-ir-constants}
 \begin{center}
 \rowcolors{2}{}{gray!3}
 \begin{tabular}{@{}|l|l|l|@{}}
@@ -865,10 +934,11 @@ First, let's deal outline the primitive data types that PyFunc's IR supports:
 \end{table}
 
 With just these five primitive types, a large majority of the types in the IR can be convered.
-However, there exisits a few special cases that need to be considered to allow the IR to be fully well typed.
+However, there exisits a few special cases that need to be considered to allow the IR to be fully typed.
 
 \begin{table}[h]
 \caption{Table of PyFunc-IR's type constructs.}
+\label{tab:pyfunc-ir-type-constructs}
 \begin{center}
 \rowcolors{2}{}{gray!3}
 \begin{tabular}{@{}|l|l|l|@{}}
@@ -884,47 +954,70 @@ However, there exisits a few special cases that need to be considered to allow t
 \end{center}
 \end{table}
 
-\emph{- To build an abstract syntax tree for the IR, a full description of the possible tree nodes needs to be created.
-- Using the above defined primitive types and additionally including the previously outlined common extensions to the lambda calculus we can write a specification for the abstract syntax tree.}
+The syntax used in the type construction section has important significance to the type system we will be implementing eventually.
+For clarity's sake, $\tau$ refers to a specific type that is not explicitly written, whilst $\sigma$ refers to a polytype. 
 
-\subsection*{Abstract Syntax}
+Without these type constructs it becomes impossible to infer types or reason about certain aspects of the IR.
 
-Bollocks.
+As a simple example we have functions.
+If the type checker knows what type a function takes and what type the function produces, it becomes trivial to check the validity of a function.
+
+% \emph{- To build an abstract syntax tree for the IR, a full description of the possible tree nodes needs to be created.
+% - Using the above defined primitive types and additionally including the previously outlined common extensions to the lambda calculus we can write a specification for the abstract syntax tree.}
+
+\subsection{Abstract Syntax}
+
+To construct an abstract syntax tree (AST) for the intermediate representation (IR) of PyFunc, the various syntax constructions need to be delineated as possible variants of a given type.
+This type description will have to encompass the language's syntax in its entirety.
+
+A simple way to construct this description is to have additional types that contain repetative information.
+For example, we can take the constant types (table \ref{tab:pyfunc-ir-constants}) and wrap them as variants of a type called \texttt{Constant}.
+The same can be done for the various binary and unary operators supported by the IR.
+(OpBinary and OpUnary, repectively.)
+With the IR being very regularly structured, and differing rather minimally from the PyFunc frontend AST, it seems appropriate to include all of the available operators in the frontend in the IR itself.
+
+See table \ref{tab:operators} for the previously outlined operators.
+
+Beyond just using these collated types, the AST also needs to consider type constructs (table \ref{tab:pyfunc-ir-type-constructs}).
+Convinently these type constructs are effectively structured combinations of more primitive types.
+This means that the AST can represent elements of the IR in much the same way.
+
+By simply combining the previously specified collated types with the lambda calculus extensions discussed (Let, LetRec, If), a detailed AST specification can be formulated.
 % To construct an abstract syntax tree (AST) for the intermediate representation (IR), it is imperative to meticulously delineate all potential tree nodes.
 % This comprehensive description encompasses both primitive types and the incorporation of prevalent extensions to lambda calculus.
 % By amalgamating the specified primitive types with the previously outlined lambda calculus extensions, a detailed specification for the AST can be formulated.
 % This specification serves as a foundational blueprint, guiding the development of the AST and ensuring its alignment with the intended representation of the IR.
 % Through this systematic approach, the AST can accurately capture the intricacies of the IR, facilitating efficient analysis and manipulation within the context of the specified computational model.
 
-The abstract syntax give below describes the extended lambda calculus used as PyFunc's IR.
-
-\begin{lstlisting}[language=Caml, caption=The Abstract Syntax for the IR]
+% The abstract syntax give below describes the extended lambda calculus used as PyFunc's IR.
+\clearpage
+\begin{lstlisting}[language=Caml, breaklines=false, caption=The Abstract Syntax for PyFunc's IR written in OCaml.]
 type tree = 
-    | ExprVar of variable
-    | ExprConst of Constant.t
-    | ExprLet of (binder * tree * tree)
+    | ExprVar of variable (* String binding. *)
+    | ExprConst of Constant.t (* A constant primitive. *)
+    | ExprLet of (binder * tree * tree) (* Binding, let body, continuation. *)
     | ExprLetRec of (binder * tree * tree) (* Binder, e, and e'*)
-    | ExprOpUnary of (OpUnary.t * tree)
-    | ExprOpBinary of (OpBinary.t * tree * tree)
+    | ExprOpUnary of (OpUnary.t * tree) (* Unary Op, body *)
+    | ExprOpBinary of (OpBinary.t * tree * tree) (* Binary Op, left, right *)
     | ExprFunc of (binder * tree) (* Var binder, body*)
     | ExprApplic of (tree * tree) (* Arg, Func *)
-    | ExprIf of (tree * tree * tree)
+    | ExprIf of (tree * tree * tree) (* Condition, if-true, if-false *)
     | ExprPair of (tree * tree)
     | ExprLetPair of (variable * variable * tree * tree)
     | ExprFirst of tree
     | ExprSecond of tree
-    | ExprList of tree list
+    | ExprList of tree list (* An OCaml list of tree nodes. *)
 \end{lstlisting}
 
 
-This \texttt{Expr} type can completely represent the IR extended lambda calculus. 
+This \texttt{tree} type can completely represent the IR extended lambda calculus. 
 The scope of the IR's syntax is relatively minimal, but due to the scope of the project, further extension of this IR would, one, encroach on the frontend language and, two, further complicate the type checker.
 
 This level of complexity, being greater than the standard lambda calculus yet not becoming too distant from it seemed the most reasonable option.
 
-\subsection*{IR Operators}
-With the IR being very regularly structured, and differing rather minimally from the PyFunc frontend AST, it seems appropriate to include all of the available operators in the frontend in the IR itself.
-This would include both binary operators and unary operators.
+In an ideal world, this would be processed further to a more optimised and compressed representation to improve the performance of the langauge.
+However, the time to design and build an interpreter for such a representation is beyond the reasonable scope of this project.
+
 
 % \begin{table}[]
 %     \begin{center}
@@ -1020,48 +1113,143 @@ Interpretation is final step and can be relatively simple.
 
 The process of IR conversion will be the integral bridge between the frontend syntax and the simpler extended lambda calculus that the IR consists of.
 The conversion aims to handle many aspects of the frontend and getting them into an appropriate format for the IR.
-Some important examples of this are:
+
+The key things the IR converter needs to handle are:
 \begin{itemize}
-    \item The handling of function bindings.
+    \item Function bindings.
     \item Multiple parameter functions.
     \item Program entry point.
     \item List literal processing.
     \item Immutable and mutalbe assignments.
 \end{itemize}
 
-The most important of these is the handling of function bindings as the actual structure of PyFunc is dictated by this.
-The language is aimed to be largely expression-based, but the necessary inclusion of declarations in the form of fuction definitions adds a layer of complication.
-So, as a solution to this, the IR-Converter does the following:
+These problems roughly fall into three categories: Function bindings and entry point, processing lists and multiple parameters, and assignments.
+
+\subsection*{Function Bindings and Program Entry Point}
+
+The structure of a PyFunc program will be a tree akin to the tree in figure \ref{fig:ast-binding-conversion-tree}, with a list of top-level function bindings.
+\begin{figure}[H]
+\begin{center}
+    \begin{forest}
+        [Program 
+        [Function A [* [x] [x]]]
+        [Function B [** [y] [2]]]
+        [Function C [- [Call A [2]] [Call B [2]]]]
+        ]
+    \end{forest}
+\end{center}
+\caption{Hypothetical PyFunc frontend abstract syntax tree.}
+\label{fig:ast-binding-conversion-tree}
+\end{figure}
+
+There is no definitive way to decide between these functions which should be the program's starting point.
+It could be reasonably argued that Function C has calls to the other functions and therefore it should be the entry point, but this would require some sort of entry point resolution rubric.
+And beyond that, there will inevitably be ambiguious programs, not even considering recursion and the difficulties it could introduce.
+
+So to avoid all of this complication of implicit determining of the entry point, let's make it explicit.
+
+\begin{center}
+    \emph{For a program to run, there must be a function called \texttt{main} which will be executed first.}
+\end{center}
+
+This seems to be a reasonable solution at first glance, but there is a problem.
+Functions have their own scopes. 
+The \texttt{x} variable in Function A only exists with in the scope of function A.
+In fact, Function A \emph{does not} exist in the scope of our new entry point, Function C.
+
+So to deal with this issue, the IR-converter must perform one additional step to handle this top-level scope.
+The function bindings outside of Function C must be entered into its scope.
+This conceptually looks like a lot like let expression: $\text{let } A = (\lambda x. x \times x) \text{ in } C$
+
+So the converted IR would have to look something like figure \ref{fig:ir-binding-conversion-tree} with a series of let rec expressions (rec is to allow recursive functions at the top-level).
+
+\begin{figure}[H]
+    \begin{center}
+    \begin{forest}
+        [Let rec B [** [y] [2]] 
+            [Let rec A [* [x][x]]
+                [Let rec main [- [A [2]] [B [2]]]]
+            ]
+        ]
+    \end{forest}
+    \caption{The tree in figure \ref{fig:ast-binding-conversion-tree} having undergone the outlined conversion process to PyFunc-IR.}
+    \label{fig:ir-binding-conversion-tree}
+    \end{center}
+\end{figure}
+
+To explicitly state the process of conversion:
+
+% The most important of these is the handling of function bindings as the actual structure of PyFunc is dictated by this.
+% The language is aimed to be largely expression-based, but the necessary inclusion of declarations in the form of fuction definitions adds a layer of complication.
+% So, as a solution to this, the IR-Converter should do the following:
 \begin{enumerate}
     \item Take the list of bindings from the AST.
     \item Find the program entry point, i.e., the \texttt{main} function binding.
-    \item Convert all other bindings into \texttt{let-rec} expressions with the \texttt{main} being the "in-scope".
+    \item Convert all other bindings into \texttt{let-rec} expressions with the \texttt{main} being the let expression's continuation.
 \end{enumerate}
 
-\section{Type Inference and Polymorphism}
-\textbf{Inference}
+One final thing to note regarding this conversion is that if functions are calling one another in the top-level, they cannot allow forward referencing and should raise an error when used before their declaration.
+However, they can be called if they are declared before their call in the top-level scope.
+
+\begin{figure}[]
+\begin{center}
+    \begin{subfigure}[]{0.65\textwidth}
+        \begin{lstlisting}[language=Python, caption=Example of PyFunc program that will raise an error due to a forward reference of the function B.]
+            def A(y):
+            y * B(2)
+            
+            def B(x):
+            x ** 2
+            
+            def main():
+            A(2) - B(2)
+        \end{lstlisting}
+    \end{subfigure}
+\end{center}
+\end{figure}
+
+
+\subsection*{Multi-Parameter Functions and List Processing}
+
+In the case of the IR, Multi-parameter functions and list processing are oddly similar processes, and especially so in the case of PyFunc's IR.
+The IR is limited to single argument anonymous lambda function internally.
+This means that a function is \emph{not} represented by a single lambda or even just a collection of lambdas.
+To achieve the conversion of a simple function from PyFunc's frontend to the IR, a few things must happen.
+
+
+\section{Type Inference and Polymorphism} \label{sec:type-inference-and-polymorphism}
 
 Type theory is like a set of rules for organising and categorising things in programs based on what they are and what operations can be done to them.
-It is not disimilar to how we categorise objects in real life, like sorting fruits into distinct groups of apples, oranges and bananas.
+It is not disimilar to how we categorise objects in real life, like sorting fruits into distinct groups of apples, oranges and bananas. In a way type systems are rule sets for the reasonable use of the language they are in.
+They stop programmers making non-sensical programs by mistake.
 
-\textbf{Non-technical explanation of type theory and inference}
+\textbf{Not sure about this ($\downarrow$) paragraph.}
 
-Now, type inference is the process of deducing the types of things without being explicitly told.
+Type inference is an extension of this where types are infered instead of explicitly stated.
+Parametric Polymorphism is a complicated way of saying that functions that can take many different types can be created. This is obviously a somewhat reductionist simplification, but it does get the gist of the feature.
+The acutal power of it is somewhat harder to quantify without examples.
+
+% \textbf{Non-technical explanation of type theory and inference:}
+\subsection{A Non-Technical Explanation of Inference}
+
+Type inference is the process of deducing the types of things without being explicitly told.
 Imagine there is a game, where someone gives you clues about an object, but they cannot say what it is explicitly.
 For example, they might say "It's round, red and grows on trees."
 From these clues you might \emph{infer} that they are talking about an apple, even if they never said the word "apple" directly. 
 (Though the ambiguity in this example would likely hinder accurate inferences.)
 
-In programming, type inference works similarly.
-Instead of explicitly stating (usually, via type annotations) the types of variables, the programming language's type system tries to guess what they are based on their usage in the code.
+In programming, type inference works similarly, thought with rigourous rules that are proven correct.
+Instead of explicitly stating (usually, via type annotations) the types of variables, the programming language's type system tries to deduct what they are based on their usage in the code.
 
-\textbf{Give a practical example}
+% \textbf{A practical example:}
 
 Here's a practical example: Let's say you are writing a program in a language with type inference, and you have a variable $x$ that you set to $5$.
 Now, without explicitly saying it, the type inference system can figure out that $x$ is an integer because you assigned it a whole number.
-Later in the program, if you try to do something like $x +$ \texttt{"hello"}, the type system would catch that $x$ is an integer and \texttt{"hello"} is a string, so adding them together does not make sense, thereby raising an error.
+Later in the program, if you try to do something strage like $x \;\: +$ \texttt{"hello"}, the type system would catch that $x$ is an integer and \texttt{"hello"} is a string, so adding them together does not make sense, thereby raising an error.
 
-\textbf{Now say why HM is better. (Type inference without annotations. Complete. Decideable.)}
+\subsection{The Simply Typed Lambda-Calculus}
+
+% \textbf{Now say why HM is better. (Type inference without annotations. Complete. Decideable.)}
 
 It should be noted that there are many different styles of type systems with their own inference algorithms, each of which have their own strengths and weaknesses.
 
@@ -1069,10 +1257,11 @@ The Hindley-Milner type system is highly regarded for its simplicity, efficiency
 It provides strong type safety guarantees, catching errors at compile time and reducing the likelihood of runtime errors.
 Additionally, Hindley-Milner supports type polymorphism, allowing for concise and expressive code while maintaining type correctness. 
 
-\textbf{How does it work? (Baby steps...)}
+% \textbf{How does it work? (Baby steps...)}
 
-So how does it work?
-For Hindley-Milner to make much sense as a type-system, the first thing to understand is how types work on lambda calculus at all.
+\emph{So how does it work?}
+
+For Hindley-Milner to make much sense as a type-system, the first thing to understand is how types work on the lambda calculus at all.
 
 The lambda calculus is agnostic to typing, much in the way binary is.
 The lambda calculus does not consider "type" at all and in its purest form does not have any inherent conception of values at all, which gave rise to concepts such as Church encodings\footnote{Church encodings are representations of data structures and operations solely through functions and function application, originating from lambda calculus. They enable the representation of primitive data types and operations using only functions.}. 
@@ -1080,7 +1269,7 @@ The lambda calculus does not consider "type" at all and in its purest form does 
 There is however, an extension of the lambda calculus, called the \textbf{simply typed lambda calculus}, where types are considered.
 There a four typing rules in the simply typed lambda calculus:
 
-\textbf{Simply typed lambda calculus and monomorphic types.}
+% \textbf{Simply typed lambda calculus and monomorphic types.}
 
 \begin{equation} \label{eq:stlc-primitives-rule}
     \frac{x\text{ is constant of type }T}{\Gamma \vdash x:T} \;\;\text{Primitive}
@@ -1362,7 +1551,7 @@ OCamllex for tokenisation.
 
 Everything else was built from scratch in the language.
 
-\section{Parsing, Lexing and the Abstract Syntax Tree}
+\section{Parsing, Lexing and the Abstract Syntax Tree} \label{sec:parsing-lexing-and-the-ast}
 
 % To aid in a flexible yet easily modifiable syntax the following was done:
 % 0. An initial pass that converts white space identation into explicit scopes for later parsing.
@@ -1677,7 +1866,7 @@ Here is the AST.
 
 It also includes these few features.
 
-\section{Hindley-Milner Typechecker}
+\section{Hindley-Milner Typechecker} \label{sec:hindley-milner-typechecker}
 
 The type checker is the most technically difficult aspect of this project.
 It required several structures and the implementation of significant pieces of the HM theory already outlined to be encoded into OCaml.
@@ -1996,7 +2185,18 @@ Here are excepts indicating the implementations of the following rules:
 
 %==================================================================================================================================
 \chapter{Evaluation} 
-How good is your solution? How well did you solve the general problem, and what evidence do you have to support that?
+% How good is your solution? How well did you solve the general problem, and what evidence do you have to support that?
+
+In this section we evaluate the implementation of the PyFunc language.
+To do this several steps were required.
+
+Initailly, actual code comparisions for relatively non-trivial examples could indicate the general similarity between the possible structure of the code.
+Metrics such as Levenshtein distance could to some degree quantify the differences, though the actual usefulness of such a metric is not conclusive.
+
+To compare the output of the PyFunc runtime and the Python runtime a parallel comparison was required.
+But as there does not exist a full implementation test-suite for the Python language specification a substitute means for determining correct function was necessary.
+The next best thing to a langauge implementation test-suite is the actual internal test-suite of the current Python release version (CPython v3.12.2).
+The test suite was used as effectively a unit-test for the various features of PyFunc.
 
 \section{Direct Comparison Code Comparison}
 
@@ -2052,9 +2252,18 @@ Summarise the whole project for a lazy reader who didn't read the rest (e.g. a p
 \begin{itemize}
     \item
         Summarise briefly and fairly.
+
+        The aim of this project was to create a Python-like, functional programming language with a Hindley-Milner type system.
     \item
         You should be addressing the general problem you introduced in the
-        Introduction.        
+        Introduction. 
+        
+        The implementation outlined is a fully functional programming language that can now perform non-trivial computations.
+
+        Furthermore, the project indicates that Pythonic syntax is rather amenable to this style of programming, as minimal changes were needed to convert the syntax of the imperative, statement-based Python to the expression-based functional language of PyFunc.
+
+        The implementation performed well on an applicable subset of the CPython test suite, producing favourable results that indicate a level of functionality in the PyFunc implementation.
+
     \item
         Include summary of concrete results (``the new compiler ran 2x
         faster'')
@@ -2098,6 +2307,12 @@ Typical inclusions in the appendices are:
 
 \textbf{Don't include your source code in the appendices}. It will be
 submitted separately.
+\cite{Orw68}
+\cite{Pey17}
+
+\citet{Orw68}
+
+\citet{TIOBE}
 
 \end{appendices}
 

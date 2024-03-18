@@ -50,7 +50,7 @@
 
 % set bibliography styling
 \usepackage{natbib}
-\bibpunct{(}{)}{;}{a}{}{;}
+\bibpunct{[}{]}{;}{n}{}{;}
 
 
 \usepackage{etoolbox}
@@ -59,6 +59,8 @@
 \usepackage[table,svgnames]{xcolor}
 \usepackage{parskip} % adjustable line spacing
 \usepackage{listings} % nice code listings
+\usepackage{forest}
+\usepackage{float}
 
 % remove dots from ToC
 \usepackage[titles]{tocloft} 
