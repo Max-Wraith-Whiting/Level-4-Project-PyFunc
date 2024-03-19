@@ -32,6 +32,8 @@
 %token EXPONENT
 %token NOT
 %token CONS
+%token HEAD
+%token TAIL
 %token MOD
 %token COMMA
 %token COLON
@@ -46,6 +48,7 @@
 
 // Precedence
 %right CONS NOT
+%right HEAD TAIL
 %right UPLUS UMINUS
 %left LT GT GEQ LEQ EQQ NEQ
 %left PLUS MINUS
@@ -100,42 +103,12 @@ elif_expr:
 else_expr:
     | ELSE COLON scope {$3}
 
-// Expressions with explicit precedence.
-
-// logic_or:
-//     | logic_and OR logic_and {makeOpBinary OpBinary.And $1 $3}
-//     | logic_and {$1}
-
-// logic_and:
-//     | equality AND equality {makeOpBinary OpBinary.Or $1 $3}
-//     | equality {$1}
-
-// equality:
-//     | comparison NEQ comparison {makeOpBinary OpBinary.NotEqual $1 $3}
-//     | comparison EQQ comparison {makeOpBinary OpBinary.Equal $1 $3}
-//     | comparison {$1}
-
-// comparison:
-//     | term LT term  {makeOpBinary OpBinary.Less $1 $3}
-//     | term LEQ term {makeOpBinary OpBinary.LessEqual $1 $3}
-//     | term GT term  {makeOpBinary OpBinary.Greater $1 $3}
-//     | term GEQ term {makeOpBinary OpBinary.GreaterEqual $1 $3}
-//     | term {$1}
-
-// term:
-//     | factor MINUS factor {makeOpBinary OpBinary.Subtract $1 $3}
-//     | factor PLUS factor  {makeOpBinary OpBinary.Add $1 $3}
-//     | factor {$1}
-
-// factor:
-//     | unary DIVIDE unary {makeOpBinary OpBinary.Divide $1 $3}
-//     | unary STAR unary   {makeOpBinary OpBinary.Multiply $1 $3}
-//     | unary {$1}
-
 unary:
     | NOT unary   {makeOpUnary OpUnary.Not $2}
     | MINUS unary %prec UMINUS {makeOpUnary OpUnary.Negative $2}
     | PLUS unary  %prec UPLUS  {makeOpUnary OpUnary.Positive $2}
+    | HEAD unary {makeOpUnary OpUnary.Head $2}
+    | TAIL unary {makeOpUnary OpUnary.Tail $2}
     | list_op     {$1}
 
 list_op:

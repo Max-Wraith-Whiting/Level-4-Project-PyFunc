@@ -3,11 +3,15 @@ module OpUnary = struct
     | Positive
     | Negative
     | Not
+    | Head
+    | Tail
 
   let op_unary_pp = function
     | Positive -> "+"
     | Negative -> "-"
     | Not -> "!"
+    | Head -> "hd"
+    | Tail -> "tl"
 
 end
 

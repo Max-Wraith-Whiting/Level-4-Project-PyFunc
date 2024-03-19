@@ -99,6 +99,8 @@ module Frontend = struct
       | Positive -> IR.ExprOpUnary (UnOp.Positive, right)
       | Negative -> IR.ExprOpUnary (UnOp.Negative, right)
       | Not      -> IR.ExprOpUnary (UnOp.Not, right)
+      | Head     -> IR.ExprOpUnary (UnOp.Head, right)
+      | Tail     -> IR.ExprOpUnary (UnOp.Tail, right)
   
   and convert_list value_list = 
     let converted_list = List.map (convert) (value_list) in

@@ -17,7 +17,6 @@ rule token = parse
     | "elif"    {ELIF}
     | "else"    {ELSE}
     | "None"    {UNITVAL}
-
     | '('       {LPAREN}
     | ')'       {RPAREN}
     | '{'       {LBRACE}
@@ -41,6 +40,8 @@ rule token = parse
     | "//"      {INTDIVIDE}
     | "**"      {EXPONENT}
     | "::"      {CONS}
+    | "head"    {HEAD}
+    | "tail"    {TAIL}
     | '%'       {MOD}
     | ','       {COMMA}
     | ':'       {COLON}

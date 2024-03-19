@@ -109,6 +109,8 @@ module Interpreter = struct
       | Positive, (Vint i) -> Vint (~+i)
       | Negative, (Vint i) -> Vint (~-i)
       | Not, (Vbool b) -> Vbool (not b)
+      | Head, (Vlist l) -> List.hd l
+      | Tail, (Vlist l) -> Vlist(List.tl l)
       | _, _ -> raise (Errors.runtime_error ("Oh no! Invalid unary op: " ^ op_unary_pp op))
 
   and eval_op_binary env op expr_a expr_b =

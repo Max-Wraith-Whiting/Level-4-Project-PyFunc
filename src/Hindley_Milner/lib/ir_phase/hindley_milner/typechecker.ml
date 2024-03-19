@@ -325,6 +325,16 @@ module Typecheck = struct
         | Not ->
           unify typ TypeBool;
           TypeBool
+
+        | Head -> 
+          let fresh_typ = new_var () in
+          unify typ (TypeList(fresh_typ));
+          fresh_typ
+        
+        | Tail ->
+          let fresh_typ_list = TypeList(new_var ()) in
+          unify typ fresh_typ_list;
+          fresh_typ_list
     in 
 
     
