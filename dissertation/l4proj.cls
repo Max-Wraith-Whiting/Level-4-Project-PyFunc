@@ -61,6 +61,7 @@
 \usepackage{listings} % nice code listings
 \usepackage{forest}
 \usepackage{float}
+\usepackage{mathpartir}
 
 % remove dots from ToC
 \usepackage[titles]{tocloft} 

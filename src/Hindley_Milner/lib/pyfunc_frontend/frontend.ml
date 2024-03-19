@@ -158,7 +158,6 @@ module Frontend = struct
 
     let convert_func func_binder func_param_list func_body scope =
       let p_list = List.rev func_param_list in
-
       let lambdas = func_to_lambdas p_list (convert func_body) in
         IR.ExprLetRec (func_binder, lambdas, scope)
     in
