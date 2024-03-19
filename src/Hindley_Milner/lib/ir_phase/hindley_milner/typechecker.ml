@@ -82,7 +82,8 @@ module Typecheck = struct
 
   let in_type_check type_var typ = 
     let rec go = function 
-      | TypeVar tv -> if type_var = tv then raise Is_in_type
+      | TypeVar tv -> 
+        if type_var = tv then raise Is_in_type
       | TypeFunc (type_a, type_b) | TypePair (type_a, type_b) -> go type_a; go type_b;
       | _ -> ()
     in
@@ -92,7 +93,6 @@ module Typecheck = struct
           TypeVar.pp type_var
           Type.pp typ
       in raise (Errors.Type_Error error)
-
 
   let rec is_value = function
     | ExprPair (expr_a, expr_b) -> is_value expr_a && is_value expr_b

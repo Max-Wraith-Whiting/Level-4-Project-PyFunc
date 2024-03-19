@@ -1,0 +1,47 @@
+CPython Test suite Applicable tests.
+####################### Boolean tests:
+        self.assertIs(not True, False)
+        self.assertIs(not False, True)
+        self.assertIs(1==1, True)
+        self.assertIs(1==0, False)
+        self.assertIs(0<1, True)
+        self.assertIs(1<0, False)
+        self.assertIs(0<=0, True)
+        self.assertIs(1<=0, False)
+        self.assertIs(1>0, True)
+        self.assertIs(1>1, False)
+        self.assertIs(1>=1, True)
+        self.assertIs(0>=1, False)
+        self.assertIs(0!=1, True)
+        self.assertIs(0!=0, False)
+        
+    def test_str(self):
+        self.assertEqual(str(False), 'False')
+        self.assertEqual(str(True), 'True')
+
+    def test_int(self):
+        self.assertEqual(int(False), 0)
+        self.assertIsNot(int(False), False)
+        self.assertEqual(int(True), 1)
+        self.assertIsNot(int(True), True)
+
+    def test_float(self):
+        self.assertEqual(float(False), 0.0)
+        self.assertIsNot(float(False), False)
+        self.assertEqual(float(True), 1.0)
+        self.assertIsNot(float(True), True)
+        
+########################## Integer tests:
+
+        self.assertEqual(int(314), 314)
+        self.assertEqual(int(3.14), 3)
+        # Check that conversion from float truncates towards zero
+        self.assertEqual(int(-3.14), -3)
+        self.assertEqual(int(3.9), 3)
+        self.assertEqual(int(-3.9), -3)
+        self.assertEqual(int(3.5), 3)
+        self.assertEqual(int(-3.5), -3)
+        self.assertEqual(int("-3"), -3)
+        self.assertEqual(int(" -3 "), -3)
+        
+        self.assertEqual(int('0123'), 123)

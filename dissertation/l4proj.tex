@@ -380,7 +380,7 @@ To highlight the benefits of the syntax, the following examples will contrast th
 % Obviously, the exact semantics differ, but certain universals remain.
 
 % It is to Python's benefit that there is an effective understanding of the syntax of the language.
-% It is also likely why Python is so successful as a beginner language, as it informs new programmers of one of the most prevalent syntax's the collection of all of programming langauges.
+% It is also likely why Python is so successful as a beginner language, as it informs new programmers of one of the most prevalent syntax's the collection of all of programming languages.
 
 % So to short: Python's strengths lie in its syntax and semantics, not necessarily its implementation.
 % The value that this project aims to extract from it is not in its underlying structure but its front-facing interface as a means to producing easily comprehensible code.
@@ -458,10 +458,10 @@ A type refers to a classification that specifies what kind of data a variable ca
 
 % What is a Hindley-Milner Type System?
 
-The Hindley-Milner (HM) Type System is a type system used in statically typed functional langauges to automatically deduce the types of expressions without explicit type annotations.
+The Hindley-Milner (HM) Type System is a type system used in statically typed functional languages to automatically deduce the types of expressions without explicit type annotations.
 It also supports polymorphic functions 
 $\tilde{}$ It was independantly developed by Rogder Hindley in () and later extended by Robin Milner in ().
-The most well known implementation of the system is in the programming language ML (Meta Language), though it exists in many langauges, such as Haskell, OCaml, and Clean.
+The most well known implementation of the system is in the programming language ML (Meta Language), though it exists in many languages, such as Haskell, OCaml, and Clean.
 
 \subsection{Typing Systems and Notation} \label{subsec:typing-systems-and-notation}
 
@@ -1015,7 +1015,7 @@ The scope of the IR's syntax is relatively minimal, but due to the scope of the 
 
 This level of complexity, being greater than the standard lambda calculus yet not becoming too distant from it seemed the most reasonable option.
 
-In an ideal world, this would be processed further to a more optimised and compressed representation to improve the performance of the langauge.
+In an ideal world, this would be processed further to a more optimised and compressed representation to improve the performance of the language.
 However, the time to design and build an interpreter for such a representation is beyond the reasonable scope of this project.
 
 
@@ -2111,36 +2111,35 @@ The distinction of polytypes and free type variables needs to be explicit:
 
 \[\text{Polytypes are resolved types whereas free type variables are unresolved types.}\]
 
-With this in mind we can begin with the definition of the monotypes and polytypes in PyFunc's IR.
+% With this in mind we can begin with the definition of the monotypes and polytypes in PyFunc's IR.
 
-\begin{lstlisting}[language=Caml, caption="Pyfunc internal definitions for types.]
-  type resolution_state = Unresolved | Resolved of t
-  and typevar = string * (resolution_state UnionFind.elem)
-  and monoType = 
-    | TypeInt
-    | TypeFloat
-    | TypeBool
-    | TypeString
-    | TypeFunc of (t * t) (* A recursive definition refering to t. *)
-    | TypePair of (t * t)
-    | TypeUnit
-    | TypeVar of typevar
-    | TypeList of t
-  and polyType = quantifier list * monoType
-  and t = monoType
-\end{lstlisting}
+% \begin{lstlisting}[language=Caml, caption="Pyfunc internal definitions for types.]
+%   type resolution_state = Unresolved | Resolved of t
+%   and typevar = string * (resolution_state UnionFind.elem)
+%   and monoType = 
+%     | TypeInt
+%     | TypeFloat
+%     | TypeBool
+%     | TypeString
+%     | TypeFunc of (t * t) (* A recursive definition refering to t. *)
+%     | TypePair of (t * t)
+%     | TypeUnit
+%     | TypeVar of typevar
+%     | TypeList of t
+%   and polyType = quantifier list * monoType
+%   and t = monoType
+% \end{lstlisting}
 
-% Internally handling a monotype that has a singlular concrete type and a polytype that has a quantifier and an a possibly indeterminate type is an added layer of complication.
-\dots
+Internally handling a monotype that has a singlular concrete type and a polytype that has a quantifier and an a possibly indeterminate type is an added layer of complication.
 
-BLARG
+A conceptually easy way to handle this in the implementation is to treat monotypes as polytype we no quantifiers.
 
+For example, $\sigma := (quantifier, \tau)$ and $\tau ;= (\;\;, \tau)$
 
-
-Before type variables can be implemented, polytypes and the concept of quantifiers needs to be described.
+Regardless, before type variables can be implemented, polytypes and the concept of quantifiers needs to be described.
 The very simple Quantifier module does just that.
 
-\begin{lstlisting}[language=Caml]
+\begin{lstlisting}[language=Caml, caption=The PyFunc type checker's quantifier module.]
   module Quantifier = struct
     type t = string
     let make x = x
@@ -2149,7 +2148,9 @@ The very simple Quantifier module does just that.
   end
 \end{lstlisting}
 
-The first step in the implementation of type variables, is itself describing the types that type variables will depend on.
+The quantifiers are simply strings which can be compared, which allows for very easy modification in the type checker.
+
+The next step in the implementation of type variables, is itself describing the types that type variables will depend on.
 
 \begin{lstlisting}[language=Caml]
   type resolution_state = Unresolved | Resolved of t
@@ -2164,18 +2165,24 @@ The first step in the implementation of type variables, is itself describing the
     | TypeVar of typevar
     | TypeList of t
   and polyType = quantifier list * monoType
-  and t = monoType
+  and t = monoType (* The default type is a monotype. *)
 \end{lstlisting}
 
 This includes some definintions that need a little clarifying:
 \begin{itemize}
     \item The type \texttt{resolution\_state} is a simple way of tracking if type variables are resolved or not.
     If it is unresolved then it carries no variable, whereas if it is resolved, it carries the monotype it has been resolved to.
-    \item The type \texttt{typevar} is a simple pair of an identifier, which
+    \item The type \texttt{typevar} is an easy way to represent type variables for unification.
+    The inclusion of \texttt{UnionFind.elem} enables us to use the Union Find algorithm to resolve type variables.
+    \item Polytypes are types containing variables bound by zero or more $\forall$ quantifiers. 
+    The \texttt{Polytype} type shows this directly by being a pair of a list of quanitifers and the base monotype.
 \end{itemize}
 
-\begin{lstlisting}[language=Caml, caption=The TypeVar module. The module specifies the utility functions for the management of type variables.]
-  module TypeVar = struct
+Now with these type defiitions, the additional ifrastructure of type variables needs to be added.
+There needs to be to function to generate a new type variable that does not already exist in the context.
+This type variable should also be initialised in an "unresolved" state.
+
+\begin{lstlisting}[language=Caml, caption=The simple implementation of type variables. The fresh\_TV function generates a new\, unresolved type variable.]
     let id_count = ref 0
     let reset () = id_count := 0
     
@@ -2184,16 +2191,103 @@ This includes some definintions that need a little clarifying:
       let () = incr id_count in
       let resolution_state = UnionFind.make Unresolved in
       (scope_prefix ^ (string_of_int id), resolution_state)
-
-    let var = fst
-    let resolution_state = snd
-    let compare (typeVar_a,_) (typeVar_b,_) = String.compare typeVar_a typeVar_b
   end
 \end{lstlisting}
 
 \subsection{Type-Environments and Why We Need Them}
+
+Now that we have described the basic implementation of type variables, we need to describe a type environment like $\Gamma$ so in the type checker, we can bind new type annotations internally.
+A simple way to do this is to is using both a set and a map together.
+With a set to contain type variables and a map from variable names to their associated polytypes.
+
+\begin{lstlisting}[language=Caml]
+    type t = ContextSet.t * (Type.polyType ContextMap.t)
+
+    let empty = (ContextSet.empty, ContextMap.empty)
+    let fresh_TVs = fst
+\end{lstlisting}
+
+Now, the other major jobs that this environment needs to handle are: binding type variables and finding bound type variables.
+
+Let's start with binding type variables:
+
+\begin{lstlisting}[language=Caml]
+    let bind_polytype k (quantifier, typ) (env_fresh_TVs, env) : t =
+      let type_fresh_TVs = ContextSet.diff (fresh_monoTvs typ) (ContextSet.of_list quantifier) in
+      (ContextSet.union env_fresh_TVs type_fresh_TVs,
+       ContextMap.add k (quantifier, typ) env)
+\end{lstlisting}
+
+This function \texttt{bind\_polytype} binds a polytype to a variable in the type environment.
+It takes three arguments:
+\begin{itemize}
+    \item $k$: The variable name.
+    \item $(quantifier, typ)$: The polytype to bind.
+    \item $(env\_fresh\_TVs, env)$: The existing type environment.
+\end{itemize}
+
+This function calculates the set of fresh type variables introduced by the type typ and updates the environment accordingly by adding the variable $k$ mapped to the polytype $(quantifier, typ)$.
+If a monotype needs to be bound, it should be bound just as a polytype with an empty list of quantifiers.
+
+Beyond this, defining a method to find if a variable exists within the context map is almost trivial.
+
+\begin{lstlisting}[language=Caml]
+    let find k (_, env) = 
+      match ContextMap.find_opt k env with
+        | Some typ -> typ
+        | None -> raise (Errors.type_error ("Unbound variable " ^ k))
+\end{lstlisting}
+
+\subsection{Generalisation and Instatitation}
+
+DESCRIBE THEIR ROLES
+
+SHOW CODE
+
+EXPLAIN CODE
+
+SAY IT WORKS
+
+HOW IT MIGHT BE MODIFIED IN FUTURE OR WON'T BE
+
 \subsection{Unification}
-\subsection{Generalisation}
+
+The unification algorithm is the part of the type checker that does the heavy lifting for the project.
+It finds a common substitution for variables in two or more expressions, such that the expressions can be made equivalent. 
+% \begin{figure}
+\begin{lstlisting}[language=Caml, caption=PyFunc's unification algorithm.]
+let rec unify type_a type_b = 
+match type_a, type_b with
+    (* Matching types succeed by not throwing an error.*)
+    | type_a, type_b when type_a = type_b -> () 
+    (* Matching where types are pairs / funcs. *)
+    | TypeFunc (a1, a2), TypeFunc (b1, b2) | TypePair (a1, a2), TypePair (b1, b2) -> 
+        unify a1 b1; unify a2 b2
+    (* Check type occurs, then unionfind to see if it is resolved or unresolved. *)
+    | TypeVar type_var, t | t, TypeVar type_var -> 
+        in_type_check type_var t;
+        let res_state = TypeVar.resolution_state type_var in (
+            match UnionFind.get res_state with
+            | Unresolved -> UnionFind.set res_state (Resolved t)
+            | Resolved type_b -> unify type_b t
+        )
+    (* List Operation *)
+    | TypeList a, TypeList b -> 
+        unify a b
+    | _, _ -> 
+        let error = Format.asprintf "[Unification error]: Cannot unify %a with %a" 
+            Type.pp type_a 
+            Type.pp type_b 
+        in 
+    raise (Errors.type_error error)
+\end{lstlisting}
+% \end{figure}
+
+The provided unification algorithm recursively matches and unifies two types \texttt{type\_a} and \texttt{type\_b}, handling various cases such as matching identical types, pairs, functions, type variables, and lists.
+When encountering type variables, it checks for occurrences and uses the UnionFind data structure to manage unresolved and resolved states.
+If types cannot be unified, it raises a type error with detailed information about the types involved.
+Overall, the algorithm efficiently handles type unification in PyFunc, ensuring type consistency and correctness during type inference.
+
 \subsection{The Typerchecker}
 % \subsection{The Not So Simple Typechecking}
 
@@ -2205,28 +2299,62 @@ It is in a way the simplest part of the project, being a tree-walk interpreter, 
 
 \subsection{Interpreted Values}
 
+The interpreter needed some type to output as a computed value, which could represent the various possible program outputs and termination states.
+
+\begin{lstlisting}[language=Caml]
+type value = 
+  | Vint of int 
+  | Vfloat of float
+  | Vbool of bool 
+  | Vstring of string 
+  | Vunit of unit 
+  | Vvar of string 
+  | Vpair of (value * value)
+  | Vlist of value list
+\end{lstlisting}
+
 Having an interpreted value type was necessary but also got in the way in one key case: Partial application.
 
 Due to the function not having the sufficent parameters to totally evaluate, the interpreter would need to stop evaluating the expression and leave it be until it had all the necessary arguments.
 
 However, this was very difficult with the structure of the interpreter being a recursive depth-first search of the IR-AST.
 Initally as a patch, the option for a value to be a VTree was added.
-A VTree is literally a segment of the code that will cause an error if evaluated wrapped in the value type.
+A VTree was literally a segment of the code that would cause an error if evaluated wrapped in the value type.
 
-But for the case of partial application it works very well.
+But for the case of partial application it worked very well.
 
 For example, [Example with f(a, b, c) -> let f = $\lambda a. \lambda b. \lambda c. a + b + c$]
 
 With partial application what happens is: [f (1) = VTree ($\lambda b. \lambda c. 1 + b + c$)]
 
-When another application occurs on VTree then the VTree value is unwrapped and applied.
+When another application occurs on VTree then the VTree value is unwrapped and reconsidered part of the ast.
 As it still isn't fully evaluated, it is again wrapped in the value type as a VTree.
-
 When all the requisite applications are done it returns a value type other than a VTree.
 
-Whilst this is still a somewhat clunky solution, it most certainly works effectively.
+This idea whilst having some merit is unweildy and generally quite clunky.
+However, a simple remedy to this clunky solution is something that ought to have been obvious, \emph{closures}.
+
+A closure value type could wrap the partially applied function and its local environment until used again, making a far easier to implement version of the raw VTree idea.
+There was only one caveat to using closures to handle partial application, and that was the fact that recursive functions (implemented via let rec) could not be initally defined with a closure as they have to be include themselves in their local environment.
+This is impossible for a closure to do as it introduces a circular dependancy to the definition of the closure and the environment it includes.
+
+So as a simple fix, a simple VFn value type was added that is only used in this one instance.
+The VFn type simple holds the body of a recursive function for the initial definition, to mitigate the depedancy issue.
+
+\begin{lstlisting}[language=Caml, caption=The aditional type definitions of a VClos and VFn.]
+    type t = (string * value) list
+    and value = 
+    | ...
+    | VFn of (tree)
+    | VClos of (binder * tree * env.t)
+    | ...
+\end{lstlisting}
 
 \subsection{Environment}
+
+In a similar fashion to the typechecker, the environments in the interpreter are passed down the evaluation tree during interpretation.
+
+When an evaulation function returns an interpreted value
 
 Contrary to the evironments in the type checker which were only passed down the ast as an argument, the interpreter uses a reference type to handle the env.
 
@@ -2244,8 +2372,70 @@ Here are excepts indicating the implementations of the following rules:
 
 1. Unary and Binary operations
 
-2. Yada yada yada.
+\begin{lstlisting}[language=Caml, caption=Excerpt of the PyFunc Interpreter rules for binary and unary operations.]
+and eval_op_binary env op expr_a expr_b =
+    let left = eval env expr_a in
+    let right = eval env expr_b in
+    match left, op, right with
+    | (Vint a), Add,       (Vint b) ->  Vint (a + b)
+    | (Vint a), Subtract,  (Vint b) ->  Vint (a - b)
+    | ...
 
+and eval_op_unary env op expr = 
+    let expr_value = eval env expr in
+    match op, expr_value with
+      | Positive, (Vint i) -> Vint (~+i)
+      | Negative, (Vint i) -> Vint (~-i)
+      | Not, (Vbool b) -> Vbool (not b)
+      | ...
+\end{lstlisting}
+The rules for operations are relatively simple by virtue of the reduced complexity of the IR allowing for pattern matching to handle all of the major differentation of operations.
+
+2. The previously mentioned recursive let expression
+
+\begin{lstlisting}[language=Caml, caption=The Pyfunc Interpreter let rec rule.]
+and eval_letrec env binder let_expr in_expr =
+    (* Set variable into the Env before evaluation. *)
+    let fn = VFn (let_expr) in
+    let env' = (Env.set env binder fn) in
+    (* Compute value with recursive referencing. *)
+    eval env' in_expr
+\end{lstlisting}
+
+In the example above, the in\_expr refers to the continuation of the let rec expression.
+
+3. Application
+
+\begin{lstlisting}[language=Caml, caption=The PyFunc interpreter's application rule.]
+    and eval_applic env func arg =
+      (* Attmept computation. *)
+      let fn = eval env func in
+      (* Unwrap value. *)
+      match fn with 
+      | VFn body -> eval env body
+      | VClos (binder, body, c_env) -> 
+        let arg_value = eval env arg in
+      (* Bind arg *)
+        let env' = Env.set c_env binder arg_value in
+        eval env' body 
+      | v -> v
+\end{lstlisting}
+
+4. Variables
+
+\begin{lstlisting}[language=Caml, caption=The PyFunc interpreter's rule for variables.]
+and eval_var env var =
+    (* Attempt to get var from env *)
+    try let result = Env.get env var in
+    match result with
+      | VFn body -> print_endline ("VFn var: " ^ var); eval env body
+      | VClos (binder, body, env') -> eval env' body
+      | x -> x
+
+    with
+      | Errors.Lookup_Error msg -> raise (Errors.Lookup_Error msg)
+      | exn -> raise exn
+\end{lstlisting}
 % \section{Guidance}
 % You can't talk about everything. Cover the high level first, then cover important, relevant or impressive details.
 
@@ -2445,8 +2635,12 @@ Metrics such as Levenshtein distance could to some degree quantify the differenc
 
 To compare the output of the PyFunc runtime and the Python runtime a parallel comparison was required.
 But as there does not exist a full implementation test-suite for the Python language specification a substitute means for determining correct function was necessary.
-The next best thing to a langauge implementation test-suite is the actual internal test-suite of the current Python release version (CPython v3.12.2).
+The next best thing to a language implementation test-suite is the actual internal test-suite of the current Python release version (CPython v3.12.2).
 The test suite was used as effectively a unit-test for the various features of PyFunc.
+
+It should be noted that the CPython test suite is an interal test-suite and its standard is not held as the optimal language implementation test-suite.
+Furthermore, the test-suite also tests significant amounts functionaility that PyFunc does not support in any way, ranging from built-in functions to the behaviour of overloaded operators.
+(I.e., $-\text{True}$ is valid Python but is not valid PyFunc as a negative unary operator is for numeric types only.)
 
 \section{Direct Comparison Code Comparison}
 
@@ -2463,7 +2657,9 @@ The test suite was used as effectively a unit-test for the various features of P
 %         The key thing is to show that you know how to evaluate your work, not
 %         that your work is the most amazing product ever.
 % \end{itemize}
-\section{Testing Agianst The CPython Test-Suite}
+\section{Testing Against The CPython Test-Suite}
+
+
 
 % \section{Evidence}
 % Make sure you present your evidence well. Use appropriate visualisations, reporting techniques and statistical analysis, as appropriate.
