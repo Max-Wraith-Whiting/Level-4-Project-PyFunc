@@ -1,5 +1,2 @@
-def a(x, y, z):
-    x * y + z
-
 def main():
-    a(2,4,6)
+    head [1, 2, 3]
