@@ -105,12 +105,59 @@ module Interpreter = struct
 
   and eval_op_unary env op expr = 
     let expr_value = eval env expr in
+
+    let rec value_to_int = function
+    | Vint i -> Vint i
+    | Vfloat f -> Vint (Float.to_int f)
+    | Vbool b -> Vint (Bool.to_int b)
+    | Vpair (a, b) -> Vpair (value_to_int a, value_to_int b)
+    | Vlist l -> Vlist (List.map (value_to_int) l)
+    | Vunit () -> Vunit ()
+    | _ -> raise (Errors.runtime_error "Illegal input to unary int cast!")
+    in
+
+    let rec value_to_float = function
+    | Vint i -> Vfloat (Int.to_float i)
+    | Vfloat f -> Vfloat f
+    | Vbool b -> Vfloat (Bool.to_float b)
+    | Vpair (a, b) -> Vpair (value_to_float a, value_to_float b)
+    | Vlist l -> Vlist (List.map (value_to_float) l)
+    | Vunit () -> Vunit ()
+    | _ -> raise (Errors.runtime_error "Illegal input to unary float cast!")
+    in
+
+    let rec value_to_string = function
+    | Vint i -> Vstring (Int.to_string i)
+    | Vfloat f -> Vstring (Float.to_string f)
+    | Vbool b -> Vstring (Bool.to_string b)
+    | Vpair (a, b) -> Vpair (value_to_string a, value_to_string b)
+    | Vlist l -> Vlist (List.map (value_to_string) l)
+    | VClos (binder, _, _) -> Vstring (binder)
+    | Vunit () -> Vunit ()
+    | _ -> raise (Errors.runtime_error "Illegal input to unary string cast!")
+    in
+
+    let rec value_to_bool = function
+    | Vint i -> Vbool (if i = 0 then false else true)
+    | Vfloat f -> Vbool (if f = 0. then false else true)
+    | Vbool b -> Vbool b
+    | Vstring s -> Vbool (if s = "" then false else true)
+    | Vpair (a, b) -> Vpair (value_to_bool a, value_to_bool b)
+    | Vlist l -> Vlist (List.map (value_to_bool) l)
+    | Vunit () -> Vunit ()
+    | _ -> raise (Errors.runtime_error "Illegal input to unary float cast!")
+    in
+
     match op, expr_value with
       | Positive, (Vint i) -> Vint (~+i)
       | Negative, (Vint i) -> Vint (~-i)
       | Not, (Vbool b) -> Vbool (not b)
       | Head, (Vlist l) -> List.hd l
       | Tail, (Vlist l) -> Vlist(List.tl l)
+      | UInt, v -> value_to_int v
+      | UFloat, v -> value_to_float v
+      | UBool, v -> value_to_bool v
+      | UString, v -> value_to_string v
       | _, _ -> raise (Errors.runtime_error ("Oh no! Invalid unary op: " ^ op_unary_pp op))
 
   and eval_op_binary env op expr_a expr_b =

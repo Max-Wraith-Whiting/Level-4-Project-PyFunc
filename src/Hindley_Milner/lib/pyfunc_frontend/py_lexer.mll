@@ -17,6 +17,10 @@ rule token = parse
     | "elif"    {ELIF}
     | "else"    {ELSE}
     | "None"    {UNITVAL}
+    | "int"     {INT}
+    | "float"   {FLOAT}
+    | "bool"    {BOOL}
+    | "string"  {STRING}
     | '('       {LPAREN}
     | ')'       {RPAREN}
     | '{'       {LBRACE}

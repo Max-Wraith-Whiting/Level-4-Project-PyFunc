@@ -5,6 +5,10 @@ module OpUnary = struct
     | Not
     | Head
     | Tail
+    | UInt
+    | UFloat
+    | UBool
+    | UString
 
   let op_unary_pp = function
     | Positive -> "+"
@@ -12,6 +16,10 @@ module OpUnary = struct
     | Not -> "!"
     | Head -> "hd"
     | Tail -> "tl"
+    | UInt -> "int"
+    | UFloat -> "float"
+    | UBool -> "bool"
+    | UString -> "string"
 
 end
 

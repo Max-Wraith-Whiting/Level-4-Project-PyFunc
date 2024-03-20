@@ -17,6 +17,10 @@
 %token ELIF
 // %token THEN
 %token ELSE
+%token INT 
+%token FLOAT
+%token BOOL
+%token STRING
 %token UNITVAL
 %token LPAREN
 %token RPAREN
@@ -48,6 +52,7 @@
 
 // Precedence
 %right CONS NOT
+%right INT FLOAT BOOL STRING 
 %right HEAD TAIL
 %right UPLUS UMINUS
 %left LT GT GEQ LEQ EQQ NEQ
@@ -104,12 +109,16 @@ else_expr:
     | ELSE COLON scope {$3}
 
 unary:
-    | NOT unary   {makeOpUnary OpUnary.Not $2}
+    | NOT unary     {makeOpUnary OpUnary.Not $2}
     | MINUS unary %prec UMINUS {makeOpUnary OpUnary.Negative $2}
     | PLUS unary  %prec UPLUS  {makeOpUnary OpUnary.Positive $2}
-    | HEAD unary {makeOpUnary OpUnary.Head $2}
-    | TAIL unary {makeOpUnary OpUnary.Tail $2}
-    | list_op     {$1}
+    | HEAD unary    {makeOpUnary OpUnary.Head $2}
+    | TAIL unary    {makeOpUnary OpUnary.Tail $2}
+    | INT unary     {makeOpUnary OpUnary.UInt $2}
+    | FLOAT unary   {makeOpUnary OpUnary.UFloat $2}
+    | BOOL unary    {makeOpUnary OpUnary.UBool $2}
+    | STRING unary  {makeOpUnary OpUnary.UString $2}
+    | list_op       {$1}
 
 list_op:
     | unary CONS unary {makeOpBinary OpBinary.Cons $1 $3}

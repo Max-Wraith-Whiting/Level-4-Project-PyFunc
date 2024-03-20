@@ -1,2 +1,2 @@
 def main():
-    True == True
+    float (True) != (float 0)
