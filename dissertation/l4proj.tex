@@ -347,7 +347,7 @@ This section aims to offer a cohesive overview of these distinct areas, providin
 % In essence, Python's strengths lie in its syntax and semantics rather than its performance, emphasizing its value in producing easily comprehensible code.
 
 
-Python's popularity is undeniable, evident from its consistent top rankings on indices like the Tiobe Index (February 2024) and the PYPL Index (March 2024) .
+Python's popularity is undeniable, evident from its consistent top rankings on indices like the Tiobe Index (February 2024)\citep{TIOBE} and the PYPL Index (March 2024) .
 But what makes Python so widely favored? One of its key strengths lies in its unparalleled agility, enabling rapid iteration and fostering a development environment conducive to experimentation and quick prototyping.
 Moreover, Python's simplicity and readability contribute significantly to its appeal, making it accessible to both novice and experienced programmers alike.
 The language's syntax, often resembling plain English, further enhances its beginner-friendly nature, minimizing the learning curve for newcomers.
@@ -654,7 +654,7 @@ This enables powerful programming techniques such as function composition, parti
 
 \textbf{Inner Functions:}
 The necessity of including inner functions into PyFunc is not apparent.
-Whilst they are of great utility for encapsulation of logic, the potential increase in complexity of bindings makes them an lesser priority than other frontend features like Higher Order Functions.
+Whilst they are of great utility for encapsulation of logic, the potential increase in complexity of bindings makes them a lesser priority than other frontend features like Higher Order Functions.
 
 \subsection{Type-System}
 The Hindley-Milner Type System offers several advantages in programming:
@@ -714,16 +714,14 @@ MUST HAVE:
     To be explicit the arithmetic operations to include are: +, -, $\times$, ÷, ==, >=, <=, >, <, !=.
     \item \textbf{Basic Control Structures:} Basic controls structures are a must-have feature. They must include: If-else expressions, match-expressions.
     \item \textbf{Functions:} Simple non-recursive functions and recursive functions must be included. Without recursive functions the language cannot support looping.
+    \item \textbf{Closures:} Being an unusually hidden piece of syntax, closures are not as commonly used in Python though it supports them.
+    Closures are undeniably very powerful, but much like inner functions, the scoping rules involved introduces additional complexity into the implementation of function scopes. 
     \item \textbf{Lists and Appropriate Operations:} List are the major data structure in Python and for any resemblanace to be accurate the prototype language must implement them in atleast a basic form.
     \item \textbf{Hindley-Milner Type System:} The type system is a fundamental structure that the benefits of this language hinge upon, and therefore it is an essential feature.
 \end{itemize}
 
 SHOULD HAVE:
 \begin{itemize}
-    \item \textbf{Standard Functions:} Python includes an array of keywords to do common tasks, the prototype language should do something similar.
-    (E.g., include keywords such as \verb|len| or \verb|any| to simplify code.)
-    \item \textbf{List Comprehensions:} List comprehensions are an incredibly useful feature of Python that fit nicely into the functional ethos whilst being relatively easy to read and parse.
-    Such a useful construct would be a boon to the prototype languages though not critical.
     \item \textbf{String Manipulation:} Whilst any true language implementation should include some measure of string manipulation, for this prototype it falls outside of truly critical featuers, whilst being an important addition to potentially add.
     \item \textbf{Basic IO:} A program that cannot take input or produce an output is fundamentally useless, and therefore some amount of IO (no matter how minimal) should be included to this prototype.
 \end{itemize}
@@ -732,9 +730,11 @@ COULD HAVE:
 \begin{itemize}
     \item \textbf{Inner Functions:} Inner functions are a useful tool for encapsulating relevant functions within other function scopes.
     However, managing the potentially complex scoping involved might require semantic analysis and more work than they are worth in a prototype language.
-    \item \textbf{Closures:} Being an unusually hidden piece of syntax, closures are not as commonly used in Python though it supports them.
-    Closures are undeniably very powerful, but much like inner functions, the scoping rules involved introduces additional complexity into the implementation of function scopes. 
+    \item \textbf{Standard Functions:} Python includes an array of keywords to do common tasks, the prototype language should do something similar.
+    (E.g., include keywords such as \verb|len| or \verb|any| to simplify code.)
     \item \textbf{Dictionaries and Sets:} Whilst a very commonly used feature, dictionaries and sets are somewhat beyond the core scope of this project, or at least enough so to not be a primary implementation concern.
+    \item \textbf{List Comprehensions:} List comprehensions are an incredibly useful feature of Python that fit nicely into the functional ethos whilst being relatively easy to read and parse.
+    Such a useful construct would be a boon to the prototype languages though not critical.
 \end{itemize}
 
 WILL NOT HAVE:
@@ -1291,6 +1291,7 @@ The acutal power of it is somewhat harder to quantify without examples.
 
 % \textbf{Non-technical explanation of type theory and inference:}
 \subsection{A Non-Technical Explanation of Inference}
+\label{sec:non-technical-inference-explanation}
 
 Type inference is the process of deducing the types of things without being explicitly told.
 Imagine there is a game, where someone gives you clues about an object, but they cannot say what it is explicitly.
@@ -1405,7 +1406,7 @@ There are four\footnote{This is not \emph{technically} true, as the "primitive" 
 % \textbf{Simply typed lambda calculus and monomorphic types.}
 
 \begin{equation*} \label{eq:stlc-primitives-rule}
-    \frac{x\text{ is constant of type }T}{\Gamma \vdash x:T} \;\;\text{[Primitive]}
+    \frac{e\text{ is constant of type }T}{\Gamma \vdash e:T} \;\;\text{[Primitive]}
 \end{equation*}
 
 \begin{equation*} \label{eq:stlc-var-rule}
@@ -1453,9 +1454,9 @@ Here is an example usage of the simply typed lambda calculus to prove that $(\la
                 \inferrule*[right=Var.]
                 { } {x:\textbf{int} \vdash x : \textbf{int}}
             }
-            { \vdash (\lambda x : \textbf{int}) : \textbf{int} \rightarrow \textbf{int}}\;\;
+            { \vdash (\lambda x  : \textbf{int} . x ): \textbf{int} \rightarrow \textbf{int}}\;\;
             \inferrule*[right=Primitive]
-            { } { \vdash 2 : int}
+            { } { \vdash 2 : \textbf{int}}
         }
         {
             \vdash (\lambda x : \textbf{int}. x) 2 : \textbf{int}
@@ -1513,9 +1514,39 @@ If we want to remove the annotation, we must consider the type of the lambda to 
 We previously described polytypes regarding the identity function \texttt{id}, which encompass the idea of a more general type than a monotype, allowing for specific instantiation of more specified types.
 That is one of the key rules that allows HM to function.
 
-\citet{Milner_1978} outlined the requiste typing rules for an efficent implementation of this polymorphic type system, known as Algorithm J.
+\citet{Milner_1978} outlined the requiste typing rules for an efficent implementation of this polymorphic type system, known as Algorithm W.
 
-Algorithm J had six typing rules in its definition which are:
+Algorithm W has six rules which are very similar to those of the STLC, but there are two additional rules that handle the specificity of polymorphic types directly.
+
+As a brief note on the syntax of these rules; polytypes can be ordered by how "general" they are, for example, $\sigma_a$ could be called more general than $\sigma_b$ if some substitution into $\sigma_a$ can transform it into $\sigma_b$.
+The formal syntax for this is $\sigma_a \sqsubseteq \sigma_b$.
+
+\begin{mathpar}
+    \inferrule*[right=Specialisation]
+    {\Gamma \vdash e: \sigma_a \;\;\; \sigma_a \sqsubseteq \sigma_b}
+    {\Gamma \vdash e: \sigma_b}
+\end{mathpar}
+
+\begin{mathpar}
+    \inferrule*[right=Generalisation]
+    {\Gamma \vdash e : \sigma \;\;\; \alpha \notin \mathit{free}(\Gamma)}
+    {\Gamma \vdash e : \forall \alpha. \sigma}
+\end{mathpar}
+
+With the first of these two typing rules, a given polytype can be instantiated, i.e., made into a specific type, as seen in the \texttt{id} example before (\ref{sec:non-technical-inference-explanation}).
+
+Generalisation in this case is quite simple in that it checks whether the type if free within the given context ($\Gamma$) and if not allows the type to be polymorphic.
+
+For example, $\texttt{id} : \lambda x . x $ has no specifically typed reference to the type it takes. I.e., the $+$ operation for example requires an integer.
+As, \texttt{id} does not have any type imposed on $x$, it can be generalised into a polytype.
+
+\subsection*{Algorithm J}
+
+Now, whilst algorithm W is the algorithm we have been talking about, there is another implementation called algorithm J \citep{Milner_1978} \citep{Damas_Milner_1982}.
+Algorithm J is technially not a "proper" set typing of typing rules as it allows for side-effects.
+However, Algorithm J is an efficent implementation of the type inference algorithm.
+
+Algorithm J has six typing rules in its definition which are:
 \begin{itemize}
     \item Variable Rule
     \item Application Rule
@@ -1525,41 +1556,19 @@ Algorithm J had six typing rules in its definition which are:
     \item Generalisation Rule
 \end{itemize}
 
-Of these rules, the two that are of interest are the instatiation rule and generalisation rule.
-These two rules manipulate polytypes.
-Polytypes can be ordered by how "general" they are, for example, $\sigma_a$ could be called more general than $\sigma_b$ if some substitution into $\sigma_a$ can transform it into $\sigma_b$.
-The formal syntax for this is $\sigma_a \sqsubseteq \sigma_b$.
-
-Instantiation makes takes a polytype and specifies it:
-
-\begin{mathpar}
-    \inferrule*[right=Specialisation]
-    {\Gamma \vdash e: \sigma_a \;\;\; \sigma_a \sqsubseteq \sigma_b}
-    {\Gamma \vdash e: \sigma_b}
-\end{mathpar}
-
-And to do the direct opposite, generalisation makes a polytype more general:
-
-\begin{mathpar}
-    \inferrule*[right=Generalisation]
-    {\Gamma \vdash e : \sigma \;\;\; \alpha \notin \text{free}(\Gamma)}
-    {\Gamma \vdash e : \forall \alpha. \sigma}
-\end{mathpar}
-
 However, \citet{Clement_Despeyroux_Kahn_Despeyroux_1986} simplified the typing rules\footnote{It should be noted that this simplification did reduce the completeness of the rules, though only marginally.} further until there was only four by combining specialisation into the variable rule and generalisation into the let rule.
-
 
 Here are a simplified interpretetation of the outlined rules:
 
 \begin{mathpar}
     \inferrule*[right=Variable]
-    {x : \sigma \in \Gamma \;\;\; \tau = instance(\sigma)}
+    {x : \sigma \in \Gamma \;\;\; \tau = \mathit{instance}(\sigma)}
     {\Gamma \vdash x : \tau}
 \end{mathpar}
 
 \begin{mathpar}
     \inferrule*[right=Application]
-    {\Gamma \vdash e_0 : \tau_0 \;\;\; \Gamma \vdash e_1 : \tau_1 \; \tau'=fresh\_var \;\;\; unify(\tau_0, \tau_1 \rightarrow \tau')}
+    {\Gamma \vdash e_0 : \tau_0 \;\;\; \Gamma \vdash e_1 : \tau_1 \; \tau'=\mathit{fresh\_var} \;\;\; \mathit{unify}(\tau_0, \tau_1 \rightarrow \tau')}
     {\Gamma \vdash e_0 e_1 : \tau'}
 \end{mathpar}
 
@@ -1579,115 +1588,295 @@ The $instance(\sigma)$ operation takes $\sigma$ and relaces all bound type varia
 
 The $fresh\_var$ operation quite simply produces a new monotype on demand.
 
-$\bar \Gamma(\tau)$ refers to generalisation, where the given type is quantified to its most general form.
+$\bar \Gamma(\tau)$ refers to generalisation, as specified previously, where the given type is quantified to its most general form.
+It should be noted however, that \emph{unification} is the process that takes place here to determine the most general form of the given terms.
+
+Now with these four typing rules, the lambda caculus can now infer types for polymorphic functions.
+
+% \begin{itemize}
+%     \item Monotypes [Already explained, either remove this or incorporate it elsewhere.]
+    
+%     Monotypes are base types.
+%     They always designate a specific type.
+%     They are represented by $\tau$.
+%     There are broadly two categories of monotypes, type constants like \texttt{int, string, bool}, and type functions like \texttt{int $rightarrow$ string}.
+%     Monotypes are not to be confused with \emph{monomorphic} types.
+%     Monotypes include things like variables which are not monomorphic.
+
+%     \item Polytypes [Already discussed, and this is not very useful.]
+    
+%     Polytypes or type schemes are types containing variables bound by zero or more for-all ($\forall$) quantifiers, eg. $\forall \alpha . \alpha \rightarrow \alpha$.
+%     A function with polytype $\forall \alpha . \alpha \rightarrow \alpha$ can map any value of the same type to itself, which is by definiton the identity function.
+%     The way to check equality of polytypes is up to reordering the quantification and $\alpha$-conversion.
+%     Further, quantified variables not occuring in the monotype can be dropped.
+%     \item Context and typing [Pretty useful, keep around, maybe move it]
+    
+%     To join together syntax expressions and types a third piece of the puzzle is desperately needed: context.
+%     Syntactically, a context is a list of pairs $(x : \sigma)$, called bindings.
+%     The example binding states that $x$ has type $\sigma$.
+%     A typing judgement has the form $\Gamma \vdash e : \sigma$, stating that under the assumptions $\Gamma$, the expression $e$ has type $\sigma$.
+%     % \item Free type variables []
+    
+%     % In a type $\forall a_1 \dots \forall a_n \cdot \tau$, the $\forall$ is the quanitifer binding the type variables $a_i$ in the monotype $\tau$.
+%     % The variables $a_i$ are called quantified and any occurance of a quantified type variable in $\tau$ is called \emph{bound}.
+%     % The unbound variables are called \emph{free}.
+%     % Type variables can be bound by occuring in the given context ($\Gamma$), but with the inverse effect on the right hand side of the $\vdash$.
+%     % In our case, all type variables are implicitly as "all-quantified".
+%     % So in PyFunc, the type $a \rightarrow a$ would be quantified as: $\forall a.a \rightarrow a$.
+%     \item Type Order
+    
+%     Polymorphism means that one expression can have an arbitrarily large number of types.
+%     But there is a constraint to this number of possible types.
+%     $\lambda x . x$ can have $\forall a . a \rightarrow a$ as its type as well as \texttt{string $\rightarrow$ string} or \texttt{int $\rightarrow$ int} and more.
+%     It cannot however have the type \texttt{int $\rightarrow$ string}.
+%     The most general type for this function is $\forall a . a \rightarrow a$, while the others are more specific and can be derived from the most general type via substituting a type for the type parameter ($a$).
+
+%     Formally, in HM, a type $\sigma ' $ is more general than $\sigma$, if some quantified variable in $\sigma'$ is consistently subsittuted such that one gains $\sigma$.
+%     Formally the statement, $\sigma ' $ is more general than $\sigma$, can be written as $\sigma' \sqsubseteq \sigma$.
+
+%     An example substitution with the given syntax would be:
+%     \[(\forall a . a \rightarrow a) \sqsubseteq (\texttt{string} \rightarrow \texttt{string})\]
+%     \item Principal types
+    
+%     The "principal" type of a type scheme or polytype is the most general form of the type.
+%     \item Substitution in typings
+    
+%     Type subsitutions that arise from the above specified type-order are consistent in their replacement.
+%     % \item Natural Deduction
+%     \item Typing rules
+%     \item Let Polymorphism
+%     \item Generalisation
+%     \item Inference Algorithm
+%     \item Unification 
+%     \item Algorithm J
+    
+% \end{itemize}
 
 
-\newpage
-
-\begin{itemize}
-    \item Monotypes [Already explained, either remove this or incorporate it elsewhere.]
-    
-    Monotypes are base types.
-    They always designate a specific type.
-    They are represented by $\tau$.
-    There are broadly two categories of monotypes, type constants like \texttt{int, string, bool}, and type functions like \texttt{int $rightarrow$ string}.
-    Monotypes are not to be confused with \emph{monomorphic} types.
-    Monotypes include things like variables which are not monomorphic.
-
-    \item Polytypes [Already discussed, and this is not very useful.]
-    
-    Polytypes or type schemes are types containing variables bound by zero or more for-all ($\forall$) quantifiers, eg. $\forall \alpha . \alpha \rightarrow \alpha$.
-    A function with polytype $\forall \alpha . \alpha \rightarrow \alpha$ can map any value of the same type to itself, which is by definiton the identity function.
-    The way to check equality of polytypes is up to reordering the quantification and $\alpha$-conversion.
-    Further, quantified variables not occuring in the monotype can be dropped.
-    \item Context and typing [Pretty useful, keep around, maybe move it]
-    
-    To join together syntax expressions and types a third piece of the puzzle is desperately needed: context.
-    Syntactically, a context is a list of pairs $(x : \sigma)$, called bindings.
-    The example binding states that $x$ has type $\sigma$.
-    A typing judgement has the form $\Gamma \vdash e : \sigma$, stating that under the assumptions $\Gamma$, the expression $e$ has type $\sigma$.
-    % \item Free type variables []
-    
-    % In a type $\forall a_1 \dots \forall a_n \cdot \tau$, the $\forall$ is the quanitifer binding the type variables $a_i$ in the monotype $\tau$.
-    % The variables $a_i$ are called quantified and any occurance of a quantified type variable in $\tau$ is called \emph{bound}.
-    % The unbound variables are called \emph{free}.
-    % Type variables can be bound by occuring in the given context ($\Gamma$), but with the inverse effect on the right hand side of the $\vdash$.
-    % In our case, all type variables are implicitly as "all-quantified".
-    % So in PyFunc, the type $a \rightarrow a$ would be quantified as: $\forall a.a \rightarrow a$.
-    \item Type Order
-    
-    Polymorphism means that one expression can have an arbitrarily large number of types.
-    But there is a constraint to this number of possible types.
-    $\lambda x . x$ can have $\forall a . a \rightarrow a$ as its type as well as \texttt{string $\rightarrow$ string} or \texttt{int $\rightarrow$ int} and more.
-    It cannot however have the type \texttt{int $\rightarrow$ string}.
-    The most general type for this function is $\forall a . a \rightarrow a$, while the others are more specific and can be derived from the most general type via substituting a type for the type parameter ($a$).
-
-    Formally, in HM, a type $\sigma ' $ is more general than $\sigma$, if some quantified variable in $\sigma'$ is consistently subsittuted such that one gains $\sigma$.
-    Formally the statement, $\sigma ' $ is more general than $\sigma$, can be written as $\sigma' \sqsubseteq \sigma$.
-
-    An example substitution with the given syntax would be:
-    \[(\forall a . a \rightarrow a) \sqsubseteq (\texttt{string} \rightarrow \texttt{string})\]
-    \item Principal types
-    
-    The "principal" type of a type scheme or polytype is the most general form of the type.
-    \item Substitution in typings
-    
-    Type subsitutions that arise from the above specified type-order are consistent in their replacement.
-    % \item Natural Deduction
-    \item Typing rules
-    \item Let Polymorphism
-    \item Generalisation
-    \item Inference Algorithm
-    \item Unification 
-    \item Algorithm J
-    
-\end{itemize}
-
-
-    
-    
-\newpage
-
-\newpage
 \subsection{Unification Algorithm}
 
-The requiste unification algorithm in Hindley-Milner is not terribly extensive due to the constraints of the type system.
+Unification is the fundamental back bone of the type inference piece of the type checker.
+But what is unification, in this context?
 
-When unifying two types there are different ways to handle unification depending on the types themselves.
+In this case, it is expedient to start with an example.
+Suppose there are the functions 'resverse' and 'sum' with the following type signatures:
 
-In the most basic case, unification of two monotypes will result in either an error or no error.
+\begin{align*}
+    \mathit{reverse} &: \forall \text{a} . [\text{a}] \rightarrow [\text{a}] \\
+    \mathit{sum} &: [\text{Int}] \rightarrow \text{Int}
+\end{align*}
 
-\[\tau_a \text{ unify } \tau_b \rightarrow \text{ if } \tau_a = \tau_b \text{ then success}\]
+The 'reverse' function is a polymorphic function that literally reverses a given list irrespective of the type inside the list.
+The 'sum' function adds all of the terms in the list together.
 
-A unification algorithm is a procedure used to find a common substitution for variables in two or more expressions, such that the expressions can be made equivalent.
-For Hindley-Milner, unification is used to determine the most general types for variables and expressions.
+Now with these functions we can create an example problem for the type checker:
+
+\begin{align*}
+    \lambda xs . \; \mathit{sum} \; (\mathit{reverse} \; xs) \\
+\end{align*}
+
+So we know that we do not know the type of $xs$ as it is a lambda variable, so we can place a type variable in its place to represent the unresolved type.
+In this case we will say $(xs : \alpha)$.
+
+First, we must typecheck 'reverse' $xs$.
+
+For 'reverse' we must first instatitate the function as a specific type because it is polymorphic and therefore ranges over many types.
+So, an instance of reverse will have a specific type replacing 'a' with a type variable ($\beta$), as a stand-in for the unknown type.
+
+I.e, \[reverse' : [\beta] \rightarrow [\beta]\]
+
+
+To finish constraint generation with 'reverse', first we understand that 'reverse' expected an argument of type [$\beta$] and the actual argument passed to 'reverse' was $xs$ whose type is $\alpha$.
+
+With this information we can say that the constraint $\alpha = [\beta]$ is created.
+
+For typechecking 'sum' we do not need to instantiate anything as the types involved are explicit types.
+So all that needs doing for this function to generate the constraint is understand that the expected input type is [Int] and what is supplied to it is [$\beta$].
+Therefore another constraint can be defined:
+\[[\beta] = [\text{Int}]\]
+
+With these constraints: $\alpha = [\beta]$ and $[\beta] = [\text{int}]$ it is \emph{almost} trivial to solve infer the types in the initial expression.
+
+\[\lambda \underbrace{xs}_{xs : \text{[Int]}} . \; \overbrace{\mathit{sum}}^{sum : \text{[Int]} \rightarrow \text{Int}} \; (\underbrace{\mathit{reverse}}_{reverse : \text{[Int]} \rightarrow \text{[Int]}} \; xs)\]
+
+Now that we have our constraints and it is relatively obvious how to use them to solve the types in a given expression — how do we algorithmically solve them?
+
+\subsection*{Robinson's Unficiation Algorithm}
+
+The process of taking these constraints and solving them for a substitution is called \emph{unification}\citep{Robinson_1965}.
+
+The requiste unification algorithm in Hindley-Milner is not terribly extensive due to the possible constraints generated in the type system.
+The classic Hindley Milner type system does not support things like higher-order types, or type functions, therefore, in this case, the unification algorithm does not need to handle anything beyond the inference of relatively basic types.
+
+A well established solution to unification is Robinson's Unfication algorithm \citep{Robinson_1965}.
+% The algorithm is presented in the form of pseudo-code below.
+The algorithm aims to find the most general unifier for two terms, denoted by $t_1$ and $t_2$.
+The algortithm is presented formally below.
+
+% \begin{lstlisting}[language=Caml, caption=A pseudo code representation of Robinson's Unification Algorithm.]
+% function unify(t1, t2):
+%     if t1 is a variable and t2 is not:
+%         return bind(t1, t2)
+%     else if t2 is a variable and t1 is not:
+%         return bind(t2, t1)
+%     else if t1 is a variable and t2 is a variable:
+%         if t1 == t2:
+%             return {}
+%         else:
+%             return bind(t1, t2)
+%     else if t1 and t2 are compound terms:
+%         if t1's functor != t2's functor:
+%             return FAILURE
+%         else:
+%             return unify(t1's arguments, t2's arguments)
+%     else:
+%         return FAILURE
+
+% function bind(var, term):
+%     if occurs_check(var, term):
+%         return FAILURE
+%     else:
+%         return { var := term }
+
+% function occurs_check(var, term):
+%     if term is a variable:
+%         return var == term
+%     else if term is a compound term:
+%         return any(occurs_check(var, subterm) for subterm in term's subterms)
+%     else:
+%         return false
+% \end{lstlisting}
+
+
+
+    % An example substitution with the given syntax would be:
+    % \[(\forall a . a \rightarrow a) \sqsubseteq (\texttt{string} \rightarrow \texttt{string})\]
+    % \item Principal types
+    
+    % An example substitution with the given syntax would be:
+    % \[(\forall a . a \rightarrow a) \sqsubseteq (\texttt{string} \rightarrow \texttt{string})\]
+    % \item Principal types
+    
+    % Type subsitutions that arise from the above specified type-order are consistent in their replacement.
+    % % \item Natural Deduction
+    % \item Typing rules
+    % \item Let Polymorphism
+    % \item Generalisation
+    % \item Inference Algorithm
+    % \item Unification 
+    % \item Algorithm J
+
+    % Type subsitutions that arise from the above specified type-order are consistent in their replacement.
+    % % \item Natural Deduction
+    % \item Typing rules
+    % \item Let Polymorphism
+    % \item Generalisation
+    % \item Inference Algorithm
+    % \item Unification 
+    % \item Algorithm J
+
+\begin{center}
+\begin{minipage}{0.8\linewidth}%
+\begin{algorithm}[H]
+\DontPrintSemicolon
+\KwData{$t_1$, $t_2$: two terms to unify. \; $\sigma$: an empty substitution.}
+\KwResult{A substitution that is the most general substitution for $t_1$ and $t_2$. Otherwise an error.}
+\Begin{
+    $\sigma := \{\}$\;
+    \uIf {$t_1$ is a variable and $t_2$ is not}
+        {return \emph{bind}($t_1, t_2$)}
+    \uElseIf {$t_2$ is a variable and $t_1$ is not}
+        {return \emph{bind}($t_2$, $t_1$)}
+    \uElseIf {$t_1$ is a variable and $t_2$ is a variable}
+        {\uIf {$t_1$ = $t_2$}
+            {return $\{\}$}
+         \uElse
+         {
+            return \emph{bind}($t_1$, $t_2$)
+         }
+        }
+    \uElseIf {$t_1$ and $t_2$ are compound terms}
+        {
+        \uIf {$t_1$'s functor $\neq$ $t_2$'s functor}
+            {return FAILURE}
+        \uElse {
+            return \emph{unify}($t_1$'s arguments, $t_2$'s arguments)
+        }
+        }
+    \uElse{
+        return FAILURE
+    }
+}
+\caption{An interpretation of Robinson's Unification Algorithm \citep{Robinson_1965}, \citep{Luger}. This algorithm can handle type constructions such as functions $a \rightarrow a$ by breaking down their arguments. The type constructions themselves are refered to as $functors$.}
+\end{algorithm}
+\end{minipage}
+\end{center}
+
+This definition relies on the function \emph{bind} which is defined as follows:
+\begin{center}
+\begin{minipage}{0.8\linewidth}%
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \Begin{
+        \uIf {$var \notin \{t\}$}
+            {return $var := t$}
+        \uElse{
+            return FAILURE
+        }
+    }
+\caption{The binding function is a simple utility function for determining if a type is recursively defined. If it \emph{is} recursive, then return a failure. Otherwise, allow the type variable binding.}
+\end{algorithm}
+\end{minipage}
+\end{center}
+
+This algorithm outlines the steps involved in Robinson's Unification Algorithm, detailing how it handles different cases of terms and variables to find a most general unifier.
+The algorithm ensures that the resulting substitution satisfies the unification constraints and resolves any potential recursive dependencies between variables and terms.
+
+\subsection*{Deffered vs. On-the-Fly Unification}
+
+When generating a set of constraints, an interesting dilemma becomes apparent.
+One can unify types immediately upon encountering a constraint, or can defer attempting to unify them until after all the program's constraints have been generated.
+
+There are justifications for deferring unification until all constraints are generated, as it is possible to construct type level code that cannot be infered on the fly.
+
+In the case of on-the-fly unification, there is no need to avoid solving constraints as you go so long as the type system does not range out of simple inferrence.
+For this project, on-the-fly unification is far easier to implement via the Union Find data structure and covers the intended outcomes of the project more than sufficently.
+
+% When unifying two types there are different ways to handle unification depending on the types themselves.
+% In the most basic case, unification of two monotypes will result in either an error or no error.
+
+% \[\tau_a \text{ unify } \tau_b \rightarrow \text{ if } \tau_a = \tau_b \text{ then success}\]
+
+% A unification algorithm is a procedure used to find a common substitution for variables in two or more expressions, such that the expressions can be made equivalent.
+% For Hindley-Milner, unification is used to determine the most general types for variables and expressions.
 
 % Robinson's Unification algorithm is an effective method for determining
 
+\subsection*{Union Find}
 The unification algorithm is closely related to Union Find data structure, which is a method for maintaining disjoint sets of elements and efficiently determining whether two elements belong to the same set.
 In the context of type inference, Union Find is used to represent and manage equivalence classes of types.
 During the unification process, Union Find is employed to merge sets of type variables that are determined to be equivalent based on type constraints, allowing for efficient resolution of type ambiguities and the determination of the most general types.
 
-Using disjoint sets to represent classes of unifiable types is a clean and easy way to handle the tricky parts of equivalence classes.
-It also adds the possibility of utilising the Union Find algorithm to handle these disjoint sets.
+Using disjoint sets to represent classes of unifiable types is a clean and easy way to handle the tricky parts of substituting equivalent types for one another.
+It also adds the possibility of utilising the Union Find algorithm to handle the searching of these disjoint sets.
 
-\begin{lstlisting}[language=Caml]
-    let rec unify type_a type_b = 
-    match type_a, type_b with
-      | type_a, type_b when type_a = type_b -> () 
-      | TypeFunc (a1, a2), TypeFunc (b1, b2) | TypePair (a1, a2), TypePair (b1, b2) -> 
-        unify a1 b1; unify a2 b2
-      | TypeVar type_var, t | t, TypeVar type_var -> 
-        in_type_check type_var t; 
-        if Resolved
-        (
-          match UnionFind.get res_state with
-          | Unresolved -> UnionFind.set res_state (Resolved t)
-          | Resolved type_b -> unify type_b t
-        )
-      | TypeList a, TypeList b -> unify a b
-      | _, _ -> raise (UnificationError type_a type_b)
-\end{lstlisting}
+% \begin{lstlisting}[language=Caml]
+%     let rec unify type_a type_b = 
+%     match type_a, type_b with
+%       | type_a, type_b when type_a = type_b -> () 
+%       | TypeFunc (a1, a2), TypeFunc (b1, b2) | TypePair (a1, a2), TypePair (b1, b2) -> 
+%         unify a1 b1; unify a2 b2
+%       | TypeVar type_var, t | t, TypeVar type_var -> 
+%         in_type_check type_var t; 
+%         if Resolved
+%         (
+%           match UnionFind.get res_state with
+%           | Unresolved -> UnionFind.set res_state (Resolved t)
+%           | Resolved type_b -> unify type_b t
+%         )
+%       | TypeList a, TypeList b -> unify a b
+%       | _, _ -> raise (UnificationError type_a type_b)
+% \end{lstlisting}
 
 % \section{Evaluation}
 % \section{Guidance}
@@ -1695,17 +1884,22 @@ It also adds the possibility of utilising the Union Find algorithm to handle the
 
 %==================================================================================================================================
 \chapter{Implementation}
-What did you do to implement this idea, and what technical achievements did you make?
+% What did you do to implement this idea, and what technical achievements did you make?
 
-The language of choice for implementation was OCaml.
+This section gives an overview of PyFunc's implementation details and key decisions made during development.
 
-All aspects of the project exist by default in OCaml.
+% The language of choice for implementation was OCaml.
+% All aspects of the project exist by default in OCaml.
+First off, the language of choice for the implementation of PyFunc was OCaml.
+The justification for this was much like the justification for the development of PyFunc.
+OCaml offers a combination of strong typing, functional programming, and enough flexibility to allow imperative and / or object-oriented code for project edge cases.
+ 
+% Menhir for parsing.
+% OCamllex for tokenisation.
+Additionally, a lexical analyser generator (OCamllex) and a parser generator (Menhir) were ustilised in development.
 
-Menhir for parsing.
-
-OCamllex for tokenisation.
-
-Everything else was built from scratch in the language.
+% Everything else was built from scratch in the language.
+Beyond these dependancies, all other features were built from scratch in OCaml.
 
 \section{Parsing, Lexing and the Abstract Syntax Tree} \label{sec:parsing-lexing-and-the-ast}
 
@@ -1851,26 +2045,27 @@ What appears in quotes is the token that is recognised in the source text.
 The capitalised values in the curly braces are the tokens that are being emitted by the lexer.
 % At the bottom of the ruleset the series of buffer actions are simply the parsing of string literals into single contiguous tokens refering to the literal value of the string.
 
-The full PyFunc lexer specification can be found in the appendix.
+The full PyFunc lexer specification can be found in the appendix. (\ref{lst:lexer-spec})
 
 
 \subsection{Parsing with Menhir}
 
 Parsing is the process of analyzing a sequence of tokens according to the rules of a formal grammar to determine its structure and meaning.
 In simpler terms, parsing is like understanding the syntax of a sentence in a language.
-Just as we follow grammar rules to understand the structure of sentences in human languages, parsers in computer science follow the rules of a formal grammar to understand the structure of code written in programming languages.
+Just as we follow grammar rules to understand the structure of sentences in human languages, parsers in code follow the rules of a formal grammar to understand the structure of code written in programming languages.
 The parser checks whether the sequence of tokens conforms to the syntax rules defined by the grammar of the language.
 If the sequence of tokens forms a valid structure according to the grammar, it is considered syntactically correct.
 And in this case the parser will generate the frontend language's AST from its formal grammar.
 
 For convenience the parser generator tool Menhir was used.
-Menhir facilitates the creation of parsers by automatically generating efficent parsing code based on the provided grammar rules, much like OCamllex, though somewhat more indepth.
+Menhir facilitates the creation of parsers by automatically generating efficent parsing code based on the provided grammar rules, much like OCamllex does for a lexical analyser, though somewhat more indepth.
 
 In PyFunc the formal grammar for the fronend language is relatively simple, with only a few constructs included in its current state.
 
 Here are a few of the more interesting parts of the parser grammer:
 \begin{itemize}
-    \item
+    \item \textbf{Top-level Bindings}
+    
     Each PyFunc program consists of a list of function bindings, with a specified entry point denoted by the function named \texttt{main}.
     In the AST the form this takes is as a list of bindings as well, so the start of each program parser beings with this grammar rule.
 
@@ -1887,7 +2082,8 @@ Here are a few of the more interesting parts of the parser grammer:
     The rule expects a series of bindings (indicated by the $+$) before the EOF (End Of File) token.
     These results bindings are passed to an OCaml constructor, which produces the AST as it parses the program.
 
-    \item 
+    \item \textbf{Binary and Unary Operators}
+    
     The operators of the language are all implemented in very similar ways to one another, so here is an abbreviated look at that grammar.
     \begin{lstlisting}[caption=An abrreviated version of PyFunc Parser's implementation of binary and unary operators.]
         base_expr:
@@ -1919,7 +2115,8 @@ Here are a few of the more interesting parts of the parser grammer:
     The \texttt{\%right} indicates right associativity whilst \texttt{\%left} does the opposite.
     The actual precedence of these operations s bottom to top, so AND and OR have the highest precedence, whilst CONS and NOT have the lowest.
 
-    \item 
+    \item \textbf{List Processing}
+    
     One final interesting thing in the grammar is how it handles list literals, parameter lists, and argument lists.
     \begin{lstlisting}[caption=PyFunc's Parser grammar for handling list literals.]
     call:
@@ -1939,11 +2136,12 @@ Here are a few of the more interesting parts of the parser grammer:
     \end{lstlisting}
 
     Menhir includes some utility functions for the implementation of efficent solutions to common constructs.
-    Poorly implemented lists are often major bottlenecks in parser generators, so by using Menhir's seperated\_list construct all the parser needed to know was what to expect in the list.
+    Poorly implemented lists could cause major bottlenecks in parser generators, so by using Menhir's seperated\_list construct all the parser needed to know was what to expect in the list.
     The \texttt{seperated\_list} function takes a token to represent what the list will be split by (COMMA, in this case), and also what parsing rule should be called upon for what it finds in this list.
     It should also be noted that \texttt{seperated\_list} allows for empty lists which are not uncommon in both list literals and functions.
-
 \end{itemize}
+
+The entire PyFunc grammar can be found in the appendix. (ADD REF)
 
 \subsection{Constructors}
 
@@ -2047,16 +2245,18 @@ end
 To take the frontend abstract syntax tree and convert it into the equivalent AST in the IR, a conversion process was necessary.
 To do this conversion several things had to be given special attention (whilst others converted almost one-to-one):
 
-1. Bindings are difficult, in that they exist in the top-level where the expression based-nature of the language raises a question: where do you start the program from.
+\subsection{Bindings}
+Bindings are difficult, in that they exist in the top-level where the expression based-nature of the language raises a question: where do you start the program from.
 Python starts the program quite simply at the topmost statement in the running file.
 PyFunc ideally would do something like this but actually implementing this fell to the wayside when trying to correctly convert the bindinggs to an appropriate IR in the correct order.
 Likely having a semantic analysis pass for collecting bindings would be a viable solution, but in the end the easy and effective option is to require a "main" function declaration to be the program entry point.
 
-2. Functions themselves are rather complicated.
+\subsection{Functions}
+Functions themselves are rather complicated.
 The IR has only lambdas which can take only a single argument, but the frontend allows for an arbitrary number of parameters.
-To deal with this a conversion helper-function was devised.
+To help deal with this conversion, a helper-function was devised.
 This function constructs a let rec binding (let rec to allow recursive function definitions) from the given parameters.
-Inside the let rec a series of lambdas are created for each parameter in reverse order (so as to have partial applications apply the parameters in the same order they appear in the definition).
+Inside the let rec a series of lambdas are created for each parameter in reverse order (so as to have applications, partial or complete, apply the parameters in the same order they appear in the definition).
 
 \begin{lstlisting}[language=Caml, keepspaces=true, caption=PyFunc frontend's function binding conversion code.]
     let rec func_to_lambdas p_list (body : IR.tree) =
@@ -2089,27 +2289,38 @@ Even allowing recursive expressions as bindings is not particularly difficult, a
 
 Having a mutable assignment however is a problem of a more significant complexity.
 The typechecker and unification algorithm would have to have a case introduced to handle mutable bindings.
-The unifcation algorithm would need to know to never attempt to generalise the mutable binding.
+Furthermore, the unifcation algorithm would need to know to never attempt to generalise the mutable binding.
 
-Whilst this is a possible additon to the implementation, it does fall on the side of being a "could have" feature.
+Whilst this is a possible additon to the implementation, it does fall on the side of being a "could have" feature, and did not make it into the final verision of the project.
 
-\section{Intermediate Representation}
+% \section{Intermediate Representation}
 
-The IR is almost identical to the IR specified in listing \ref{ir-ast}.
+% The IR is almost identical to the IR specified in listing \ref{ir-ast}.
 
 \section{Hindley-Milner Typechecker} \label{sec:hindley-milner-typechecker}
 
 The type checker is the most technically difficult aspect of this project.
-It required several structures and the implementation of significant pieces of the HM theory already outlined to be encoded into OCaml.
+It required several data structures and the implementation of significant pieces of the HM theory already outlined to be encoded into OCaml.
 
-\subsection{Type Variables}
+\subsection{Monotypes, Polytypes, and Type Variables}
 
-A naive description of a type variable could be something like: "A place holder that represents an unknown type".
-This is true, but from an implementation standpoint is a minor issue.
-Fundamentally, types can be monotypes or polytypes as previously outlined.
-The distinction of polytypes and free type variables needs to be explicit:
+A simple description of a type variable could be something like: "A place holder that represents an unknown type".
+This is true, but from an implementation standpoint it creates a minor issue.
+Fundamentally, types can be monotypes, polytypes or type variables as previously outlined, but more often than not they exist in the same spaces interchangeably.
+The distinction between polytypes, monotypes, and type variables warrant being explicitly stated:
 
-\[\text{Polytypes are resolved types whereas free type variables are unresolved types.}\]
+\begin{enumerate}
+    \item Monotypes refer to concrete type that do not contain any type variables.
+    They represent specific types such as, integers, booleans, functions, etc.
+
+    \item Polytypes, or type-schemes, refer to types that may contain one or more type variables.
+    They represent a range of types.
+    Polytypes can also be \emph{instantiated} with a monotype to produce a monotype version of the polytype.
+
+    \item Type variables are placeholders for an unresolved type.
+    They could be any type, monotype or polytype.
+    Type variables can be specialised via unification to produce specific types during type inference.
+\end{enumerate}
 
 % With this in mind we can begin with the definition of the monotypes and polytypes in PyFunc's IR.
 
@@ -2130,27 +2341,33 @@ The distinction of polytypes and free type variables needs to be explicit:
 %   and t = monoType
 % \end{lstlisting}
 
+Now, from an implementation stand point, the distinction between a polytype and a monotype is quantification.
+Polytypes have quantifiers that distinguish the scope of polymorphism within a type expression.
 Internally handling a monotype that has a singlular concrete type and a polytype that has a quantifier and an a possibly indeterminate type is an added layer of complication.
 
-A conceptually easy way to handle this in the implementation is to treat monotypes as polytype we no quantifiers.
+A conceptually easy way to handle this in the implementation is to treat monotypes as polytype with no quantifiers at all.
 
-For example, $\sigma := (quantifier, \tau)$ and $\tau ;= (\;\;, \tau)$
+For example,
 
-Regardless, before type variables can be implemented, polytypes and the concept of quantifiers needs to be described.
-The very simple Quantifier module does just that.
+\[\sigma := (quantifier, \tau) \text{ and } \tau := (\;\;, \tau)\]
+
+% Regardless, before type variables can be implemented, polytypes and the concept of quantifiers needs to be described.
+So, before we can define the types themselves, some implementation of a quantifier must be described.
+\newpage
+This very simple Quantifier module does just that.
 
 \begin{lstlisting}[language=Caml, caption=The PyFunc type checker's quantifier module.]
   module Quantifier = struct
     type t = string
     let make x = x
-    let of_typeVar (tv, _) = tv (*Ignore this for now.*)
+    let of_typeVar (tv, _) = tv (*Type variables as quantifiers.*)
     let compare = String.compare
   end
 \end{lstlisting}
 
 The quantifiers are simply strings which can be compared, which allows for very easy modification in the type checker.
 
-The next step in the implementation of type variables, is itself describing the types that type variables will depend on.
+The next step in the implementation of the Hindley-Milner types, is itself describing the types that type checker will depend on.
 
 \begin{lstlisting}[language=Caml]
   type resolution_state = Unresolved | Resolved of t
@@ -2173,12 +2390,12 @@ This includes some definintions that need a little clarifying:
     \item The type \texttt{resolution\_state} is a simple way of tracking if type variables are resolved or not.
     If it is unresolved then it carries no variable, whereas if it is resolved, it carries the monotype it has been resolved to.
     \item The type \texttt{typevar} is an easy way to represent type variables for unification.
-    The inclusion of \texttt{UnionFind.elem} enables us to use the Union Find algorithm to resolve type variables.
+    The inclusion of \texttt{UnionFind.elem} enables us to use the Union Find algorithm to resolve type variables across the constraint set it relates to.
     \item Polytypes are types containing variables bound by zero or more $\forall$ quantifiers. 
     The \texttt{Polytype} type shows this directly by being a pair of a list of quanitifers and the base monotype.
 \end{itemize}
 
-Now with these type defiitions, the additional ifrastructure of type variables needs to be added.
+Now with these type defiitions, the additional infrastructure of type variables needs to be added.
 There needs to be to function to generate a new type variable that does not already exist in the context.
 This type variable should also be initialised in an "unresolved" state.
 
@@ -2191,23 +2408,26 @@ This type variable should also be initialised in an "unresolved" state.
       let () = incr id_count in
       let resolution_state = UnionFind.make Unresolved in
       (scope_prefix ^ (string_of_int id), resolution_state)
-  end
+end
 \end{lstlisting}
 
-\subsection{Type-Environments and Why We Need Them}
+This excerpt shows how new type variables can be defined in such a way that they do not ever overlap.
 
-Now that we have described the basic implementation of type variables, we need to describe a type environment like $\Gamma$ so in the type checker, we can bind new type annotations internally.
-A simple way to do this is to is using both a set and a map together.
+A type variable is identified by the string quantifier, which as seen in the code is generate with a unique id that counts up every time a fresh type variable is created with the \texttt{fresh\_TV} function.
+
+\subsection{Type Environments and Why We Need Them}
+
+Now that we have described the basic implementation of type variables, we need to describe a type environment ($\Gamma$) so in the type checker, we can bind new type annotations internally.
+A simple way to do this is using both a set and a map together.
 With a set to contain type variables and a map from variable names to their associated polytypes.
 
 \begin{lstlisting}[language=Caml]
     type t = ContextSet.t * (Type.polyType ContextMap.t)
-
     let empty = (ContextSet.empty, ContextMap.empty)
     let fresh_TVs = fst
 \end{lstlisting}
 
-Now, the other major jobs that this environment needs to handle are: binding type variables and finding bound type variables.
+Now, the other major jobs that this environment needs to handle are binding type variables and finding bound type variables.
 
 Let's start with binding type variables:
 
@@ -2226,29 +2446,101 @@ It takes three arguments:
     \item $(env\_fresh\_TVs, env)$: The existing type environment.
 \end{itemize}
 
-This function calculates the set of fresh type variables introduced by the type typ and updates the environment accordingly by adding the variable $k$ mapped to the polytype $(quantifier, typ)$.
+This function then calculates the set of fresh type variables introduced by the type typ and updates the environment accordingly by adding the variable $k$ mapped to the polytype $(quantifier, typ)$.
 If a monotype needs to be bound, it should be bound just as a polytype with an empty list of quantifiers.
 
 Beyond this, defining a method to find if a variable exists within the context map is almost trivial.
 
 \begin{lstlisting}[language=Caml]
     let find k (_, env) = 
-      match ContextMap.find_opt k env with
-        | Some typ -> typ
+      match ContextMap.find_opt k env with (*find_opt returns optional type.*)
+        | Some typ -> typ 
         | None -> raise (Errors.type_error ("Unbound variable " ^ k))
 \end{lstlisting}
 
+With just these few features, a fully functional type environment has been defined.
+
 \subsection{Generalisation and Instatitation}
 
-DESCRIBE THEIR ROLES
+% DESCRIBE THEIR ROLES
+Generalisation and instantiation are the key operations that manipulate how polytypes are quantified.
+Instantiation substitutes type variables for all quantifiers in a polytype.
+Whereas, generalisation finds the most general type a type variable could be.
 
-SHOW CODE
+As described in the design chapter, instantiation has been merged with the variable inference rule, and generalisation has been merged with the let inference rule.
 
-EXPLAIN CODE
+So, to start of with, here is the implementation for instantiation:
+\begin{lstlisting}[language=Caml, caption=PyFunc's instantiation function.]
+    let instantiate poly_type =
+        let (quant, monotype) = poly_type in 
+        let substitution_map = List.map (fun q -> (q, TypeVar.fresh_TV ())) quant in
+        let rec inner = function
+        | TypeVar type_var -> (
+            match List.assoc_opt (TypeVar.var type_var) substitution_map with
+                | Some instance -> TypeVar instance
+                | None -> TypeVar type_var
+            )
+        | TypeFunc (type_a, type_b) -> TypeFunc (inner type_a, inner type_b)
+        | TypePair (type_a, type_b) -> TypePair (inner type_a, inner type_b)
+        | t -> t
+        in
+        inner monotype
+\end{lstlisting}
 
-SAY IT WORKS
+Here's a breakdown of how the function works:
 
-HOW IT MIGHT BE MODIFIED IN FUTURE OR WON'T BE
+\begin{enumerate}
+    \item \textbf{Pattern Matching:} The function begins by pattern matching on the poly\_type to extract its components, namely the quantifier list (quant) and the monomorphic type (monotype).
+    
+    \item \textbf{Generating Substitution Map:} Next, the function generates a substitution map using List.map.
+    For each type variable in the quantifier list, it associates a fresh type variable using TypeVar.fresh\_TV(), creating a mapping from each quantified type variable to a fresh type variable.
+
+    \item \textbf{Recursive Inner Function:} The function defines a recursive inner function named "inner" that traverses the monomorphic type recursively and replaces each occurrence of quantified type variables with their corresponding fresh type variables from the substitution map.
+
+    If the encountered type is a type variable (TypeVar), it checks if there's an entry for the type variable in the substitution map.
+    If so, it replaces the type variable with its corresponding fresh type variable; otherwise, it leaves the type variable unchanged.
+    
+    If the encountered type is a function type (TypeFunc) or a pair type (TypePair), it recursively applies the inner function to each component of the compound type.
+
+    For any other type, it leaves the type unchanged.
+
+    \item \textbf{Applying Inner:} 
+    Finally, the function applies the inner function to the monotype, instantiating the polytype by replacing each quantified type variable with its corresponding fresh type variable.
+\end{enumerate}
+
+By comparison, the generalisation function is much more concise.
+
+\begin{lstlisting}[language=Caml, caption=PyFunc's generalisation function implemenation.]
+    let generalise env (monoType : Type.monoType) : Type.polyType =
+        (List.map Quantifier.make 
+        (ContextSet.elements 
+            (ContextSet.diff (fresh_TVs monoType) (Env.fresh_TVs env))
+        )
+        ), monoType
+\end{lstlisting}
+
+The function is used to generalise a monotype into a polytype within a given type environment (env). Here's an explanation of how the function works:
+
+\begin{enumerate}
+    \item \textbf{Extracting Type Variables:}
+
+    The function first gets the set of type variables present in the monotype using the fresh\_TVs function.
+    These are type variables that are unbound in any context and are ready to be generalised.
+
+    \item \textbf{Filtering Type Variables:}
+
+    Next the set difference (\texttt{ContextSet.diff}) between the previously gathered type variables and those in the type environment is calculated.
+    This is to filter out any type variables that are present in the environment, ensuring that the generalised type variables are in fact free.
+
+    \item \textbf{Createing New Quantifiers:}
+    
+    The function then maps over the filtered type variables, using \texttt{List.map}, generating universal quantifiers for the type variables.
+
+    \item \textbf{Constructing the Polytype:}
+    Finally, once the qunatifiers have been generated, the polytype can be constructed from the original monotype and the generated quantifer list.
+\end{enumerate}
+
+Overall, this is one of the most important steps in the type checker, as without it, polymorphism would not be possible in the type system.
 
 \subsection{Unification}
 
@@ -2291,17 +2583,107 @@ Overall, the algorithm efficiently handles type unification in PyFunc, ensuring 
 \subsection{The Typerchecker}
 % \subsection{The Not So Simple Typechecking}
 
+The rest of the typechecker outside of the inferrence rules is relatively simple.
+
+Anytime the type checker needs to be invoked, the function \texttt{\_typecheck} can be called.
+The function allows the type checking of any type via pattern-matching the passed IR-AST node and passing the children to specific type checking functions.:
+
+\begin{lstlisting}[language=Caml, caption=The body of PyFunc's main type check function\, which defers to other more specific type checking functions via patter-matching.]
+function
+    | ExprVar value -> instantiate (Env.find value env)
+    | ExprFunc (binder, body) -> typecheck_func env binder body
+    | ExprApplic (expr_func, expr_arg) -> typecheck_applic env expr_func expr_arg
+    | ExprOpUnary (op, expr) -> typecheck_op_unary env op expr
+    | ExprOpBinary (op, expr_a, expr_b) -> typecheck_opbinary env op expr_a expr_b
+    | ExprConst const -> typecheck_const const
+    | ExprIf (expr_cond, expr_if, expr_else) -> typecheck_if env expr_cond expr_if expr_else
+    | ExprLet (binder, expr_a, expr_b) -> typecheck_let env binder expr_a expr_b
+    | ExprLetRec (binder, expr_a, expr_b) -> typecheck_letrec env binder expr_a expr_b
+    | ExprLetPair (a, b, expr_a, expr_b) -> typecheck_let_pair env a b expr_a expr_b
+    | ExprPair (expr_a, expr_b) -> typecheck_pair env expr_a expr_b
+    | ExprFirst expr -> typecheck_first env expr
+    | ExprSecond expr -> typecheck_second env expr
+    | ExprList list -> typecheck_list (env : Env.t) list
+\end{lstlisting}
+
+% If a construct, an if-expression for example, requires some part of it to be a certain type
+Of the numerous specific type checking functions, here are a few excerpts of the more interesting cases:
+\begin{itemize}
+    \item \textbf{If expressions:}
+If expressions require two things, the condition to evaluate to a boolean type, and the type of both branches to match.
+
+To do this, the rule unifies the \texttt{cond\_type} with a \texttt{TypeBool} type literal.
+If unification does not produce an error, \texttt{cond\_type} is of type boolean.
+
+To check that both branches produce the same type, they are unified together.
+The return type could be either the \texttt{if\_type} or the \texttt{else\_type}, but in the excerpt the \texttt{if\_type} is used.
+\begin{lstlisting}[language=Caml, caption=PyFunc Typechecker's typecheck\_if function. If no error is produced then the provided if-expression code is well-typed.]
+    (* Typechecking ifs *)
+    let typecheck_if env expr_cond expr_if expr_else = 
+      let cond_type = _typecheck env expr_cond in
+      let if_type = _typecheck env expr_if in 
+      let else_type = _typecheck env expr_else in
+        unify cond_type TypeBool;
+        unify if_type else_type;
+        if_type
+    in
+\end{lstlisting}
+
+
+
+    \item \textbf{Let Pair:}
+    This exceprt is interesting because the type environemnt is updated twice with new bindings.
+    In practice the procedure is very simple.
+    The variables $a$ and $b$ are instantiated as fresh type variables, then they are wrapped in a pair type and unified with \texttt{a\_type}.
+    This is to ensure that \texttt{a\_type} is of an acceptable type, I.e, a pair type construct.
+    After determining if the type is well-typed, the fresh type variables for $a$ and $b$ are entered into the type context, before \texttt{b\_type} is returned.
+    \begin{lstlisting}[language=Caml, caption=PyFunc Typechecker's typecheck\_let\_pair function. If no error is produced then the provided let-pair code is well-typed.]
+    let typecheck_let_pair env a b expr_a expr_b =
+      let a_type = _typecheck env expr_a in
+      let var_a = new_var () in
+      let var_b = new_var () in
+        unify (TypePair (var_a, var_b)) a_type;
+        let env = Env.bind a var_a env in
+        let env = Env.bind b var_b env in
+        let b_type = _typecheck env expr_b in
+          b_type
+    in
+    \end{lstlisting}
+
+
+
+    \item \textbf{Application:}
+    
+    Application is one of the less regular rules, though simple all the same.
+    First, a fresh type variable is created, to serve as the output type of the function.
+    Then the actual function itself and the provided argument are type checked, making \texttt{func\_type} and \texttt{arg\_type}.
+    Finally, the types of the arguments and the fresh type are wrapped in a function type construct and unified with the \texttt{func\_type} produced by the type checker.
+    If the unification occurs properly then the application is well-typed, and the fresh type variable is returned.
+    \begin{lstlisting}[language=Caml, caption=PyFunc Typechecker's typecheck\_applic function. If no error is produced then the provided application code is well-typed.]
+        (* Typechecking Applications *)
+        let typecheck_applic env expr_func expr_arg =
+          let fresh_var = new_var () in
+          let func_type = _typecheck env expr_func in
+          let arg_type = _typecheck env expr_arg in
+          unify func_type (TypeFunc (arg_type, fresh_var));
+          fresh_var
+        in
+    \end{lstlisting}
+\end{itemize}
 
 \section{Interpreter}
 
-The interpreter is the final stage of the pipeline.
-It is in a way the simplest part of the project, being a tree-walk interpreter, but a few unusal cases made this marginally harder than expected in some areas.
+The interpreter is the final stage of the PyFunc language pipeline and is responsible for the actual execution of the code.
+Because the language has a reduced form intermediate representation, the interpreter is in a way the simplest part of the project.
+This is also helped by being a tree-walk interpreter\footnote{In this context, a tree-walk interpreter means a depth-first recursive traversal of the AST where the code is executed as the interpreter traverses.}, but a few unusal cases made this somewhat awkward to implement than expected in some areas.
 
 \subsection{Interpreted Values}
 
 The interpreter needed some type to output as a computed value, which could represent the various possible program outputs and termination states.
 
-\begin{lstlisting}[language=Caml]
+So a simple value type was designed like so:
+
+\begin{lstlisting}[language=Caml, caption="PyFunc's Interpreter value type definition.]
 type value = 
   | Vint of int 
   | Vfloat of float
@@ -2315,34 +2697,44 @@ type value =
 
 Having an interpreted value type was necessary but also got in the way in one key case: Partial application.
 
-Due to the function not having the sufficent parameters to totally evaluate, the interpreter would need to stop evaluating the expression and leave it be until it had all the necessary arguments.
+Partial application is a technique used in functional programming languages where a function with multiple parameters can be applied to some, but not all, of its arguments.
+The result of this partial application is a new function that takes only the remaining parameters not already given.
+
+This raised an issue in the interpreter.
+Due to the function not having the sufficent parameters to totally evaluate, the interpreter would need to stop evaluating the expression and return it as a function until it had all the necessary arguments.
 
 However, this was very difficult with the structure of the interpreter being a recursive depth-first search of the IR-AST.
 Initally as a patch, the option for a value to be a VTree was added.
-A VTree was literally a segment of the code that would cause an error if evaluated wrapped in the value type.
+A VTree was literally a segment of the AST (that would cause an error if evaluated) wrapped into a type.
 
 But for the case of partial application it worked very well.
 
-For example, [Example with f(a, b, c) -> let f = $\lambda a. \lambda b. \lambda c. a + b + c$]
+For example, \[ f(a, b, c) -> \text{let } f = \lambda a. \lambda b. \lambda c. a + b + c \text{ in ...}\]
 
-With partial application what happens is: [f (1) = VTree ($\lambda b. \lambda c. 1 + b + c$)]
+With partial application what happens is: 
+\[f (1) = VTree (\lambda b. \lambda c. 1 + b + c)\]
 
-When another application occurs on VTree then the VTree value is unwrapped and reconsidered part of the ast.
-As it still isn't fully evaluated, it is again wrapped in the value type as a VTree.
+When another application occurs on VTree then the VTree value is unwrapped and reconsidered part of the AST.
+As it still is not fully evaluated, it is again wrapped in the value type as a VTree.
 When all the requisite applications are done it returns a value type other than a VTree.
 
 This idea whilst having some merit is unweildy and generally quite clunky.
+Everytime the function was paritally applied the AST of the function would need substitutions to be applied to it, modifying the AST.
 However, a simple remedy to this clunky solution is something that ought to have been obvious, \emph{closures}.
 
 A closure value type could wrap the partially applied function and its local environment until used again, making a far easier to implement version of the raw VTree idea.
-There was only one caveat to using closures to handle partial application, and that was the fact that recursive functions (implemented via let rec) could not be initally defined with a closure as they have to be include themselves in their local environment.
+
+Using a closure instead of the VTree, allowed for variables to still be in the local environment.
+Because of that, not substitutions in the AST were required, greatly simplifying the implementation.
+
+There was only one caveat to using closures to handle partial application, and that was the fact that recursive functions (implemented via let-rec) could not be initally defined with a closure as they have to include themselves in their local environment\footnote{Recursive let expressions effectively forward declare themselves so they can reference themselves in their own definition.}.
 This is impossible for a closure to do as it introduces a circular dependancy to the definition of the closure and the environment it includes.
 
 So as a simple fix, a simple VFn value type was added that is only used in this one instance.
 The VFn type simple holds the body of a recursive function for the initial definition, to mitigate the depedancy issue.
 
-\begin{lstlisting}[language=Caml, caption=The aditional type definitions of a VClos and VFn.]
-    type t = (string * value) list
+\begin{lstlisting}[language=Caml, label=lst:vclos-example, caption=The aditional type definitions of a VClos and VFn.]
+    type t = (string * value) list (* Env type *)
     and value = 
     | ...
     | VFn of (tree)
@@ -2354,59 +2746,81 @@ The VFn type simple holds the body of a recursive function for the initial defin
 
 In a similar fashion to the typechecker, the environments in the interpreter are passed down the evaluation tree during interpretation.
 
-When an evaulation function returns an interpreted value
+However, maintaining a collection of runtime bindings is not the same as keeping track of disjoint sets, so a new interpreter environemnt had to be defined.
 
-Contrary to the evironments in the type checker which were only passed down the ast as an argument, the interpreter uses a reference type to handle the env.
+All that is required of the interpreter's environment is that it hold string to value bindings, like a let expression.
+In listing \ref{lst:vclos-example} the type of the environment was already stated as:
 
-A important reason for using a reference type for the env was because of the complications regarding scope of values in the interpreter.
+\[\text{type } t = (\text{string} * \text{value}) \;list\]
 
-With a passed env the previous sections use of VTree would be impossible.
-For example, (EXAMPLE) Basically whenever a set of tree nodes get cast a VTree, the env no longer gets passed down the recursive calls, which means that the added bindings relating to the parameters are completely lost in every partial application, resulting unresolvable errors for bindings being in and out of scope.
+Which is a simple list of string to value bindings.
+The simple list of string-value pairs proved more than capable of working as the local environment for the interpreter at runtime.
 
-Using a reference env allows us to completely circumnavigate this issue entirely and set the parameters into scope and remove them only when the function has been fully applied and interpreted.
+Such a simple implementation of the environement itself, allow for the accessor function to also be simple.
+
+For example, the \texttt{Env.get} function is defined:
+
+\begin{lstlisting}[language=Caml, caption=PyFunc's Interpreter Environment get function.]
+    let get (env : t) key =
+    let result = 
+      try List.assoc key env with 
+      Not_found -> raise (Errors.lookup_error ("Undefined variable '" ^ key ^ "'!")) in
+    result
+\end{lstlisting}
+
+% When an evaulation function returns an interpreted value
+
+% Contrary to the evironments in the type checker which were only passed down the ast as an argument, the interpreter uses a reference type to handle the env.
+
+% A important reason for using a reference type for the env was because of the complications regarding scope of values in the interpreter.
+
+% With a passed env the previous sections use of VTree would be impossible.
+% For example, (EXAMPLE) Basically whenever a set of tree nodes get cast a VTree, the env no longer gets passed down the recursive calls, which means that the added bindings relating to the parameters are completely lost in every partial application, resulting unresolvable errors for bindings being in and out of scope.
+
+% Using a reference env allows us to completely circumnavigate this issue entirely and set the parameters into scope and remove them only when the function has been fully applied and interpreted.
 
 \subsection{General Rules}
-Beyond these unusal edge cases which required special attention, the rest of the interpreter was largely straightforward evaluations of syntax.
+% Beyond these unusal edge cases which required special attention, 
+The rest of the interpreter was largely straightforward evaluations of syntax.
 
 Here are excepts indicating the implementations of the following rules:
 
-1. Unary and Binary operations
+\begin{itemize}
+    \item \textbf{Unary and Binary Operations:}
+    
+    \begin{lstlisting}[language=Caml, caption=Excerpt of the PyFunc Interpreter rules for binary and unary operations.]
+    and eval_op_binary env op expr_a expr_b =
+        let left = eval env expr_a in
+        let right = eval env expr_b in
+        match left, op, right with
+        | (Vint a), Add,       (Vint b) ->  Vint (a + b)
+        | (Vint a), Subtract,  (Vint b) ->  Vint (a - b)
+        | ...
 
-\begin{lstlisting}[language=Caml, caption=Excerpt of the PyFunc Interpreter rules for binary and unary operations.]
-and eval_op_binary env op expr_a expr_b =
-    let left = eval env expr_a in
-    let right = eval env expr_b in
-    match left, op, right with
-    | (Vint a), Add,       (Vint b) ->  Vint (a + b)
-    | (Vint a), Subtract,  (Vint b) ->  Vint (a - b)
-    | ...
+    and eval_op_unary env op expr = 
+        let expr_value = eval env expr in
+        match op, expr_value with
+        | Positive, (Vint i) -> Vint (~+i)
+        | Negative, (Vint i) -> Vint (~-i)
+        | Not, (Vbool b) -> Vbool (not b)
+        | ...
+    \end{lstlisting}
+    The rules for operations are relatively simple by virtue of the reduced complexity of the IR allowing for pattern matching to handle all of the major differentation of operations.
 
-and eval_op_unary env op expr = 
-    let expr_value = eval env expr in
-    match op, expr_value with
-      | Positive, (Vint i) -> Vint (~+i)
-      | Negative, (Vint i) -> Vint (~-i)
-      | Not, (Vbool b) -> Vbool (not b)
-      | ...
-\end{lstlisting}
-The rules for operations are relatively simple by virtue of the reduced complexity of the IR allowing for pattern matching to handle all of the major differentation of operations.
+    \item \textbf{Recursive Let Expressions:}
+    \begin{lstlisting}[language=Caml, caption=The Pyfunc Interpreter let rec rule.]
+    and eval_letrec env binder let_expr in_expr =
+        (* Set variable into the Env before evaluation. *)
+        let fn = VFn (let_expr) in
+        let env' = (Env.set env binder fn) in
+        (* Compute value with recursive referencing. *)
+        eval env' in_expr
+    \end{lstlisting}
 
-2. The previously mentioned recursive let expression
+    In the example above, the in\_expr refers to the continuation of the let rec expression.    
 
-\begin{lstlisting}[language=Caml, caption=The Pyfunc Interpreter let rec rule.]
-and eval_letrec env binder let_expr in_expr =
-    (* Set variable into the Env before evaluation. *)
-    let fn = VFn (let_expr) in
-    let env' = (Env.set env binder fn) in
-    (* Compute value with recursive referencing. *)
-    eval env' in_expr
-\end{lstlisting}
-
-In the example above, the in\_expr refers to the continuation of the let rec expression.
-
-3. Application
-
-\begin{lstlisting}[language=Caml, caption=The PyFunc interpreter's application rule.]
+    \item \textbf{Application:}
+    \begin{lstlisting}[language=Caml, caption=The PyFunc interpreter's application rule.]
     and eval_applic env func arg =
       (* Attmept computation. *)
       let fn = eval env func in
@@ -2419,12 +2833,12 @@ In the example above, the in\_expr refers to the continuation of the let rec exp
         let env' = Env.set c_env binder arg_value in
         eval env' body 
       | v -> v
-\end{lstlisting}
+    \end{lstlisting}
 
-4. Variables
-
-\begin{lstlisting}[language=Caml, caption=The PyFunc interpreter's rule for variables.]
-and eval_var env var =
+    \item \textbf{Variables:}
+    
+    \begin{lstlisting}[language=Caml, caption=The PyFunc interpreter's rule for variables.]
+    and eval_var env var =
     (* Attempt to get var from env *)
     try let result = Env.get env var in
     match result with
@@ -2436,6 +2850,11 @@ and eval_var env var =
       | Errors.Lookup_Error msg -> raise (Errors.Lookup_Error msg)
       | exn -> raise exn
 \end{lstlisting}
+
+\end{itemize}
+
+
+
 % \section{Guidance}
 % You can't talk about everything. Cover the high level first, then cover important, relevant or impressive details.
 
@@ -2508,7 +2927,9 @@ and eval_var env var =
 % Algorithms can be set using \texttt{algorithm2e}, as in Algorithm \ref{alg:metropolis}.
 
 % % NOTE: line ends are denoted by \; in algorithm2e
-% \begin{algorithm}
+% \begin{center}
+% \begin{minipage}{0.8\linewidth}%
+% \begin{algorithm}[H]
 %     \DontPrintSemicolon
 %     \KwData{$f_X(x)$, a probability density function returing the density at $x$.\; $\sigma$ a standard deviation specifying the spread of the proposal distribution.\;
 %     $x_0$, an initial starting condition.}
@@ -2536,6 +2957,8 @@ and eval_var env var =
 % \caption{The Metropolis-Hastings MCMC algorithm for drawing samples from arbitrary probability distributions, 
 % specialised for normal proposal distributions $q(x^\prime|x) = \mathcal{N}(x, \sigma^2)$. The symmetry of the normal distribution means the acceptance rule takes the simplified form.}\label{alg:metropolis}
 % \end{algorithm}
+% \end{minipage}
+% \end{center}
 
 % % \subsection{Tables}
 
@@ -2628,19 +3051,20 @@ and eval_var env var =
 % How good is your solution? How well did you solve the general problem, and what evidence do you have to support that?
 
 In this section we evaluate the implementation of the PyFunc language.
-To do this several steps were required.
+% To do this several steps were required.
 
-Initailly, actual code comparisions for relatively non-trivial examples could indicate the general similarity between the possible structure of the code.
-Metrics such as Levenshtein distance could to some degree quantify the differences, though the actual usefulness of such a metric is not conclusive.
+Initailly, direct code comparisions for relatively non-trivial examples are used to indicate the general similarity between the structure of PyFunc code and Python code.
+Metrics such as Levenshtein distance do to some degree quantify the differences, though the actual usefulness of such a metric is not conclusive.
 
 To compare the output of the PyFunc runtime and the Python runtime a parallel comparison was required.
 But as there does not exist a full implementation test-suite for the Python language specification a substitute means for determining correct function was necessary.
 The next best thing to a language implementation test-suite is the actual internal test-suite of the current Python release version (CPython v3.12.2).
-The test suite was used as effectively a unit-test for the various features of PyFunc.
+The test suite was used as a series of unit-tests for the various features of PyFunc.
 
-It should be noted that the CPython test suite is an interal test-suite and its standard is not held as the optimal language implementation test-suite.
+It should be noted that the CPython test suite is an interal test-suite and its standard is not held as the optimal language implementation test-suite for Python.
 Furthermore, the test-suite also tests significant amounts functionaility that PyFunc does not support in any way, ranging from built-in functions to the behaviour of overloaded operators.
-(I.e., $-\text{True}$ is valid Python but is not valid PyFunc as a negative unary operator is for numeric types only.)
+
+(I.e., $-\text{True}$ is valid Python, but is not valid PyFunc as a negative unary operator is for numeric types only.)
 
 \section{Direct Comparison Code Comparison}
 
@@ -2727,6 +3151,7 @@ Summarise the whole project for a lazy reader who didn't read the rest (e.g. a p
 \begin{appendices}
 
 \chapter{Appendices}
+\label{chp:appendix}
 
 \section{User Guide}
 \subsection{Install}
@@ -2735,7 +3160,7 @@ Summarise the whole project for a lazy reader who didn't read the rest (e.g. a p
 \section{Full Parser Grammar}
 \subsection{Lexer Specification}
 
-\begin{lstlisting}[language=C, caption=PyFunc's lexer specification for OCamllex., keepspaces=true]
+\begin{lstlisting}[language=C, label=lst:lexer-spec, caption=PyFunc's lexer specification for OCamllex., keepspaces=true]
 rule token = parse
     (* Source Cleaners *)
     | [' ' '\t' '\r' '\n']* { token lexbuf }
@@ -2809,12 +3234,6 @@ rule token = parse
 
 \textbf{Don't include your source code in the appendices}. It will be
 submitted separately.
-\cite{Orw68}
-\cite{Pey17}
-
-\citet{Orw68}
-
-\citet{TIOBE}
 
 \end{appendices}
 

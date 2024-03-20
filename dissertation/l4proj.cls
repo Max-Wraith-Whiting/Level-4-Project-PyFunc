@@ -271,7 +271,7 @@ textfont=it,tableposition=above]{caption}
 \captionsetup{subrefformat=parens}
 
 % Algorithm typesetting package
-\usepackage[plain, noline, shortend, linesnumberedhidden]{algorithm2e}
+\usepackage[plain, noline, shortend, linesnumberedhidden, ruled]{algorithm2e}
 \SetAlFnt{\sffamily \small}
 
 % adjust spacing

@@ -50,20 +50,20 @@ module Typecheck = struct
   (* Instantiation:
      - Sub in fresh TVars for all given quantifiers. *)
   let instantiate poly_type =
-    let (quant, mono) = poly_type in
-    let substitution_map = List.map (fun q -> (q, TypeVar.fresh_TV ())) quant in
-    let rec go = function
+    let (quantifier, monotype) = poly_type in
+    let substitution_map = List.map (fun q -> (q, TypeVar.fresh_TV ())) quantifier in
+    let rec inner = function
       | TypeVar type_var ->
         (
           match List.assoc_opt (TypeVar.var type_var) substitution_map with
             | Some instance -> TypeVar instance
             | None -> TypeVar type_var
         )
-      | TypeFunc (type_a, type_b) -> TypeFunc (go type_a, go type_b)
-      | TypePair (type_a, type_b) -> TypePair (go type_a, go type_b)
+      | TypeFunc (type_a, type_b) -> TypeFunc (inner type_a, inner type_b)
+      | TypePair (type_a, type_b) -> TypePair (inner type_a, inner type_b)
       | t -> t
     in
-    go mono
+    inner monotype
 
   (* Instantiation End *)
 
