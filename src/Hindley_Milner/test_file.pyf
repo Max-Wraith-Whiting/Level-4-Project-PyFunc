@@ -1,2 +1,8 @@
+# Babbage Problem
+def babbage(x):
+    if ((x * x) % 1000000) != 269696:
+        babbage(x + 1)
+    else:
+        x
 def main():
-    float (True) != (float 0)
+    print (babbage(1))

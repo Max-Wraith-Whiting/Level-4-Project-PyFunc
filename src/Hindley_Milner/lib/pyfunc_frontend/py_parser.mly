@@ -21,6 +21,7 @@
 %token FLOAT
 %token BOOL
 %token STRING
+%token PRINT
 %token UNITVAL
 %token LPAREN
 %token RPAREN
@@ -51,6 +52,7 @@
 // %token LIST // On a probationary status.
 
 // Precedence
+%right PRINT
 %right CONS NOT
 %right INT FLOAT BOOL STRING 
 %right HEAD TAIL
@@ -118,6 +120,7 @@ unary:
     | FLOAT unary   {makeOpUnary OpUnary.UFloat $2}
     | BOOL unary    {makeOpUnary OpUnary.UBool $2}
     | STRING unary  {makeOpUnary OpUnary.UString $2}
+    | PRINT unary   {makeOpUnary OpUnary.Print $2}
     | list_op       {$1}
 
 list_op:

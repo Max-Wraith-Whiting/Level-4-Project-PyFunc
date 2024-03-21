@@ -573,6 +573,7 @@ Now with these three structures, there are two further rules for actually runnin
 
 %==================================================================================================================================
 \chapter{Analysis/Requirements}
+\label{chp:analysis-requirements}
 % What is the problem that you want to solve, and how did you arrive at it?
 
 % [NOTE]: What is the problem
@@ -701,7 +702,7 @@ For the possible type systems listed below there has been consideration given to
 % \subsection{Language Features}
 
 \section{Proposed Minimal Requirements}
-
+\label{sec:proposed-minimal-requirements}
 After the previous analysis it was determined that the MVS should include the following:
 
 MUST HAVE:
@@ -3067,6 +3068,114 @@ Furthermore, the test-suite also tests significant amounts functionaility that P
 (I.e., $-\text{True}$ is valid Python, but is not valid PyFunc as a negative unary operator is for numeric types only.)
 
 \section{Direct Comparison Code Comparison}
+
+
+In this section, we will examine the direct differences between two pieces of code written in Python and Pyfunc.
+In this first example, both code snippets implement the same algorithm to calculate the greatest common divisor (GCD) of two numbers using the Euclidean algorithm.
+However, despite their apparent similarity, there are several distinctive differences between the Python and Pyfunc implementations.
+
+\begin{figure}[H]
+\begin{subfigure}{0.45\textwidth}
+    \begin{lstlisting}[language=Python, label=lst:python-gcd, caption=Python greatest common divisor program.]
+    def gcd(x , y):
+        if y == 0:
+            return x
+        else:
+            return gcd(y, x % y)
+
+    gcd(127, 127**2) # 127
+    \end{lstlisting}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.45\textwidth}
+    \begin{lstlisting}[language=Python, label=lst:pyfunc-gcd, caption=Pyfunc greatest common divisor example program.]
+        def gcd(x, y):
+            if y == 0:
+                x
+            else:
+                gcd(y, x % y)
+
+        def main():
+            gcd(127, 127**2) # 127
+    \end{lstlisting}
+\end{subfigure}
+\end{figure}
+
+One notable difference is the entry point of the code.
+Python does not have an explicit entry point but rather the top level of scope is considered a block of code, much like a class or function\cite{Python_documentation}.
+Whereas in PyFunc, a specific \texttt{main} function is required to explicitly indicate the program entry point.\footnote{This is true even in the REPL currently, though it is unlikely to remain a requirement there for long.}
+
+Additionally, PyFunc uses does not have an explicit return statement, and implicitly returns the evaluation of the function.
+This makes sense, as PyFunc is an expression based language and does not have statements that do not evaluate (with the exception of declarations).
+
+But, I think it can be said that these differences are not major, and those that are present are closer to stylistic than not.
+
+Here is another comparison:
+
+\begin{figure}[H]
+    \begin{subfigure}{0.45\textwidth}
+        \begin{lstlisting}[language=Python, label=lst:python-gcd, caption=Python solutions to the Babbage problem. ]
+        # Babbage Problem
+        def imperative(n):
+            while n**2 % 1000000 != 269696:
+                n += 1 
+            return n # 25264
+
+        def recursive(n):
+            if x * x % 1000000 != 269696:
+                recursive(n + 1)
+            else:
+                return n # Recursion depth error.
+        \end{lstlisting}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \begin{lstlisting}[language=Python, label=lst:pyfunc-gcd, caption=Pyfunc greatest common divisor example program.]
+# Babbage Problem
+def babbage(n):
+    if ((n * n) % 1000000) != 269696:
+        babbage(n + 1)
+    else:
+        n
+def main():
+    babbage(1) # 25264
+        \end{lstlisting}
+    \end{subfigure}
+    \end{figure}
+
+The code excerpts above are solutions to the Babbage problem\citep{babbage_problem}, which stated plainly is:
+
+\begin{center}
+    \emph{What is the smallest positive integer whose square ends in the digits 269,696?}
+\end{center}
+
+There are two implementations for Python because the recursive example actually failed to calculate the number before reaching the maximum recursion depth and raising an error.
+PyFunc has no such limitation with recursion, which is reasonable considering the functional core of the language.
+From a syntactic point of view the two programs are distinctly similar and have comparable levels of expression, which was a goal PyFunc was aimed at when concieved.
+
+\section{MoSCow}
+
+In its current form, PyFunc is the core of a language.
+In chapter \ref{chp:analysis-requirements}, section \ref{sec:proposed-minimal-requirements}, the intentions and requirements of the project were outlined.
+This section aims to review the sucess of the project in relation to this rubric.
+
+\textbf{Must have:}
+\begin{itemize}
+    \item The language has a functional REPL and can accept a file for execution.
+    \item The language has a fully implemented language pipeline, including a Hindley-Milner type system.
+    \item The language includes basic arithmetic and primitive types.
+    \item Of the basic control structures, only if-expressions have been added to the language.
+    \item Functions are largely implemented into the language.
+    \item Closures and partial application are totally supported by the language.
+    \item Lists and basic list operations are supported in PyFunc.
+\end{itemize}
+
+\textbf{Could have:}
+\begin{itemize}
+    \item The language does \emph{not} currently have any significant string manipulation outside of splitting strings by head and tail.
+    \item There is \emph{no} IO currently in the language
+\end{itemize}
+
 
 % \section{Guidance}
 % \begin{itemize}

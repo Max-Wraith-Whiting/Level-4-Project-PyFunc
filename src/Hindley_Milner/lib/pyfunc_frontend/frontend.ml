@@ -105,6 +105,7 @@ module Frontend = struct
       | UFloat   -> IR.ExprOpUnary (UnOp.UFloat, right)
       | UBool    -> IR.ExprOpUnary (UnOp.UBool, right)
       | UString  -> IR.ExprOpUnary (UnOp.UString, right)
+      | Print    -> IR.ExprOpUnary (UnOp.Print, right)
   
   and convert_list value_list = 
     let converted_list = List.map (convert) (value_list) in

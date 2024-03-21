@@ -9,6 +9,7 @@ module OpUnary = struct
     | UFloat
     | UBool
     | UString
+    | Print
 
   let op_unary_pp = function
     | Positive -> "+"
@@ -20,6 +21,7 @@ module OpUnary = struct
     | UFloat -> "float"
     | UBool -> "bool"
     | UString -> "string"
+    | Print -> "print"
 
 end
 

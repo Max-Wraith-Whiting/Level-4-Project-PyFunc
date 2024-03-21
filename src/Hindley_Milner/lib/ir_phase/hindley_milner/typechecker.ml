@@ -361,6 +361,9 @@ module Typecheck = struct
           let fresh_typ = new_var () in
           unify typ fresh_typ;
           TypeString
+
+        | Print ->
+          TypeUnit
     in 
 
     

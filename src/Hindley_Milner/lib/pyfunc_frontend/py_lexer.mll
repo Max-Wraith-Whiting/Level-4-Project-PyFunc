@@ -21,6 +21,7 @@ rule token = parse
     | "float"   {FLOAT}
     | "bool"    {BOOL}
     | "string"  {STRING}
+    | "print"   {PRINT}
     | '('       {LPAREN}
     | ')'       {RPAREN}
     | '{'       {LBRACE}
