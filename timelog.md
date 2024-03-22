@@ -190,11 +190,14 @@
 * *1.0 hour* Added pair constructors
 * *1.5 hour*
 
+## Week 13
 
 ### 12th December 2023
 
-* *1.0 hour* Intergrated all the disparate parts of the typechecker and fully implemented it for the extended lambda calculus IR.
+* *1.0 hour* Integrated all the disparate parts of the type checker and fully implemented it for the extended lambda calculus IR.
 * *1.0 hour* Lot's of house-keeping. (Refactoring etc.)
+
+## Week 14
 
 ### 19th December 2023
 
@@ -204,16 +207,185 @@
 
 * *1.5 hour* Made a far better AST printer like Unix tree command. (Feels like Ocaml has finally clicked!)
 
-### 8th January 2024
+## Week 17
 
-### 13th January 2024
+### 11st January 2024
+
+* *2.5 hour* Frontend Parser created
+
+### 13rd January 2024
+
+* *2.0 hour* Minor restructuring
+* *2.5 hour* Dune is being a pain
+* *1.5 hour* Fixed buggy "use package" statements in dissertation template.
+
+## Week 18
 
 ### 18th January 2024
 
-### 23rd January 2024
+* *2.0 hour* Frontend work
+* *1.0 hour* Fixing parser
+* *2.0 hour* IR float issue reappeared. Fixed it.
+
+### 19th January 2024
+
+* *1.5 hour* Code clean up.
+
+### 20th January 2024
+
+* *0.5 hour* IR Converter planning.
+* *1.0 hour* More, IR Converter designing.
+* *1.0 hour* Type inference rules research.
+
+## Week 19
+
+### 22nd January 2024
+
+* *2.5 hour* Recursive typechecking rule, tentatively added.
+* *2.0 hour* AST now pretty prints on execution.
+* *0.5 hour* Busy work.
+
+### 24th January 2024
+
+* *4.0 hour* Let-rec rule works now.
+* *1.0 hour* Let-rec rule doesn't work now.
+* *2.0 hour* Let-rec rule is back to working again, just correctly this time.
 
 ### 25th January 2024
 
-### 1st February 2024
+* *1.5 hour* I honestly don't know. I was coding.
+* *1.5 hour* The REPL code is somewhat tidier.
 
-### 6th February 2024
+### 27th January 2024
+
+* *3.5 hour* Research day. Collating theoretical underpinnings of type inference from the simply typed lambda calculus to ML.
+* *3.0 hour* Research.
+* *3.5 hour* Triple research.
+
+## Week 20
+
+### 29th January 2024
+
+* *0.5 hour* Researching tree-walk interpreters.
+* *1.0 hour* Pipeline structured.
+* *4.0 hour* Skeleton of the interpreter.
+
+### 30th January 2024
+
+* *3.0 hour* Added if evaluation to interpreter.
+* *2.0 hour* Added runtime errors and did some research on runtime error detection in functional programming languages.
+
+### 31st January 2024
+
+* *2.0 hour* Bug-fixing.
+
+## Week 21
+
+### 5th February 2024
+
+* *0.5 hour* Actually converted my time log from pen and paper to this file.
+* *2.0 hour* REPL now can handle exceptions better.
+* *1.0 hour* Improved AST outputs for IR.
+
+### 10th February 2024
+
+* *2.5 hour* Removed defunct features.
+
+## Week 22
+
+### 12nd February 2024
+
+* *1.0 hour* Added entry type for env elements in interpreter.
+* *0.5 hour* Vref type for heap allocated types.
+* *0.5 hour* Verbose logging added poorly.
+* *2.5 hour* Fully implemented function application.
+* *0.5 hour* Value system now works.
+
+### 13rd February 2024
+
+* *4.0 hour* Major tidy up of main module.
+* *2.5 hour* Miscellaneous programming tasks for project upkeep. 
+
+### 15th February 2024
+
+* *4.0 hour* Dissertation update and added list concatenation to the interpreter.
+
+## Week 23
+
+### 21st February 2024
+
+* *2.0 hour* IR converter is functioning.
+* *3.5 hour* Conversion rules for basic operation.
+* *1.0 hour* Elif expressions are in.
+* *2.0 hour* Trouble with whitespace indentation.
+
+## Week 24
+
+### 27th February 2024
+
+* *1.0 hour* Bash tidy up for easy running.
+* *1.0 hour* Dissertation update, largely MoSCoW stuff.
+
+### 28th February 2024
+
+* *3.5 hour* Global scope definitions.
+
+## Week 25
+
+### 5th March 2024
+
+* *1.0 hour* Fixed Cons to actually be Cons. 
+* *2.0 hour* Modified Unification algorithm for TypeList.
+* *2.5 hour* Unary operation support in type checker.
+
+### 9th March 2024
+
+* *2.0 hour* OpUnary now fully supported.
+* *3.5 hour* Cons List operation now fully supported.
+
+### 10th March 2024
+
+* *2.0 hour* Debugging nasty application / env issues.
+* *0.5 hour* Patched the bug with a dirty hack, environment is now not actually immutable...
+* *1.5 hour* Temporary fix.
+
+## Week 26
+
+### 12nd March 2024
+
+* *2.0 hour* Frontend linkage to function calls.
+
+### 15th March 2024
+
+* *1.0 hour* Modulo, which is poorly defined in the programming world. (Remainder is also called modulo which... *why?*)
+* *3.5 hour* Dissertation update, syntax tables.
+
+### 17th March 2024
+
+* *3.5 hour* Fixed interpreter from dirty mutable env hack back to passed env.
+* *2.0 hour* Closures now work again.
+* *3.5 hour* Dissertation update, I think its getting somewhere.
+
+## Week 27
+
+### 18th March 2024
+
+* *3.5 hour* Writing
+* *2.5 hour* Still Writing
+
+### 19th March 2024
+
+* *1.0 hour* Writing
+* *0.5 hour* Writing
+
+### 20th March 2024
+
+* *2.5 hour* Writing
+* *1.0 hour* Writing
+* *1.5 hour* Endless writing
+
+### 21st March 2024
+
+* *1.5 hour* Editing
+* *2.5 hour* Presentation prep.
+* *7.0 hour* Finalising dissertation.
