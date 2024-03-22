@@ -1,0 +1,41 @@
+{
+    "cSpell.enableFiletypes": [
+        "tex"
+    ],
+    "cSpell.words": [
+        "Agda",
+        "Alonzo",
+        "Applic",
+        "asprintf",
+        "assoc",
+        "Caml",
+        "Camllex",
+        "commiting",
+        "concat",
+        "cond",
+        "desugaring",
+        "elem",
+        "elif",
+        "funcs",
+        "Idris",
+        "incr",
+        "INTDIVIDE",
+        "lexer",
+        "LPAREN",
+        "Menhir",
+        "nonlocal",
+        "polytype",
+        "Polytypes",
+        "possiblity",
+        "PURILE",
+        "quant",
+        "RPAREN",
+        "STLC",
+        "struct",
+        "TIOBE",
+        "typevar",
+        "UMINUS",
+        "unionfind",
+        "usabilities"
+    ]
+}

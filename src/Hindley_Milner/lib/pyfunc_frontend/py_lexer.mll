@@ -29,6 +29,7 @@ rule token = parse
     | '['       {LBRACK}
     | ']'       {RBRACK}
     | '='       {EQ}
+    | ":="      {IMBIND}
     | "and"     {AND}
     | "or"      {OR}
     | "not"     {NOT}

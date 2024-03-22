@@ -1,5 +1,4 @@
 open Py_ast.Expr
-
 module Frontend = struct
   module Lexer = Py_lexer
   module Parser = Py_parser
@@ -45,10 +44,65 @@ module Frontend = struct
     in
     let output = String.concat "\n" (loop 0 [] source) in
     output
-    
+    (* loop 0 [] source *)
+(*     
+  let add_assignment_scopes source = 
+    let is_assignment_check line  =
+      let substr = ":=" in
+      let rec check_substring idx =
+        if idx + String.length substr > String.length line then
+          false
+        else if String.sub line idx (String.length substr) = substr then
+          true
+        else
+          check_substring (idx + 1)
+      in
+      check_substring 0
+    in
+
+    (* let count_braces str count =
+      let rec count_helper idx count =
+        if idx >= String.length str then
+          count
+        else
+          match str.[idx] with
+          | '{' -> count_helper (idx + 1) (count + 1)
+          | '}' -> count_helper (idx + 1) (count - 1)
+          | _   -> count_helper (idx + 1) count
+      in
+      count_helper 0 count
+    in *)
+      
+    let rec loop count acc = function
+      | [] -> 
+        if count > 0 then
+          let closing_braces = String.make count '}' in
+          List.rev (closing_braces :: acc)
+        else
+          List.rev acc
+      | line :: rest ->
+        (* If assignment then add { at the end *)
+        (* If the bracket count is 0 then add '}' at the start. *)
+        let new_count = count_braces line count in
+        let pre_line = if new_count = 0 then  "}" ^ line else line in
+        let post_line = if is_assignment_check line then pre_line ^ "{" else pre_line in
+        let new_new_count = if is_assignment_check line then new_count + 1 else new_count in
+
+        loop new_new_count (post_line :: acc) rest
+    in
+    let output = String.concat "\n" (loop 1 [] source) in
+    output
+
+
+         *)
+
+
+         
+
   let generate_ast source = 
     let open Parse in
-    let processed_source = preprocess source in
+    let processed_source =  (preprocess source) in 
+    print_endline processed_source;
     parse_string processed_source
 
   exception Unimplemented of string
@@ -61,6 +115,7 @@ module Frontend = struct
   let rec convert = function
     | Program (bindings_list) -> convert_program bindings_list
     (* | Binding (binder, expr) ->  *)
+    | Assignment (binder, expr, expr_in ) -> convert_assign binder expr expr_in
     | Call (binder, arg_list) -> convert_call binder arg_list
     | Var v -> IR.ExprVar v
     | Const c -> IR.ExprConst c
@@ -71,6 +126,11 @@ module Frontend = struct
     (* | Func (binder, param_list, body) -> convert_func binder param_list body *)
     | x -> raise_unimpl ("[" ^ get_name x ^ "] Not implemented currently!")
 
+
+  and convert_assign binder expr expr_in = 
+    let body = convert expr in
+    let continuation = convert expr_in in
+    IR.ExprLet (binder, body, continuation)
 
   and convert_binary_op op expr_a expr_b =
     let left = convert expr_a in

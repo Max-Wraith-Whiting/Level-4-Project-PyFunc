@@ -15,7 +15,6 @@
 %token FALSE
 %token IF
 %token ELIF
-// %token THEN
 %token ELSE
 %token INT 
 %token FLOAT
@@ -29,6 +28,7 @@
 %token RBRACE
 %token LBRACK
 %token RBRACK
+%token IMBIND
 %token EQ
 %token AND OR
 %token LT GT GEQ LEQ EQQ NEQ
@@ -49,9 +49,9 @@
 %token <string> STRINGVAL
 %token <int> INTVAL
 %token <float> FLOATVAL
-// %token LIST // On a probationary status.
 
 // Precedence
+%right IMBIND
 %right PRINT
 %right CONS NOT
 %right INT FLOAT BOOL STRING 
@@ -74,11 +74,8 @@ binding:
 scope: LBRACE expr RBRACE   {$2}
 
 expr:
-    // | DEFINE ID LPAREN param_list RPAREN scope expr  {update_binding_list(makeFunc $2 $4 $6); $7}
     | base_expr                                 {$1}
     | if_expr                                   {$1}
-
-    // | ID EQ value {makeAssign $1 $3 } // Requires a heap scope.
 
 base_expr:
     | expr OR expr        {makeOpBinary OpBinary.And $1 $3}
@@ -134,6 +131,7 @@ call:
 primary:
     | LPAREN expr RPAREN {$2}
     | LBRACK expr_list RBRACK {makeList $2}
+    | ID IMBIND expr scope    {makeAssign $1 $3 $4}
     | ID                 {try find var_table $1 with Not_found -> makeVar ($1)}
     | STRINGVAL          {makeConst (ConstString $1)}
     | INTVAL             {makeConst (ConstInt $1)}

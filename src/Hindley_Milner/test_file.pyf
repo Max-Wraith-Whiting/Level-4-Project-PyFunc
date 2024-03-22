@@ -1,8 +1,10 @@
-# Babbage Problem
-def babbage(x):
-    if ((x * x) % 1000000) != 269696:
-        babbage(x + 1)
+def y(a):
+    if a > 0:
+        x := 10 {
+        x * x}
     else:
-        x
+        x := 4 {
+        x * x}
+
 def main():
-    print (babbage(1))
+    y(-1)
