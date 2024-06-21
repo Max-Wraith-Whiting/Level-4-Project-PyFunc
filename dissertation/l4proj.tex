@@ -13,7 +13,7 @@
 %% METADATA
 \title{Pythonic Syntax, Functional Core}
 \author{Maxwell A. Wraith-Whiting}
-\date{March 21st, 2024}
+\date{March 22nd, 2024}
 
 \maketitle
 
@@ -61,8 +61,8 @@
 % Please note that you are under no obligation to sign 
 % this declaration, but doing so would help future students.
 %
-% \def\consentname {My Name} % your full name
-% \def\consentdate {20 March 2018} % the date you agree
+\def\consentname {Maxwell A. Wraith-Whiting} % your full name
+\def\consentdate {22 March 2024} % the date you agree
 %
 \educationalconsent
 
@@ -476,15 +476,12 @@ The most well known implementation of the system is in the programming language 
 
 \subsection{Typing Systems and Notation} \label{subsec:typing-systems-and-notation}
 
-In type theory, a typing rule (also called an inference rule) describes how a type system assigns types.
-In a general sense, a type system is a set of typing rules which when applied to a program indicate whether the program is well-typed. (I.e., A valid program.)
-
-The notation of these typing rules is somewhat unusual but relatively straight forward.
-A given rule specifies the structure of syntax to the appropriate type.
-The most basic part of the notation is a type relation:
-
-\[3 : Int\]
-\[e : \tau\]
+A type system consists of a set of typing rules that assign a type to an expression.
+If a program cannot be assigned a type, then it gives rise to a type error.
+% In a general sense, a type system is a set of typing rules which when applied to a program indicate whether the program is well-typed. (I.e., A valid program.)
+%
+% A given rule specifies the structure of syntax to the appropriate type.
+The most basic part of the notation is a type relation: $3 : Int$ or the general judgement $e : \tau$.
 
 Literal values have a definitive type, $3$ is \emph{literally} an Int value, as \texttt{true} is a boolean.
 The more general rule for $e$ being of type $\tau$ is not particularly useful in this context but can easily be read as "$e$ is of type $\tau$", where $e$ refers to some expression and $\tau$ to some type.
@@ -493,7 +490,7 @@ Now, in proof theory there already exists a notation for inference rules called 
 The general structure of a rule is as a collection of propositions on the top, and the conclusions below.
 
 \begin{equation} \label{eq:inference-syntax-example}
-\frac{Proposition\: A \;\; Proposition\: B \;\; ... \;\; Proposition\: N}{Conclusion\: A \;\; Conclusion\: B \;\; ... \;\; Conclusion\: N}
+\frac{Premise\: A \;\; Premise\: B \;\; ... \;\; Premise\: N}{Conclusion\: A \;\; Conclusion\: B \;\; ... \;\; Conclusion\: N}
 \end{equation}
 
 Here is a simple example of a type inference rule:
@@ -509,10 +506,10 @@ For an additional typing example, the following type rules specify the typing re
 \frac{}{5 : int} \;\;\; \frac{}{7 : int} \;\;\; \frac{e_1 : int \;\;\; e_2 : int}{e_1 + e_2 : int}
 \end{equation}
 
-The first two rules have no propositions and therefore can be universally concluded, which makes them \textbf{axioms}.
+The first two rules have no premises and therefore can be universally concluded, which makes them \textbf{axioms}.
 The third rule is an inference rule, with two integer expressions given as propositions.
 
-This brief outline of the natural deduction typing notation should suffice for the extent of this project. 
+% This brief outline of the natural deduction typing notation should suffice for the extent of this project. 
 
 % The final piece of notation to understand, which is of key importance to programming languages, is binding.
 % The type of a variable depends on where is is bound, which requires context-sensitive typing rules.
@@ -536,37 +533,33 @@ This brief outline of the natural deduction typing notation should suffice for t
 
 \section{A Brief Review of Lambda Calculus} \label{sec:lambda-review}
 
-The Intermediate representation (IR) of PyFunc is an extended lambda calculus, and therefore a brief review of the lambda calculus seems appropriate before discussing extensions of it.
-
+The Intermediate representation (IR) of PyFunc is an extended lambda calculus. 
+%
 The lambda calculus is a formal system designed by Alonzo Church\citep{Church_1932} as a foundational way of expressing computation.
 The system is based on \emph{function abstraction} and \emph{application}, using variable binding and substitution.
 
 What this means in short is very simple: You can define functions and you can apply said functions.
 These functions also bind variables for their inputs.
-Here is an example: 
+Here is an example: $(\lambda x . x) y$.
 
-\begin{equation} \label{eq:lambda-example}
-    (\lambda x . x) y
-\end{equation}
+% The expression in \ref{eq:lambda-example} can be read simply as a function $\lambda$ applied to variable $y$.
+% Inside the function when called, $x$ is bound to the input value of $y$, thus making the expression: $(y)$.
+% If for example the value of $y$ was $5$ then the lambda would be $5$.
+% That is because the lambda in \ref{eq:lambda-example} is the identity function which returns whatever it receives.
+% It also contains and demonstrates all three elements the lambda calculus as explained above.
 
-The expression in \ref{eq:lambda-example} can be read simply as a function $\lambda$ applied to variable $y$.
-Inside the function when called, $x$ is bound to the input value of $y$, thus making the expression: $(y)$.
-If for example the value of $y$ was $5$ then the lambda would be $5$.
-That is because the lambda in \ref{eq:lambda-example} is the identity function which returns whatever it receives.
-It also contains and demonstrates all three elements the lambda calculus as explained above.
-
-\begin{table}[!h]
-    \resizebox{\textwidth}{!}{%
-    \begin{tabular}{@{}|l|l|l|l|@{}}
-        \hline
-        \textbf{Name}       &   \textbf{Syntax}     &   \textbf{Example}    &   \textbf{Explanation} \\
-        \hline
-        Variable & <name> & $x$ & a variable named "x" \\
-        Abstraction & $\lambda$<parameter>$.$<body> & $\lambda x . x$ & a function with parameter "x" and body "x" \\
-        Application & <function><variable or function> & $(\lambda x . x) y$    & calling the function "$\lambda x . x$" with argument "y"\\
-        \hline
-    \end{tabular}}
-\end{table}
+% \begin{table}[!h]
+%     \resizebox{\textwidth}{!}{%
+%     \begin{tabular}{@{}|l|l|l|l|@{}}
+%         \hline
+%         \textbf{Name}       &   \textbf{Syntax}     &   \textbf{Example}    &   \textbf{Explanation} \\
+%         \hline
+%         Variable & <name> & $x$ & a variable named "x" \\
+%         Abstraction & $\lambda$<parameter>$.$<body> & $\lambda x . x$ & a function with parameter "x" and body "x" \\
+%         Application & <function><variable or function> & $(\lambda x . x) y$    & calling the function "$\lambda x . x$" with argument "y"\\
+%         \hline
+%     \end{tabular}}
+% \end{table}
 
 Now here is the more explicit formulation of the lambda calculus:
 \begin{enumerate}
@@ -930,47 +923,46 @@ Extensions to lambda calculus introduce additional constructs and features to be
 
 \subsection{PyFunc-IR Types}
 
-First, let's outline the primitive data types that PyFunc's IR supports:
+First, let's outline the primitive data types that PyFunc's IR supports.
 
-\begin{table}[h]
-\caption{Table of PyFunc-IR's constant types.}
-\label{tab:pyfunc-ir-constants}
-\begin{center}
-\rowcolors{2}{}{gray!3}
-\begin{tabular}{@{}|l|l|l|@{}}
-    \hline
-    \textbf{Type}        & \textbf{Description}      & \textbf{Syntax Examples}  \\
-    \hline
-    \texttt{Bool}        & Boolean type              & \texttt{True}       \\
-    \texttt{Int}         & Integer type              & \texttt{42}         \\
-    \texttt{Float}       & Floating-point type       & \texttt{3.141}      \\
-    \texttt{String}      & String type               & \texttt{"hello"}    \\
-    \texttt{Unit}        & The Unit type             & \texttt{$()$}       \\ 
-    \hline
-\end{tabular}
-\end{center}
-\end{table}
+% \begin{table}[h]
+% \caption{Table of PyFunc-IR's constant types.}
+% \label{tab:pyfunc-ir-constants}
+% \begin{center}
+% \rowcolors{2}{}{gray!3}
+% \begin{tabular}{@{}|l|l|l|@{}}
+%     \hline
+%     \textbf{Type}        & \textbf{Description}      & \textbf{Syntax Examples}  \\
+%     \hline
+%     \texttt{Bool}        & Boolean type              & \texttt{True}       \\
+%     \texttt{Int}         & Integer type              & \texttt{42}         \\
+%     \texttt{Float}       & Floating-point type       & \texttt{3.141}      \\
+%     \texttt{String}      & String type               & \texttt{"hello"}    \\
+%     \texttt{Unit}        & The Unit type             & \texttt{$()$}       \\ 
+%     \hline
+% \end{tabular}
+% \end{center}
+% \end{table}
 
-With just these five primitive types, a large majority of the types in the IR can be covered.
+% \begin{table}[h]
+% \caption{Table of PyFunc-IR's type constructs.}
+% \label{tab:pyfunc-ir-type-constructs}
+% \begin{center}
+% \rowcolors{2}{}{gray!3}
+% \begin{tabular}{@{}|l|l|l|@{}}
+%     \hline
+%     \textbf{Type}        & \textbf{Description}      & \textbf{Type Construction}  \\
+%     \hline
+%     \texttt{Function}    & Function type             & \texttt{$\tau_a$ $\rightarrow$ $\tau_b$} \\
+%     \texttt{Pair}        & Pair type                 & \texttt{$(\tau_a, \tau_b)$} \\
+%     \texttt{List}        & List type                 & \texttt{List $\tau$} \\
+%     \texttt{Variable}    & Type Variable             & \texttt{$\sigma$} \\
+%     \hline
+% \end{tabular}
+% \end{center}
+% \end{table}
+With just five primitive types, a large majority of the types in the IR can be covered.
 However, there exists a few special cases that need to be considered to allow the IR to be fully typed.
-
-\begin{table}[h]
-\caption{Table of PyFunc-IR's type constructs.}
-\label{tab:pyfunc-ir-type-constructs}
-\begin{center}
-\rowcolors{2}{}{gray!3}
-\begin{tabular}{@{}|l|l|l|@{}}
-    \hline
-    \textbf{Type}        & \textbf{Description}      & \textbf{Type Construction}  \\
-    \hline
-    \texttt{Function}    & Function type             & \texttt{$\tau_a$ $\rightarrow$ $\tau_b$} \\
-    \texttt{Pair}        & Pair type                 & \texttt{$(\tau_a, \tau_b)$} \\
-    \texttt{List}        & List type                 & \texttt{List $\tau$} \\
-    \texttt{Variable}    & Type Variable             & \texttt{$\sigma$} \\
-    \hline
-\end{tabular}
-\end{center}
-\end{table}
 
 The syntax used in the type construction section has important significance to the type system we will be implementing eventually.
 For clarity's sake, $\tau$ refers to a specific type that is not explicitly written, whilst $\sigma$ refers to a polytype. 
@@ -1008,7 +1000,7 @@ By simply combining the previously specified collated types with the lambda calc
 % Through this systematic approach, the AST can accurately capture the intricacies of the IR, facilitating efficient analysis and manipulation within the context of the specified computational model.
 
 % The abstract syntax give below describes the extended lambda calculus used as PyFunc's IR.
-\clearpage
+% \clearpage
 \begin{lstlisting}[language=Caml, breaklines=false, label=ir-ast, caption=The Abstract Syntax for PyFunc's IR written in OCaml.]
 type tree = 
     | ExprVar of variable (* String binding. *)
@@ -1147,17 +1139,34 @@ These problems roughly fall into three categories: Function bindings and entry p
 
 The structure of a PyFunc program will be a tree akin to figure \ref{fig:ast-binding-conversion-tree}, with a list of top-level function bindings.
 \begin{figure}[H]
-\begin{center}
+\begin{subfigure}{0.45\textwidth}
+    
+    \begin{center}
+        \begin{forest}
+            [Program 
+            [Function A [* [x] [x]]]
+            [Function B [** [y] [2]]]
+            [Function C [- [Call A [2]] [Call B [2]]]]
+            ]
+        \end{forest}
+    \end{center}
+    \caption{Hypothetical PyFunc frontend abstract syntax tree.}
+    \label{fig:ast-binding-conversion-tree}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.45\textwidth}
+    \begin{center}
     \begin{forest}
-        [Program 
-        [Function A [* [x] [x]]]
-        [Function B [** [y] [2]]]
-        [Function C [- [Call A [2]] [Call B [2]]]]
+        [Let rec B [** [y] [2]] 
+            [Let rec A [* [x][x]]
+                [Let rec main [- [A [2]] [B [2]]]]
+            ]
         ]
     \end{forest}
-\end{center}
-\caption{Hypothetical PyFunc frontend abstract syntax tree.}
-\label{fig:ast-binding-conversion-tree}
+    \caption{The tree in figure \ref{fig:ast-binding-conversion-tree} having undergone the outlined conversion process to PyFunc-IR.}
+    \label{fig:ir-binding-conversion-tree}
+    \end{center}
+\end{subfigure}
 \end{figure}
 
 There is no definitive way to decide between these functions which should be the program's starting point.
@@ -1182,20 +1191,6 @@ This conceptually looks like a lot like a let expression: $\text{let } A = (\lam
 
 So the converted IR would have to look something like figure \ref{fig:ir-binding-conversion-tree} with a series of let rec expressions (rec is to allow recursive functions at the top-level).
 
-\begin{figure}[]
-    \begin{center}
-    \begin{forest}
-        [Let rec B [** [y] [2]] 
-            [Let rec A [* [x][x]]
-                [Let rec main [- [A [2]] [B [2]]]]
-            ]
-        ]
-    \end{forest}
-    \caption{The tree in figure \ref{fig:ast-binding-conversion-tree} having undergone the outlined conversion process to PyFunc-IR.}
-    \label{fig:ir-binding-conversion-tree}
-    \end{center}
-\end{figure}
-
 To explicitly state the process of conversion:
 
 % The most important of these is the handling of function bindings as the actual structure of PyFunc is dictated by this.
@@ -1210,23 +1205,29 @@ To explicitly state the process of conversion:
 One final thing to note regarding this conversion is that if functions are calling one another in the top-level, they cannot allow forward referencing and should raise an error when used before their declaration.
 However, they can be called if they are declared before their call in the top-level scope.
 
-\begin{figure}[h]
-\begin{center}
-    \begin{subfigure}[]{0.65\textwidth}
-        \begin{lstlisting}[language=Python, caption=Example of PyFunc program that will raise an error due to a forward reference of the function B.]
-            def A(y):
+\begin{figure}
+\begin{minipage}{0.3\textwidth}
+    \begin{lstlisting}
+        def A(y):
             y * B(2)
-            
-            def B(x):
+    \end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}{0.3\textwidth}
+    \begin{lstlisting}
+        def B(x):
             x ** 2
-            
-            def main():
+    \end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}{0.3\textwidth}
+    \begin{lstlisting}
+        def main():
             A(2) - B(2)
-        \end{lstlisting}
-    \end{subfigure}
-\end{center}
+    \end{lstlisting}
+\end{minipage}
+\caption{Example of PyFunc program that raises an error from a forward reference of the function B.}
 \end{figure}
-
 
 \subsection*{Multi-Parameter Functions}
 
@@ -1345,23 +1346,23 @@ Monomorphic types are in contrast to polymorphic (lit., many form) types, which 
 % Now as contrast to monomorphic (lit. of one form, or in other words atomic) types, we have polymorphic types (lit. of many forms).
 
 In general, polymorphism means that operations accept values of multiple types. For example, the id function:
-\begin{figure}[H]
-\begin{align*} 
-   \text{id-type} \; :& \; \sigma \rightarrow \sigma\\
-   \text{id-body} \; :& \; \lambda x . x
-\end{align*}
-\caption{The identity function with "type-scheme" (polytype) types, as described by \citet{Hindley_1969}.}
-\end{figure}
+The identity function with "type-scheme" (polytype) types, as described by \citet{Hindley_1969}.
+\begin{mathpar} 
+   \text{id-type}:  \sigma \rightarrow \sigma 
+   
+   \text{id-body}:  \lambda x . x
+\end{mathpar}
 
 In the above equation, the type $\sigma$ that the id function accepts and returns is polymorphic.
 The Hindley-Milner type system allows what is known as \emph{parametric} polymorphism, which can effectively give a function a "generic" type.
 This means that the function can be instantiated with a particular type when needed. 
 For example:
 
-\begin{align*}\label{eq:lambda-id-instantiated} 
-    \text{id-type}' \; :& \; int \rightarrow int \\
-    \text{id-body}' \; :& \; \lambda x . x
-\end{align*}
+\begin{mathpar}\label{eq:lambda-id-instantiated} 
+    \text{id-type}' \; : \; int \rightarrow int
+
+    \text{id-body}' \; : \; \lambda x . x
+\end{mathpar}
 
 The monomorphic instance of \texttt{id} is created as a result of the polymorphic type being called with an integer.
 This just means that the exact same function has been instantiated with a more restrictive type substituted for $\sigma$, which in the above example is $int$.
@@ -1426,21 +1427,44 @@ There are four\footnote{This is not \emph{technically} true, as the "primitive" 
 
 % \textbf{Simply typed lambda calculus and monomorphic types.}
 
-\begin{equation*} \label{eq:stlc-primitives-rule}
-    \frac{e\text{ is constant of type }T}{\Gamma \vdash e:T} \;\;\text{[Primitive]}
-\end{equation*}
+% \begin{equation*} \label{eq:stlc-primitives-rule}
+%     \frac{e\text{ is constant of type }T}{\Gamma \vdash e:T} \;\;\text{[Primitive]}
+% \end{equation*}
 
-\begin{equation*} \label{eq:stlc-var-rule}
-    \frac{x:\sigma \in \Gamma}{\Gamma \vdash x:\sigma} \;\;\text{[Variable]}
-\end{equation*}
+\begin{mathpar} 
+    \inferrule*[right=Primitive]
+    {e\text{ is constant of type }T}
+    {\Gamma \vdash e:T}
 
-\begin{equation*} \label{eq:stlc-abstraction}
-    \frac{\Gamma, x:\sigma \vdash e:\tau}{\Gamma \vdash (\lambda x:\sigma, e): (\sigma \rightarrow \tau)} \;\;\text{[Abstraction]}
-\end{equation*}
 
-\begin{equation*} \label{eq:stlc-application}
-    \frac{\Gamma \vdash e_1:\sigma\rightarrow\tau \;\;\; \Gamma \vdash e_2:\sigma}{\Gamma \vdash e_1 \; e_2:\tau} \text{[Application]}
-\end{equation*}
+% \begin{equation*} \label{eq:stlc-var-rule}
+%     \frac{x:\sigma \in \Gamma}{\Gamma \vdash x:\sigma} \;\;\text{[Variable]}
+% \end{equation*}
+
+
+    \inferrule*[right=Variable]
+    {x:\sigma \in \Gamma}
+    {\Gamma \vdash x:\sigma}
+
+
+% \begin{equation*} \label{eq:stlc-abstraction}
+%     \frac{\Gamma, x:\sigma \vdash e:\tau}{\Gamma \vdash (\lambda x:\sigma, e): (\sigma \rightarrow \tau)} \;\;\text{[Abstraction]}
+% \end{equation*}
+
+    \inferrule*[right=Abstraction]
+    {\Gamma, x:\sigma \vdash e:\tau}
+    {\Gamma \vdash (\lambda x:\sigma, e): (\sigma \rightarrow \tau)}
+
+
+% \begin{equation*} \label{eq:stlc-application}
+%     \frac{\Gamma \vdash e_1:\sigma\rightarrow\tau \;\;\; \Gamma \vdash e_2:\sigma}{\Gamma \vdash e_1 \; e_2:\tau} \text{[Application]}
+% \end{equation*}
+
+
+    \inferrule*[right=Application]
+    {\Gamma \vdash e_1:\sigma\rightarrow\tau \;\;\; \Gamma \vdash e_2:\sigma}
+    {\Gamma \vdash e_1 \; e_2:\tau}
+\end{mathpar}
 
 These rules are all very simple when written out in words:
 
@@ -1570,52 +1594,34 @@ Now, whilst algorithm W is the algorithm we have been talking about, there is an
 Algorithm J is technically not a "proper" set of typing rules as it allows for side-effects.
 However, Algorithm J is an efficient implementation of the type inference algorithm.
 
-Algorithm J has six typing rules in its definition which are:
-\begin{itemize}
-    \item Variable Rule
-    \item Application Rule
-    \item Abstraction Rule
-    \item Let Rule
-    \item Instantiation Rule
-    \item Generalisation Rule
-\end{itemize}
-
+Algorithm J has six typing rules in its definition. 
 However, \citet{Clement_Despeyroux_Kahn_Despeyroux_1986} simplified the typing rules\footnote{It should be noted that this simplification did reduce the completeness of the rules, though only marginally.} further until there was only four by combining specialisation into the variable rule and generalisation into the let rule.
 
 Here are a simplified interpretation of the outlined rules:
-
+%
 \begin{mathpar}
-    \inferrule*[right=Variable]
-    {x : \sigma \in \Gamma \;\;\; \tau = \mathit{instance}(\sigma)}
+    \inferrule[Variable]
+    {x : \sigma \in \Gamma \\ \tau = \mathit{instance}(\sigma)}
     {\Gamma \vdash x : \tau}
-\end{mathpar}
 
-\begin{mathpar}
-    \inferrule*[right=Application]
-    {\Gamma \vdash e_0 : \tau_0 \;\;\; \Gamma \vdash e_1 : \tau_1 \; \tau'=\mathit{fresh\_var} \;\;\; \mathit{unify}(\tau_0, \tau_1 \rightarrow \tau')}
+    \inferrule[Application]
+    {\Gamma \vdash e_0 : \tau_0 \\ \Gamma \vdash e_1 : \tau_1 \\\\ \tau'=\mathit{fresh\_var} \\ \mathit{unify}(\tau_0, \tau_1 \rightarrow \tau')}
     {\Gamma \vdash e_0 e_1 : \tau'}
-\end{mathpar}
 
-\begin{mathpar}
-    \inferrule*[right=Abstraction]
-    {\tau=fresh\_var \;\;\; \Gamma, x : \tau \vdash e : \tau'}
+    \inferrule[Abstraction]
+    {\tau=fresh\_var \\ \Gamma, x : \tau \vdash e : \tau'}
     {\Gamma \vdash \lambda x . e : \tau \rightarrow \tau '}
-\end{mathpar}
 
-\begin{mathpar}
-    \inferrule*[right=Let]
-    {\Gamma \vdash e_0: \tau \; \Gamma, x : \mathit{generalise}(\tau) \vdash e_1 : \tau'}
+    \inferrule[Let]
+    {\Gamma \vdash e_0: \tau \\ \Gamma, x : \mathit{generalise}(\tau) \vdash e_1 : \tau'}
     {\Gamma \vdash \text{let } x = e_0 \text{ in } e_1:\tau'}
 \end{mathpar}
-
+%
 The $instance(\sigma)$ operation takes $\sigma$ and replaces all bound type variables with a new monotype (i.e., implementing a new type instance for the variable.)
-
+%
 The $fresh\_var$ operation quite simply produces a fresh type variable on demand.
-
-$generalise(\tau)$ refers to generalisation, as specified previously, where the given type is quantified to its most general form.
-It should be noted however, that \emph{unification} is the process that takes place here to determine the most general form of the given terms.
-
-Now with these four typing rules, the lambda calculus can now infer types for polymorphic functions.
+The $generalise(\tau)$ operation, as specified previously, quantifies the given type to its most general form.
+Now with these four typing rules, we can now infer types for polymorphic functions.
 
 % \begin{itemize}
 %     \item Monotypes [Already explained, either remove this or incorporate it elsewhere.]
@@ -1685,29 +1691,24 @@ But what is unification, in this context?
 
 In this case, it is expedient to start with an example.
 Suppose there are the functions 'reverse' and 'sum' with the following type signatures:
+%
+\begin{mathpar}
+    \mathit{reverse} : \forall \text{a} . [\text{a}] \rightarrow [\text{a}] 
 
-\begin{align*}
-    \mathit{reverse} &: \forall \text{a} . [\text{a}] \rightarrow [\text{a}] \\
-    \mathit{sum} &: [\text{Int}] \rightarrow \text{Int}
-\end{align*}
-
+    \mathit{sum} : [\text{Int}] \rightarrow \text{Int}
+\end{mathpar}
 The 'reverse' function is a polymorphic function that literally reverses a given list irrespective of the type inside the list.
 The 'sum' function adds all of the terms in the list together.
 
 Now with these functions we can create an example problem for the type checker:
-
 \begin{align*}
-    \lambda xs . \; \mathit{sum} \; (\mathit{reverse} \; xs) \\
+    \lambda xs . \; \mathit{sum} \; (\mathit{reverse} \; xs) 
 \end{align*}
-
 So we know that we do not know the type of $xs$ as it is a lambda variable, so we can place a type variable in its place to represent the unresolved type.
 In this case we will say $(xs : \alpha)$.
 
-First, we must typechecking 'reverse' $xs$.
-
 For 'reverse' we must first instantiate the function as a specific type because it is polymorphic and therefore ranges over many types.
 So, an instance of reverse will have a specific type replacing 'a' with a type variable ($\beta$), as a stand-in for the unknown type.
-
 I.e, \[reverse' : [\beta] \rightarrow [\beta]\]
 
 
@@ -1801,8 +1802,8 @@ The algorithm is presented formally below.
     % \item Algorithm J
 
 \begin{center}
-\begin{minipage}{0.8\linewidth}%
-\begin{algorithm}[H]
+% \begin{minipage}{0.8\linewidth}%
+\begin{algorithm}[t]
 \DontPrintSemicolon
 \KwData{$t_1$, $t_2$: two terms to unify. \; $\sigma$: an empty substitution.}
 \KwResult{A substitution that is the most general substitution for $t_1$ and $t_2$. Otherwise an error.}
@@ -1832,27 +1833,27 @@ The algorithm is presented formally below.
         return FAILURE
     }
 }
-\caption{An interpretation of Robinson's Unification Algorithm \citep{Robinson_1965}, \citep{Luger}. This algorithm can handle type constructions such as functions $a \rightarrow a$ by breaking down their arguments. The type constructions themselves are referred to as $functors$.}
+\caption{Robinson's Unification Algorithm \citep{Robinson_1965, Luger}.}
 \end{algorithm}
-\end{minipage}
+% \end{minipage}
 \end{center}
 
-This definition relies on the function \emph{bind} which is defined as follows:
-\begin{center}
-\begin{minipage}{0.8\linewidth}%
-\begin{algorithm}[H]
-    \DontPrintSemicolon
-    \Begin{
-        \uIf {$var \notin \{t\}$}
-            {return $var := t$}
-        \uElse{
-            return FAILURE
-        }
-    }
-\caption{The binding function is a simple utility function for determining if a type is recursively defined. If it \emph{is} recursive, then return a failure. Otherwise, allow the type variable binding.}
-\end{algorithm}
-\end{minipage}
-\end{center}
+This definition relies on the function \emph{bind} which is a simple utility function for determining if a type is recursively defined. If it \emph{is} recursive, then return a failure. Otherwise, allow the type variable binding.
+% \begin{center}
+% \begin{minipage}{0.8\linewidth}%
+% \begin{algorithm}[H]
+%     \DontPrintSemicolon
+%     \Begin{
+%         \uIf {$var \notin \{t\}$}
+%             {return $var := t$}
+%         \uElse{
+%             return FAILURE
+%         }
+%     }
+% \caption{The binding function is a simple utility function for determining if a type is recursively defined. If it \emph{is} recursive, then return a failure. Otherwise, allow the type variable binding.}
+% \end{algorithm}
+% \end{minipage}
+% \end{center}
 
 This algorithm outlines the steps involved in Robinson's Unification Algorithm, detailing how it handles different cases of terms and variables to find a most general unifier.
 The algorithm ensures that the resulting substitution satisfies the unification constraints and resolves any potential recursive dependencies between variables and terms.
@@ -2000,47 +2001,6 @@ The implementation for this rule was relatively simple from an algorithm perspec
     \item Return the modified source code.
 \end{enumerate}
 
-In the actual implementation the converter looked like this:
-
-\begin{lstlisting}[language=Caml, caption=The 'preprocess' function that handles all whitespace scoping in PyFunc.]
-let preprocess source =
-    let get_indent str = 
-      let rec count_space_helper idx = 
-        if idx >= String.length str || str.[idx] <> ' ' then
-          idx
-        else
-          count_space_helper (idx + 1)
-      in
-      let indent = count_space_helper 0 in
-      if (indent mod 4 = 0) then
-        indent / 4
-      else
-        raise (Parse.parse_error "Invalid indentation! 4 space indentation required.")
-    in
-    let rec loop prev_indent acc = function
-      | [] -> 
-        if prev_indent > 0 then
-          let closing_braces = String.make prev_indent '}' in
-          List.rev (closing_braces :: acc)
-        else 
-          List.rev acc
-      | line :: rest ->
-        let indent = get_indent line in
-        let diff = abs (prev_indent - indent) in
-        let amended_line =
-          if indent > prev_indent then
-            (String.make diff '{') ^ line
-          else if indent < prev_indent then
-          (String.make diff '}') ^ line
-          else
-            line
-        in
-        loop indent (amended_line :: acc) rest
-    in
-    let output = String.concat "\n" (loop 0 [] source) in
-    output
-\end{lstlisting}
-
 Whilst the implementation is rather crude, the language itself does not have any cases currently that make this algorithm fail.
 It would likely be an insufficient solution in future when the language is extended further, but this is completely functional for the language in its current state.
 
@@ -2132,7 +2092,7 @@ Here are a few of the more interesting parts of the parser grammar:
     An interesting feature of the unary rule is the presence of the \texttt{\%prec} keyword.
     For the unary versions of the PLUS and MINUS operations a different precedence and associativity is required, as all unary operators are right-associative whilst binary operations are left-associative.
     Menhir allows for an explicit declaration of the precedence and associativity of operators.
-    \newpage
+    % \newpage
     For PyFunc this precedence looks like this:
     \begin{lstlisting}[caption=PyFunc's Menhir precedence and associativity declarations.]
         %right CONS NOT
@@ -2173,7 +2133,7 @@ Here are a few of the more interesting parts of the parser grammar:
 
 
 The entire PyFunc grammar can be found in the appendix. (\ref{lst:parser-spec})
-\newpage
+% \newpage
 \subsection{Constructors}
 
 For clarities sake, the parser uses OCaml functions to generate AST nodes which refer to one another, constructing the tree as the parser reads the tokenised source code.
@@ -2215,7 +2175,7 @@ The IR has only lambdas which can take only a single argument, but the frontend 
 To help deal with this conversion, a helper-function was devised.
 This function constructs a let rec binding (let rec to allow recursive function definitions) from the given parameters.
 Inside the let rec a series of lambdas are created for each parameter in reverse order (so as to have applications, partial or complete, apply the parameters in the same order they appear in the definition).
-\newpage
+% \newpage
 \begin{lstlisting}[language=Caml, keepspaces=true, caption=PyFunc frontend's function binding conversion code.]
     let rec func_to_lambdas p_list (body : IR.tree) =
       if List.is_empty p_list then
@@ -2528,26 +2488,8 @@ Overall, the algorithm efficiently handles type unification in PyFunc, ensuring 
 
 The rest of the type checker outside of the inference rules is relatively simple.
 
-Anytime the type checker needs to be invoked, the function \texttt{\_typecheck} can be called.
-The function allows the type checking of any type via pattern-matching the passed IR-AST node and passing the children to specific type checking functions:
-
-\begin{lstlisting}[language=Caml, caption=The body of PyFunc's main type check function\, which defers to other more specific type checking functions via patter-matching.]
-function
-    | ExprVar value -> instantiate (Env.find value env)
-    | ExprFunc (binder, body) -> typecheck_func env binder body
-    | ExprApplic (expr_func, expr_arg) -> typecheck_applic env expr_func expr_arg
-    | ExprOpUnary (op, expr) -> typecheck_op_unary env op expr
-    | ExprOpBinary (op, expr_a, expr_b) -> typecheck_opbinary env op expr_a expr_b
-    | ExprConst const -> typecheck_const const
-    | ExprIf (expr_cond, expr_if, expr_else) -> typecheck_if env expr_cond expr_if expr_else
-    | ExprLet (binder, expr_a, expr_b) -> typecheck_let env binder expr_a expr_b
-    | ExprLetRec (binder, expr_a, expr_b) -> typecheck_letrec env binder expr_a expr_b
-    | ExprLetPair (a, b, expr_a, expr_b) -> typecheck_let_pair env a b expr_a expr_b
-    | ExprPair (expr_a, expr_b) -> typecheck_pair env expr_a expr_b
-    | ExprFirst expr -> typecheck_first env expr
-    | ExprSecond expr -> typecheck_second env expr
-    | ExprList list -> typecheck_list (env : Env.t) list
-\end{lstlisting}
+Anytime the type checker needs to be invoked, the function \texttt{\_typecheck} \ref{lst:typecheck-function} can be called.
+The function allows the type checking of any type via pattern-matching the passed IR-AST node and passing the children to specific type checking functions.
 
 % If a construct, an if-expression for example, requires some part of it to be a certain type
 Of the numerous specific type checking functions, here are a few excerpts of the more interesting cases:
@@ -2651,11 +2593,10 @@ Initially as a patch, the option for a value to be a VTree was added.
 A VTree was literally a segment of the AST (that would cause an error if evaluated) wrapped into a type.
 
 But for the case of partial application it worked very well.
-
 For example, \[ f(a, b, c) -> \text{let } f = \lambda a. \lambda b. \lambda c. a + b + c \text{ in ...}\]
 
 With partial application what happens is: 
-\[f (1) = VTree (\lambda b. \lambda c. 1 + b + c)\]
+$f (1) = VTree (\lambda b. \lambda c. 1 + b + c)$
 
 When another application occurs on VTree then the VTree value is unwrapped and reconsidered part of the AST.
 As it still is not fully evaluated, it is again wrapped in the value type as a VTree.
@@ -2670,10 +2611,10 @@ A closure value type could wrap the partially applied function and its local env
 Using a closure instead of the VTree, allowed for variables to still be in the local environment.
 Because of that, no substitutions in the AST were required, greatly simplifying the implementation.
 
-There was only one caveat to using closures to handle partial application, and that was the fact that recursive functions (implemented via let-rec) could not be initially defined with a closure as they have to include their binder in their local environment\footnote{Recursive let expressions effectively forward declare themselves so they can reference themselves in their own definition.}.
-This is impossible for a closure to do as it introduces a circular dependency to the definition of the closure and the environment it includes.
+% There was only one caveat to using closures to handle partial application, and that was the fact that recursive functions (implemented via let-rec) could not be initially defined with a closure as they have to include their binder in their local environment\footnote{Recursive let expressions effectively forward declare themselves so they can reference themselves in their own definition.}.
+% This is impossible for a closure to do as it introduces a circular dependency to the definition of the closure and the environment it includes.
 
-So as a simple fix, a simple VFn value type was added that is only used in this one instance.
+To handle the circular dependency introduced by recursive functions a simple VFn value type was added that is only used in this one instance.
 The VFn type simply holds the body of a recursive function for the initial definition, to mitigate the dependency issue.
 
 \begin{lstlisting}[language=Caml, label=lst:vclos-example, caption=The aditional type definitions of a VClos and VFn.]
@@ -2682,7 +2623,6 @@ The VFn type simply holds the body of a recursive function for the initial defin
     | ...
     | VFn of (tree)
     | VClos of (binder * tree * env.t)
-    | ...
 \end{lstlisting}
 
 \subsection{Environment}
@@ -2699,17 +2639,17 @@ In listing \ref{lst:vclos-example} the type of the environment was already state
 Which is a simple list of string to value bindings.
 The simple list of string-value pairs proved more than capable of working as the local environment for the interpreter at runtime.
 
-Such a simple implementation of the environment, allows for the accessor function to also be simple.
+% Such a simple implementation of the environment, allows for the accessor function to also be simple.
 
-For example, the \texttt{Env.get} function is defined:
+% For example, the \texttt{Env.get} function is defined:
 
-\begin{lstlisting}[language=Caml, caption=PyFunc's Interpreter Environment get function.]
-    let get (env : t) key =
-    let result = 
-      try List.assoc key env with 
-      Not_found -> raise (Errors.lookup_error ("Undefined variable '" ^ key ^ "'!")) in
-    result
-\end{lstlisting}
+% \begin{lstlisting}[language=Caml, caption=PyFunc's Interpreter Environment get function.]
+%     let get (env : t) key =
+%     let result = 
+%       try List.assoc key env with 
+%       Not_found -> raise (Errors.lookup_error ("Undefined variable '" ^ key ^ "'!")) in
+%     result
+% \end{lstlisting}
 
 % When an  function returns an interpreted value
 
@@ -2729,26 +2669,26 @@ The rest of the interpreter was largely straightforward evaluations of syntax.
 Here are excepts indicating the implementations of the following rules:
 
 \begin{itemize}
-    \item \textbf{Unary and Binary Operations:}
+    % \item \textbf{Unary and Binary Operations:}
     
-    \begin{lstlisting}[language=Caml, caption=Excerpt of the PyFunc Interpreter rules for binary and unary operations.]
-    and eval_op_binary env op expr_a expr_b =
-        let left = eval env expr_a in
-        let right = eval env expr_b in
-        match left, op, right with
-        | (Vint a), Add,       (Vint b) ->  Vint (a + b)
-        | (Vint a), Subtract,  (Vint b) ->  Vint (a - b)
-        | ...
+    % \begin{lstlisting}[language=Caml, caption=Excerpt of the PyFunc Interpreter rules for binary and unary operations.]
+    % and eval_op_binary env op expr_a expr_b =
+    %     let left = eval env expr_a in
+    %     let right = eval env expr_b in
+    %     match left, op, right with
+    %     | (Vint a), Add,       (Vint b) ->  Vint (a + b)
+    %     | (Vint a), Subtract,  (Vint b) ->  Vint (a - b)
+    %     | ...
 
-    and eval_op_unary env op expr = 
-        let expr_value = eval env expr in
-        match op, expr_value with
-        | Positive, (Vint i) -> Vint (~+i)
-        | Negative, (Vint i) -> Vint (~-i)
-        | Not, (Vbool b) -> Vbool (not b)
-        | ...
-    \end{lstlisting}
-    The rules for operations are relatively simple by virtue of the reduced complexity of the IR allowing for pattern matching to handle all of the major differentiation of operations.
+    % and eval_op_unary env op expr = 
+    %     let expr_value = eval env expr in
+    %     match op, expr_value with
+    %     | Positive, (Vint i) -> Vint (~+i)
+    %     | Negative, (Vint i) -> Vint (~-i)
+    %     | Not, (Vbool b) -> Vbool (not b)
+    %     | ...
+    % \end{lstlisting}
+    % The rules for operations are relatively simple by virtue of the reduced complexity of the IR allowing for pattern matching to handle all of the major differentiation of operations.
 
     \item \textbf{Recursive Let Expressions:}
     
@@ -2794,7 +2734,6 @@ Here are excepts indicating the implementations of the following rules:
       | VFn body -> eval env body
       | VClos (binder, body, env') -> eval env' body
       | x -> x
-
     with
       | Errors.Lookup_Error msg -> raise (Errors.Lookup_Error msg)
       | exn -> raise exn
@@ -3126,78 +3065,6 @@ In its current state, PyFunc cannot process strings to floats that are not expli
     \end{enumerate} 
     
     Currently PyFunc does not have any significant string manipulation outside of breaking down strings and structuring them as if they were lists. (\text{::}, \texttt{head} and \texttt{tail} operators.)
-
-
-\begin{table}[!ht]
-    \centering
-    \begin{tabular}{|l|l|l|}
-    \hline
-        Index & CPython Test  & PyFunc Result \\ \hline
-        1 & assertIs(not True, False)  & TRUE \\ \hline
-        2 & assertIs(not False, True)  & TRUE \\ \hline
-        3 & assertIs(True != False, True)  & TRUE \\ \hline
-        4 & assertIs(True != True, False)  & TRUE \\ \hline
-        5 & assertIs(True==False, False)  & TRUE \\ \hline
-        6 & assertIs(False==False,True)  & TRUE \\ \hline
-        7 & assertIs(1==1, True)  & TRUE \\ \hline
-        8 & assertIs(1==0, False)  & TRUE \\ \hline
-        9 & assertIs(0<1, True)  & TRUE \\ \hline
-        10 & assertIs(1<0, False)  & TRUE \\ \hline
-        11 & assertIs(0<=0, True) & TRUE \\ \hline
-        12 & assertIs(1<=0, False)  & TRUE \\ \hline
-        13 & assertIs(1>0, True) & TRUE \\ \hline
-        14 & assertIs(1>1, False)  & TRUE \\ \hline
-        15 & assertIs(1>=1, True)  & TRUE \\ \hline
-        16 & assertIs(0>=1, False)  & TRUE \\ \hline
-        17 & assertIs(0!=1, True) & TRUE \\ \hline
-        18 & assertIs(0!=0, False) & TRUE \\ \hline
-        19 & assertEqual(str(False), 'False')  & TRUE \\ \hline
-        20 & assertEqual(str(True), 'True')  & TRUE \\ \hline
-        21 & assertEqual(int(False), 0)  & TRUE \\ \hline
-        22 & assertIsNot(int(False), False)  & TRUE \\ \hline
-        23 & assertEqual(int(True), 1)  & TRUE \\ \hline
-        24 & assertIsNot(int(True), True)  & TRUE \\ \hline
-        25 & assertEqual(float(False), 0.0)  & TRUE \\ \hline
-        26 & assertIsNot(float(False), False)  & TRUE \\ \hline
-        27 & assertEqual(float(True), 1.0)  & TRUE \\ \hline
-        28 & assertIsNot(float(True), True) & TRUE \\ \hline
-    \end{tabular}
-    \caption{Table of CPython tests that were run on PyFunc with success results.}
-    \label{tbl:eval-bools}
-\end{table}
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|l|l|l|}
-    \hline
-        Index & CPython Test  & PyFunc Result \\ \hline
-        1 & assertEqual(float(3.14), 3.14)  & TRUE \\ \hline
-        2 & assertEqual(float(314), 314.0) & TRUE \\ \hline
-        3 & assertEqual(float("  3.14  "), 3.14)  & TRUE \\ \hline
-        4 & assertEqual(float(), 0.0) & FALSE \\ \hline
-        5 & assertEqual(float("  3.14  "), 3.14)  & TRUE \\ \hline
-        6 & assertEqual(float("+3.14  "), 3.14)  & TRUE \\ \hline
-        7 & assertEqual(float("-3.14  "), -3.14)  & TRUE \\ \hline
-        8 & assertEqual(float(".14  "), .14)  & TRUE \\ \hline
-        9 & assertEqual(float("3.  "), 3.0)  & TRUE \\ \hline
-        10 & self.assertEqual(float("3.e3  "), 3000.0)  & FALSE \\ \hline
-        11 & self.assertEqual(float("3.2e3  "), 3200.0)  & FALSE \\ \hline
-        12 & self.assertEqual(float("2.5e-1  "), 0.25)  & FALSE \\ \hline
-        13 & self.assertEqual(float("5e-1"), 0.5) & FALSE \\ \hline
-        14 & assertEqualAndEqualSign((1.0 ** -2.0), 1.0)  & TRUE \\ \hline
-        15 & assertEqualAndEqualSign((1.0 ** -1.0), 1.0)  & TRUE \\ \hline
-        16 & assertEqualAndEqualSign((1.0 ** -0.5), 1.0)  & TRUE \\ \hline
-        17 & assertEqualAndEqualSign((1.0 ** -0.0), 1.0)  & TRUE \\ \hline
-        18 & assertEqualAndEqualSign((1.0 ** 0.0), 1.0)  & TRUE \\ \hline
-        19 & assertEqualAndEqualSign((1.0 ** 0.5), 1.0)  & TRUE \\ \hline
-        20 & assertEqualAndEqualSign((1.0 ** 1.0), 1.0)  & TRUE \\ \hline
-        21 & assertEqualAndEqualSign((1.0 ** 2.0), 1.0)  & TRUE \\ \hline
-    \end{tabular}
-    \caption{Table of CPython tests that were run on PyFunc with success results.}
-    \label{tbl:eval-floats}
-\end{table}
-
-
 
 
 Overall, PyFunc performed well for a proportion of the basic functionality expected of a language, like simple operations.
@@ -3552,8 +3419,76 @@ rule token = parse
 
 % \end{itemize}
 
-\textbf{Don't include your source code in the appendices}. It will be
-submitted separately.
+\section{Tables}
+
+\begin{table}[!ht]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+        Index & CPython Test  & PyFunc Result \\ \hline
+        1 & assertIs(not True, False)  & TRUE \\ \hline
+        2 & assertIs(not False, True)  & TRUE \\ \hline
+        3 & assertIs(True != False, True)  & TRUE \\ \hline
+        4 & assertIs(True != True, False)  & TRUE \\ \hline
+        5 & assertIs(True==False, False)  & TRUE \\ \hline
+        6 & assertIs(False==False,True)  & TRUE \\ \hline
+        7 & assertIs(1==1, True)  & TRUE \\ \hline
+        8 & assertIs(1==0, False)  & TRUE \\ \hline
+        9 & assertIs(0<1, True)  & TRUE \\ \hline
+        10 & assertIs(1<0, False)  & TRUE \\ \hline
+        11 & assertIs(0<=0, True) & TRUE \\ \hline
+        12 & assertIs(1<=0, False)  & TRUE \\ \hline
+        13 & assertIs(1>0, True) & TRUE \\ \hline
+        14 & assertIs(1>1, False)  & TRUE \\ \hline
+        15 & assertIs(1>=1, True)  & TRUE \\ \hline
+        16 & assertIs(0>=1, False)  & TRUE \\ \hline
+        17 & assertIs(0!=1, True) & TRUE \\ \hline
+        18 & assertIs(0!=0, False) & TRUE \\ \hline
+        19 & assertEqual(str(False), 'False')  & TRUE \\ \hline
+        20 & assertEqual(str(True), 'True')  & TRUE \\ \hline
+        21 & assertEqual(int(False), 0)  & TRUE \\ \hline
+        22 & assertIsNot(int(False), False)  & TRUE \\ \hline
+        23 & assertEqual(int(True), 1)  & TRUE \\ \hline
+        24 & assertIsNot(int(True), True)  & TRUE \\ \hline
+        25 & assertEqual(float(False), 0.0)  & TRUE \\ \hline
+        26 & assertIsNot(float(False), False)  & TRUE \\ \hline
+        27 & assertEqual(float(True), 1.0)  & TRUE \\ \hline
+        28 & assertIsNot(float(True), True) & TRUE \\ \hline
+    \end{tabular}
+    \caption{Table of CPython tests that were run on PyFunc with success results.}
+    \label{tbl:eval-bools}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+        Index & CPython Test  & PyFunc Result \\ \hline
+        1 & assertEqual(float(3.14), 3.14)  & TRUE \\ \hline
+        2 & assertEqual(float(314), 314.0) & TRUE \\ \hline
+        3 & assertEqual(float("  3.14  "), 3.14)  & TRUE \\ \hline
+        4 & assertEqual(float(), 0.0) & FALSE \\ \hline
+        5 & assertEqual(float("  3.14  "), 3.14)  & TRUE \\ \hline
+        6 & assertEqual(float("+3.14  "), 3.14)  & TRUE \\ \hline
+        7 & assertEqual(float("-3.14  "), -3.14)  & TRUE \\ \hline
+        8 & assertEqual(float(".14  "), .14)  & TRUE \\ \hline
+        9 & assertEqual(float("3.  "), 3.0)  & TRUE \\ \hline
+        10 & self.assertEqual(float("3.e3  "), 3000.0)  & FALSE \\ \hline
+        11 & self.assertEqual(float("3.2e3  "), 3200.0)  & FALSE \\ \hline
+        12 & self.assertEqual(float("2.5e-1  "), 0.25)  & FALSE \\ \hline
+        13 & self.assertEqual(float("5e-1"), 0.5) & FALSE \\ \hline
+        14 & assertEqualAndEqualSign((1.0 ** -2.0), 1.0)  & TRUE \\ \hline
+        15 & assertEqualAndEqualSign((1.0 ** -1.0), 1.0)  & TRUE \\ \hline
+        16 & assertEqualAndEqualSign((1.0 ** -0.5), 1.0)  & TRUE \\ \hline
+        17 & assertEqualAndEqualSign((1.0 ** -0.0), 1.0)  & TRUE \\ \hline
+        18 & assertEqualAndEqualSign((1.0 ** 0.0), 1.0)  & TRUE \\ \hline
+        19 & assertEqualAndEqualSign((1.0 ** 0.5), 1.0)  & TRUE \\ \hline
+        20 & assertEqualAndEqualSign((1.0 ** 1.0), 1.0)  & TRUE \\ \hline
+        21 & assertEqualAndEqualSign((1.0 ** 2.0), 1.0)  & TRUE \\ \hline
+    \end{tabular}
+    \caption{Table of CPython tests that were run on PyFunc with success results.}
+    \label{tbl:eval-floats}
+\end{table}
 
 \end{appendices}
 
@@ -3566,7 +3501,6 @@ submitted separately.
 \bibliographystyle{abbrvnat}
 
 \bibliography{l4proj}
-
 
 
 \end{document}

@@ -51,7 +51,7 @@
 %token <float> FLOATVAL
 
 // Precedence
-%right IMBIND
+// %right IMBIND
 %right PRINT
 %right CONS NOT
 %right INT FLOAT BOOL STRING 

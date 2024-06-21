@@ -102,7 +102,6 @@ module Frontend = struct
   let generate_ast source = 
     let open Parse in
     let processed_source =  (preprocess source) in 
-    print_endline processed_source;
     parse_string processed_source
 
   exception Unimplemented of string

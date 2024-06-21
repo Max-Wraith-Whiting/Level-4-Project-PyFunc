@@ -1,0 +1,3 @@
+
+echo "Running..."
+dune exec -- pyfunc -verbose test_file.pyf 
