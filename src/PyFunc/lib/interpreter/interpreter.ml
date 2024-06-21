@@ -105,18 +105,70 @@ module Interpreter = struct
 
   and eval_op_unary env op expr = 
     let expr_value = eval env expr in
+
+    let rec value_to_int = function
+    | Vint i -> Vint i
+    | Vfloat f -> Vint (Float.to_int f)
+    | Vbool b -> Vint (Bool.to_int b)
+    | Vpair (a, b) -> Vpair (value_to_int a, value_to_int b)
+    | Vlist l -> Vlist (List.map (value_to_int) l)
+    | Vunit () -> Vunit ()
+    | _ -> raise (Errors.runtime_error "Illegal input to unary int cast!")
+    in
+
+    let rec value_to_float = function
+    | Vint i -> Vfloat (Int.to_float i)
+    | Vfloat f -> Vfloat f
+    | Vbool b -> Vfloat (Bool.to_float b)
+    | Vpair (a, b) -> Vpair (value_to_float a, value_to_float b)
+    | Vlist l -> Vlist (List.map (value_to_float) l)
+    | Vunit () -> Vunit ()
+    | _ -> raise (Errors.runtime_error "Illegal input to unary float cast!")
+    in
+
+    let rec value_to_string = function
+    | Vint i -> Vstring (Int.to_string i)
+    | Vfloat f -> Vstring (Float.to_string f)
+    | Vbool b -> Vstring (if b then "True" else "False")
+    | Vpair (a, b) -> Vpair (value_to_string a, value_to_string b)
+    | Vlist l -> Vlist (List.map (value_to_string) l)
+    | VClos (binder, _, _) -> Vstring (binder)
+    | Vunit () -> Vunit ()
+    | _ -> raise (Errors.runtime_error "Illegal input to unary string cast!")
+    in
+
+    let rec value_to_bool = function
+    | Vint i -> Vbool (if i = 0 then false else true)
+    | Vfloat f -> Vbool (if f = 0. then false else true)
+    | Vbool b -> Vbool b
+    | Vstring s -> Vbool (if s = "" then false else true)
+    | Vpair (a, b) -> Vpair (value_to_bool a, value_to_bool b)
+    | Vlist l -> Vlist (List.map (value_to_bool) l)
+    | Vunit () -> Vunit ()
+    | _ -> raise (Errors.runtime_error "Illegal input to unary float cast!")
+    in
+
+    let get_string_value = function
+        | Vstring s -> s
+        | _ -> raise (Errors.Runtime_Error "Illegal input to print unary!")
+    in
+
     match op, expr_value with
       | Positive, (Vint i) -> Vint (~+i)
       | Negative, (Vint i) -> Vint (~-i)
       | Not, (Vbool b) -> Vbool (not b)
       | Head, (Vlist l) -> List.hd l
       | Tail, (Vlist l) -> Vlist(List.tl l)
+      | UInt, v -> value_to_int v
+      | UFloat, v -> value_to_float v
+      | UBool, v -> value_to_bool v
+      | UString, v -> value_to_string v
+      | Print, v -> print_endline (get_string_value (value_to_string v)); Vunit ()
       | _, _ -> raise (Errors.runtime_error ("Oh no! Invalid unary op: " ^ op_unary_pp op))
 
   and eval_op_binary env op expr_a expr_b =
     let left = eval env expr_a in
     let right = eval env expr_b in
-    print_endline ("op_binary: " ^ (Env.pp_value left) ^ " " ^ (HM.Ast.OpBinary.op_binary_pp op) ^ " " ^ (Env.pp_value right));
 
     let modulo x y = 
       let remainder = x mod y in
@@ -182,7 +234,6 @@ module Interpreter = struct
     eval env' in_expr
 
   and eval_letrec env binder let_expr in_expr =
-    print_endline ("letrec: " ^ binder);
     (* Set variable into the Env before evaluation. *)
     let fn = VFn (let_expr) in
     let env' = (Env.set env binder fn) in
@@ -193,16 +244,15 @@ module Interpreter = struct
     (* Attempt to get var from env *)
     try let result = Env.get env var in
     match result with
-      | VFn body -> print_endline ("VFn var: " ^ var); eval env body
-      | VClos (binder, body, env') -> print_endline ("VClos var: " ^ binder); eval env' body
+      | VFn body -> eval env body
+      | VClos (_, body, env') -> eval env' body
       | x -> x
 
     with
       | Errors.Lookup_Error msg -> raise (Errors.Lookup_Error msg)
-      | exn -> print_endline ("Error: " ^ (Printexc.to_string exn)); raise exn
+      | exn -> raise exn
 
   and eval_func env binder body = 
-    print_endline ("Fn: " ^ binder);
     VClos (binder, body, env)
 
   and eval_applic env func arg =
@@ -214,7 +264,6 @@ module Interpreter = struct
       | VClos (binder, body, c_env) -> 
         let arg_value = eval env arg in
       (* Bind arg *)
-        print_endline ("Applic fn: " ^ binder);
         let env' = Env.set c_env binder arg_value in
         eval env' body 
       | v -> v

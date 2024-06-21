@@ -15,8 +15,12 @@
 %token FALSE
 %token IF
 %token ELIF
-// %token THEN
 %token ELSE
+%token INT 
+%token FLOAT
+%token BOOL
+%token STRING
+%token PRINT
 %token UNITVAL
 %token LPAREN
 %token RPAREN
@@ -24,6 +28,7 @@
 %token RBRACE
 %token LBRACK
 %token RBRACK
+%token IMBIND
 %token EQ
 %token AND OR
 %token LT GT GEQ LEQ EQQ NEQ
@@ -44,10 +49,12 @@
 %token <string> STRINGVAL
 %token <int> INTVAL
 %token <float> FLOATVAL
-// %token LIST // On a probationary status.
 
 // Precedence
+// %right IMBIND
+%right PRINT
 %right CONS NOT
+%right INT FLOAT BOOL STRING 
 %right HEAD TAIL
 %right UPLUS UMINUS
 %left LT GT GEQ LEQ EQQ NEQ
@@ -67,11 +74,8 @@ binding:
 scope: LBRACE expr RBRACE   {$2}
 
 expr:
-    // | DEFINE ID LPAREN param_list RPAREN scope expr  {update_binding_list(makeFunc $2 $4 $6); $7}
     | base_expr                                 {$1}
     | if_expr                                   {$1}
-
-    // | ID EQ value {makeAssign $1 $3 } // Requires a heap scope.
 
 base_expr:
     | expr OR expr        {makeOpBinary OpBinary.And $1 $3}
@@ -104,12 +108,17 @@ else_expr:
     | ELSE COLON scope {$3}
 
 unary:
-    | NOT unary   {makeOpUnary OpUnary.Not $2}
+    | NOT unary     {makeOpUnary OpUnary.Not $2}
     | MINUS unary %prec UMINUS {makeOpUnary OpUnary.Negative $2}
     | PLUS unary  %prec UPLUS  {makeOpUnary OpUnary.Positive $2}
-    | HEAD unary {makeOpUnary OpUnary.Head $2}
-    | TAIL unary {makeOpUnary OpUnary.Tail $2}
-    | list_op     {$1}
+    | HEAD unary    {makeOpUnary OpUnary.Head $2}
+    | TAIL unary    {makeOpUnary OpUnary.Tail $2}
+    | INT unary     {makeOpUnary OpUnary.UInt $2}
+    | FLOAT unary   {makeOpUnary OpUnary.UFloat $2}
+    | BOOL unary    {makeOpUnary OpUnary.UBool $2}
+    | STRING unary  {makeOpUnary OpUnary.UString $2}
+    | PRINT unary   {makeOpUnary OpUnary.Print $2}
+    | list_op       {$1}
 
 list_op:
     | unary CONS unary {makeOpBinary OpBinary.Cons $1 $3}
@@ -122,6 +131,7 @@ call:
 primary:
     | LPAREN expr RPAREN {$2}
     | LBRACK expr_list RBRACK {makeList $2}
+    | ID IMBIND expr scope    {makeAssign $1 $3 $4}
     | ID                 {try find var_table $1 with Not_found -> makeVar ($1)}
     | STRINGVAL          {makeConst (ConstString $1)}
     | INTVAL             {makeConst (ConstInt $1)}

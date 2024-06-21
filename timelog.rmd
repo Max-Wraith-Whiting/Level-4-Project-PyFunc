@@ -1,6 +1,6 @@
 # Timelog
 
-* Project Name: Python-like Functional Programming Language with Intergrated Type-System 
+* Project Name: Python-like Functional Programming Language with Integrated Type-System 
 * Name: Maxwell Wraith-Whiting
 * Student Reference Number: 2560800
 * Supervisor: Simon Fowler
@@ -21,12 +21,12 @@
 
 ### 21 September 2023
 
-* *0.5 hour* Researching programming laguage concepts of significance
+* *0.5 hour* Researching programming language concepts of significance
 
 ### 22 September 2023
 
 * *1 hour* Meeting to discuss new proposal with S. Fowler
-* *2 hour* Research on type systems and ambigious parsing
+* *2 hour* Research on type systems and ambiguous parsing
 
 ## Week 2
 
@@ -39,7 +39,7 @@
 ### 2nd October 2023
 
 * *3 hour* Reading material relating to parametric polymorphism implementations
-* *4 hour* Researching formal syntax defintions and working on implementing a rudimentary scanner and parser
+* *4 hour* Researching formal syntax definitions and working on implementing a rudimentary scanner and parser
 
 ### 3rd October 2023
 
@@ -388,4 +388,4 @@
 
 * *1.5 hour* Editing
 * *2.5 hour* Presentation prep.
-* *7.0 hour* Finalising dissertation.
+* *7.0 hour* Finalising dissertation submission.

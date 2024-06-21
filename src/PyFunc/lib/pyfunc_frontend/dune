@@ -3,9 +3,10 @@
 
 (menhir
  (modules py_parser)
+ (flags --explain --inspection --table --dump)
 )
 
 (library
  (name frontend)
- (libraries HM)
+ (libraries HM menhirLib)
  )

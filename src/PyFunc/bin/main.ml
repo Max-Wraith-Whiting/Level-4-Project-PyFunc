@@ -9,21 +9,33 @@ module Main = struct
 
   let reset_state = HM.Ast.Type.TypeVar.reset
 
-  let execute_code (source : string list) = 
+  let print_frontend_ast ast verbose =
+    if !verbose = true then (
+    try let tree_string = Frontend.Frontend.pp_ast ast in
+      print_endline "Initial AST:" ;
+      print_string tree_string
+    with 
+      | _ -> print_endline "Something not right happened when printing AST!"
+    )
+    else ()
+  
+  let print_ir_ast ast verbose = 
+    if !verbose = true then
+      (
+        print_endline "Converted AST:";
+        print_string (HM.Ast.Expr.print_tree ast);
+      )
+    else ()
+
+
+  let execute_code (source : string list) verbose = 
     let ast = Frontend.Frontend.generate_ast source in
       (* Print the AST. *)
-      let () = 
-        try let tree_string = Frontend.Frontend.pp_ast ast in
-          print_endline "Initial AST:" ;
-          print_string tree_string
-        with 
-          | _ -> print_endline "Something not right happened when printing AST!"
-      in
+      print_frontend_ast ast verbose;
       let converted_ast  = 
         try 
           let converted_ast = Frontend.Frontend.convert ast in
-          print_endline "Printing Converted AST:";
-          print_string (HM.Ast.Expr.print_tree converted_ast);
+          print_ir_ast converted_ast verbose;
           converted_ast
         with
           | Frontend.Frontend.BadConversion msg -> print_endline msg; ExprConst (ConstUnit)
@@ -62,14 +74,14 @@ module Main = struct
     else
       read_multiline_input (line :: acc)
 
-  let repl ?(prompt="") () =
+  let repl ?(prompt="") verbose =
     reset_state ();
     print_string (prompt ^ "> ");
     let input_string = read_multiline_input [] in
-    execute_code input_string
+    execute_code input_string verbose
 end
 
-let run_file name = 
+let run_file name verbose = 
   let read_lines name : string list =
     let ic = open_in name in
     let try_read () =
@@ -80,7 +92,7 @@ let run_file name =
     loop []
   in
   let lines = read_lines name in
-  try Main.execute_code lines with
+  try Main.execute_code lines verbose with
     | exn -> print_endline ("Error: " ^ (Printexc.to_string exn))
 
 
@@ -98,14 +110,15 @@ let speclist =
 
 let run_repl () = 
   while true do
-      try Main.repl () with
+      try Main.repl verbose with
         | exn -> print_endline ("Error: " ^ (Printexc.to_string exn))
     done
 
 let () =
   Arg.parse speclist anon_func usage_msg;
   if (List.is_empty !input_file) then
-    (print_endline ("No arg");
+    (print_endline ("--------PyFunc v0.1 REPL--------");
     run_repl ())
   else
-    run_file (List.hd !input_file)
+    (* print_endline *)
+    run_file (List.hd !input_file) verbose

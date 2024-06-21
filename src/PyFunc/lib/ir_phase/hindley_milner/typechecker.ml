@@ -335,6 +335,35 @@ module Typecheck = struct
           let fresh_typ_list = TypeList(new_var ()) in
           unify typ fresh_typ_list;
           fresh_typ_list
+        
+        | UInt ->
+          if typ = TypeFloat || typ = TypeInt || typ = TypeBool then
+            let fresh_typ = new_var () in
+            unify typ fresh_typ;
+            TypeInt
+          else
+            raise (Errors.Type_Error ("Cannot cast " ^ (typ_to_string typ) ^ "to Integer."))
+        
+        | UFloat ->
+          if typ = TypeFloat || typ = TypeInt || typ = TypeBool then
+            let fresh_typ = new_var () in
+            unify typ fresh_typ;
+            TypeFloat
+          else 
+            raise (Errors.Type_Error ("Cannot cast " ^ (typ_to_string typ) ^ "to Float."))
+
+        | UBool ->
+          let fresh_typ = new_var () in
+          unify typ fresh_typ;
+          TypeBool
+
+        | UString ->
+          let fresh_typ = new_var () in
+          unify typ fresh_typ;
+          TypeString
+
+        | Print ->
+          TypeUnit
     in 
 
     

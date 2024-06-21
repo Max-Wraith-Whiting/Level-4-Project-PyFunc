@@ -126,6 +126,11 @@ module OpUnary = struct
     | Not
     | Head
     | Tail
+    | UInt
+    | UFloat
+    | UBool
+    | UString
+    | Print
 
   let op_unary_pp = function
     | Positive -> "+"
@@ -133,6 +138,11 @@ module OpUnary = struct
     | Not -> "!"
     | Head -> "hd"
     | Tail -> "tl"
+    | UInt -> "int"
+    | UFloat -> "float"
+    | UBool -> "bool"
+    | UString -> "string"
+    | Print -> "print"
 end
 
 (* Constant declares included primitive types. *)

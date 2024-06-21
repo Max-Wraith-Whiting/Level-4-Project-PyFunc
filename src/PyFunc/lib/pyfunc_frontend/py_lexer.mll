@@ -17,6 +17,11 @@ rule token = parse
     | "elif"    {ELIF}
     | "else"    {ELSE}
     | "None"    {UNITVAL}
+    | "int"     {INT}
+    | "float"   {FLOAT}
+    | "bool"    {BOOL}
+    | "string"  {STRING}
+    | "print"   {PRINT}
     | '('       {LPAREN}
     | ')'       {RPAREN}
     | '{'       {LBRACE}
@@ -24,6 +29,7 @@ rule token = parse
     | '['       {LBRACK}
     | ']'       {RBRACK}
     | '='       {EQ}
+    | ":="      {IMBIND}
     | "and"     {AND}
     | "or"      {OR}
     | "not"     {NOT}
