@@ -1,3 +1,5 @@
-# Level-4-Individual-Project
+# PyFunc: A functional programming language that looks a lot like Python
 
-WIP
+Built as my level-4 dissertation project at the UofG.
+
+[WIP]
