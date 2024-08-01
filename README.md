@@ -1,6 +1,6 @@
 # PyFunc
 
-A functional programming language that looks a lot like Python which was built as my level-4 dissertation project at the University of Galsgow.
+A functional programming language that looks a lot like Python which was built as my level-4 dissertation project at the University of Glasgow.
 
 The language can be succinctly described as:
 > A plain english expression-based impure functional programming language.
